@@ -17,6 +17,8 @@ public class GameSlot : MonoBehaviour
     [SerializeField] private Color deselectedColor = Color.white;
     [SerializeField] private Color selectedColor = Color.white;
 
+    private int slotIndex = -1;
+
     /// <summary>
     /// Checks for tap input
     /// </summary>
@@ -26,11 +28,27 @@ public class GameSlot : MonoBehaviour
         ToggleSelect();
     }
 
+    /// <summary>
+    /// Sets the shape of the current slot
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="targetColor"></param>
     public void SetSlotShape(GameShape.ShapeType type, Color targetColor)
     {
         if (slotShape != null)
             slotShape.ConfigureShape(type, targetColor);
     }
+
+    /// <summary>
+    /// Sets the index of the current slot
+    /// </summary>
+    /// <param name="index"></param>
+    public void SetSlotIndex(int index) { slotIndex = index; }
+
+    /// <summary>
+    /// Returns the current slot index
+    /// </summary>
+    public int GetSlotIndex() { return slotIndex; }
 
     /// <summary>
     /// Returns the current shape reference or null if no shape is present
@@ -60,6 +78,11 @@ public class GameSlot : MonoBehaviour
             manager.SelectSlot(this);
         }
     }
+
+    /// <summary>
+    /// Called by the game manager upon switching two shapes
+    /// </summary>
+    public void DestroyShape() { GameObject.Destroy(slotShape.gameObject); }
 
     /// <summary>
     /// Sets Selected to false, called when

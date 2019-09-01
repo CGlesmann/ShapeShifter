@@ -120,7 +120,8 @@ public class ShapeInspector : Editor
         {
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(shape.manager.GetBlueColor());
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape color to Red according to the global manager reference
@@ -128,7 +129,8 @@ public class ShapeInspector : Editor
         {
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(shape.manager.GetRedColor());
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape color to Green according to the global manager reference
@@ -136,7 +138,8 @@ public class ShapeInspector : Editor
         {
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(shape.manager.GetGreenColor());
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape color to Yellow according to the global manager reference
@@ -144,7 +147,8 @@ public class ShapeInspector : Editor
         {
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(shape.manager.GetYellowColor());
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
     }
 }
