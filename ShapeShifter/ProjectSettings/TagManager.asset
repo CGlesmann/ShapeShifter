@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Board/Slot
+  - Board/Shape
   layers:
   - Default
   - TransparentFX
@@ -40,4 +42,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Board/Slot
+    uniqueID: 2533166411
+    locked: 0
+  - name: Board/Shape
+    uniqueID: 2629172885
     locked: 0
