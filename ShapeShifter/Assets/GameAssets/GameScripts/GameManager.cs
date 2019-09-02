@@ -359,4 +359,14 @@ public class GameManager : MonoBehaviour
         if (destoryCurrentSlot)
             GameObject.Destroy(centerSlot.GetSlotShape().gameObject);
     }
+
+    public void CheckForVictory()
+    {
+
+    }
+
+    public void CompleteLevel()
+    {
+
+    }
 }
