@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Board Settings")]
     [SerializeField] private int boardWidth = 4;
     [SerializeField] private int boardHeight = 4;
+    private int boardSize => boardWidth * boardHeight;
 
     [Header("Object References")]
     [SerializeField] private Transform gameBoardParent = null;
@@ -271,7 +272,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Top Right Slot
-        if (index + 1 % boardWidth != 0 && index - (boardWidth - 1) >= 0 && GetGameBoardslot(index - (boardWidth - 1)) != null)
+        if ((index + 1) % boardWidth != 0 && index - (boardWidth - 1) >= 0 && GetGameBoardslot(index - (boardWidth - 1)) != null)
         {
             // Getting Slot Reference
             slot = GetGameBoardslot(index - (boardWidth - 1));
@@ -284,11 +285,67 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Middle Left Slot (NOT COMPLETE)
-        if (index + 1 % boardWidth != 0 && index - (boardWidth - 1) >= 0 && GetGameBoardslot(index - (boardWidth - 1)) != null)
+        // Middle Left Slot
+        if (index % boardWidth != 0 && index - 1 >= 0 && GetGameBoardslot(index - 1) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(index - (boardWidth - 1));
+            slot = GetGameBoardslot(index - 1);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
+            {
+                slot.DestroyShape();
+                destoryCurrentSlot = true;
+            }
+        }
+        
+        // Middle Right Slot
+        if ((index + 1) % boardWidth != 0 && index + 1 >= 0 && GetGameBoardslot(index + 1) != null)
+        {
+            // Getting Slot Reference
+            slot = GetGameBoardslot(index + 1);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
+            {
+                slot.DestroyShape();
+                destoryCurrentSlot = true;
+            }
+        }
+
+        // Bottom left slot
+        if (index % boardWidth != 0 && index + (boardWidth - 1) < boardSize && GetGameBoardslot(index + (boardWidth - 1)) != null)
+        {
+            // Getting Slot Reference
+            slot = GetGameBoardslot(index + (boardWidth - 1));
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
+            {
+                slot.DestroyShape();
+                destoryCurrentSlot = true;
+            }
+        }
+
+        // Bottom Center Slot
+        if (index <= (boardSize - boardWidth) && index + boardWidth < boardSize && GetGameBoardslot(index + boardWidth) != null)
+        {
+            // Getting Slot Reference
+            slot = GetGameBoardslot(index + boardWidth);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
+            {
+                slot.DestroyShape();
+                destoryCurrentSlot = true;
+            }
+        }
+
+        // Bottom Right Slot
+        if ((index + 1) % boardWidth != 0 && index + (boardWidth + 1) < boardSize && GetGameBoardslot(index + (boardWidth + 1)) != null)
+        {
+            // Getting Slot Reference
+            slot = GetGameBoardslot(index + (boardWidth + 1));
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
