@@ -54,7 +54,13 @@ public class GameSlot : MonoBehaviour
     /// Returns the current shape reference or null if no shape is present
     /// </summary>
     /// <returns></returns>
-    public GameShape GetSlotShape() { return slotShape; }
+    public GameShape GetSlotShape()
+    {
+        if (transform.childCount > 0)
+            return transform.GetChild(0).GetComponent<GameShape>();
+        else
+            return null;
+    }
 
     /// <summary>
     /// Selects the slot if unselected, otherwise unselects the slot

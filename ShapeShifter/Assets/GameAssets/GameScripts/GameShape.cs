@@ -22,6 +22,41 @@ public class GameShape : MonoBehaviour
     [SerializeField] private ShapeType shapeType = ShapeType.Square;
     [HideInInspector] public Color shapeColor => shapeRenderer.color;
 
+    public override string ToString()
+    {
+        return "Shape: " + shapeType.ToString() + " Color: " + shapeColor.ToString();
+    }
+
+    /*
+    public static bool operator ==(GameShape shape1, GameShape shape2)
+    {
+        return (shape1.shapeType == shape2.shapeType && shape1.shapeColor == shape2.shapeColor);
+    }
+
+    public static bool operator !=(GameShape shape1, GameShape shape2)
+    {
+        if (shape1 != null && shape2 != null)
+            return (shape1.shapeType != shape2.shapeType || shape1.shapeColor != shape2.shapeColor);
+        else
+            return false;
+        return !(shape1 == shape2);
+    }
+    */
+
+    public override bool Equals(object other)
+    {
+        GameShape otherShape = (GameShape)other;
+        if (otherShape != null)
+            return (shapeType == otherShape.shapeType && shapeColor == otherShape.shapeColor);
+        else
+            return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
     /// <summary>
     /// Automatically calls SetShapeType/Color
     /// </summary>

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -22,11 +23,16 @@ public class GameManager : MonoBehaviour
     [Header("Control Variables")]
     [SerializeField] private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
     private GameSlot slot1 = null, slot2 = null; // References for selected slots
+    private bool checkVictory = false;
 
     [Header("Board Settings")]
     [SerializeField] private int boardWidth = 4;
     [SerializeField] private int boardHeight = 4;
     private int boardSize => boardWidth * boardHeight;
+
+    [Header("Solution Board Settings")]
+    [SerializeField] private float solutionDisplayTime = 10f; // In Seconds
+    private float solutionTimer = 0;
 
     [Header("Object References")]
     [SerializeField] private Transform gameBoardParent = null;
@@ -34,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     [Header("GUI References")]
     [SerializeField] private TextMeshProUGUI destroyText = null;
+    [SerializeField] private Image destroyTimer = null;
 
     /// <summary>
     /// Setting Default State
@@ -44,6 +51,41 @@ public class GameManager : MonoBehaviour
         destroyText.text = "Destroy by Shape";
 
         SetGameSlotIndexes();
+    }
+
+    /// <summary>
+    /// Managing the Solution board timer
+    /// </summary>
+    private void Update()
+    {
+        // Checking for an active timer
+        if (solutionTimer > 0f)
+        {
+            // Decrementing the timer
+            solutionTimer -= Time.deltaTime;
+
+            // Checking for solution board toggle
+            if (solutionTimer <= 0f)
+                HideSolutionBoard();
+            else // Updating the timer element
+                destroyTimer.fillAmount = (solutionTimer / solutionDisplayTime);
+        }
+    }
+
+    /// <summary>
+    /// Checking for victory (as needed)
+    /// </summary>
+    private void FixedUpdate()
+    {
+        // Checking for victory (if nessecary)
+        if (Input.GetKeyDown(KeyCode.Space) || checkVictory)
+        {
+            // Check for level completion
+            CheckForVictory();
+
+            // Mark as checked
+            checkVictory = false;
+        }
     }
 
     #region Getter Functions
@@ -147,6 +189,40 @@ public class GameManager : MonoBehaviour
     #endregion
 
     /// <summary>
+    /// Disables the game board and enables the solution board
+    /// </summary>
+    public void ShowSolutionBoard()
+    {
+        // Checking for an active timer
+        if (solutionTimer <= 0f)
+        {
+            // Setting the Solution Timer
+            solutionTimer = solutionDisplayTime;
+
+            // Enabling the timer element
+            destroyTimer.gameObject.SetActive(true);
+            destroyTimer.fillAmount = 1;
+
+            // Toggling the Solution board / Gameboard
+            gameBoardParent.gameObject.SetActive(false);
+            solutionBoardParent.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// Hides and solution board and enables the game board
+    /// </summary>
+    private void HideSolutionBoard()
+    {
+        // Disabling the timer element
+        destroyTimer.gameObject.SetActive(false);
+
+        // Toggling the Solution board / Gameboard
+        gameBoardParent.gameObject.SetActive(true);
+        solutionBoardParent.gameObject.SetActive(false);
+    }
+
+    /// <summary>
     /// Sets all of the slot indexes
     /// </summary>
     public void SetGameSlotIndexes()
@@ -203,6 +279,9 @@ public class GameManager : MonoBehaviour
         // Resetting Slot References
         slot1 = null;
         slot2 = null;
+
+        // Flag Victory Check
+        checkVictory = true;
     }
 
     /// <summary>
@@ -360,13 +439,50 @@ public class GameManager : MonoBehaviour
             GameObject.Destroy(centerSlot.GetSlotShape().gameObject);
     }
 
+    /// <summary>
+    /// Triggered after switching two shapes
+    /// Compares the gameboard to the solution board
+    /// Triggers CompleteLevel if evaluates as true
+    /// </summary>
     public void CheckForVictory()
     {
+        Debug.Log("Checking for Victory");
 
+        // Setting the storage vars
+        GameSlot slot1 = null, slot2 = null;
+        GameShape shape1 = null, shape2 = null;
+
+        // Check each square
+        for(int i = 0; i < gameBoardParent.childCount; i++)
+        {
+            // Getting each slot reference
+            slot1 = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
+            slot2 = solutionBoardParent.GetChild(i).GetComponent<GameSlot>();
+
+            // Getting Shape References
+            shape1 = slot1 != null ? slot1.GetSlotShape() : null;
+            shape2 = slot2 != null ? slot2.GetSlotShape() : null;
+
+            // Comparing the two shapes from each slot, return false if shapes aren't equal
+            if ((shape1 == null && shape2 != null) || (shape1 != null && shape2 == null))
+            {
+                Debug.Log("Victory failed at index " + i.ToString() + "\nResults were...\n" + "Slot1: " + slot1.GetSlotShape() + "\nSlot2: " + slot2.GetSlotShape());
+                return;
+            }
+            else if (shape1 != null && shape2 != null)
+                if (!slot1.GetSlotShape().Equals(slot2.GetSlotShape()))
+                {
+                    Debug.Log("Victory failed at index " + i.ToString() + "\nResults were...\n" + "Slot1: " + slot1.GetSlotShape() + "\nSlot2: " + slot2.GetSlotShape());
+                    return;
+                }
+        }
+
+        // All the slots evaluate as true, trigger Complete Level
+        CompleteLevel();
     }
 
-    public void CompleteLevel()
-    {
-
-    }
+    /// <summary>
+    /// Triggers end of level animation and menu
+    /// </summary>
+    public void CompleteLevel() { Debug.Log("Level Complete"); }
 }
