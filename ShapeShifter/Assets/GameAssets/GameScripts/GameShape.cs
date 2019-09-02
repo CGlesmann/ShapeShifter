@@ -111,6 +111,7 @@ public class ShapeInspector : Editor
         // Getting the target object
         GameShape shape = (GameShape)target;
 
+        #region Color Setting Functions
         // Makes a section label
         GUILayout.Space(16f);
         GUILayout.Label("Color Setters", EditorStyles.boldLabel);
@@ -150,6 +151,49 @@ public class ShapeInspector : Editor
             if (!EditorApplication.isPlaying)
                 EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
+        #endregion
+
+        #region Shape Setting Functions
+        // Makes a section label
+        GUILayout.Space(16f);
+        GUILayout.Label("Shape Setters", EditorStyles.boldLabel);
+
+        // Sets the shape to Square according to the global manager reference
+        if (GUILayout.Button("Set Shape: Square"))
+        {
+            // Sets the color, makrs the scene as dirty for save
+            shape.SetShapeType(GameShape.ShapeType.Square);
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+        // Sets the shape to Circle according to the global manager reference
+        if (GUILayout.Button("Set Shape: Circle"))
+        {
+            // Sets the color, makrs the scene as dirty for save
+            shape.SetShapeType(GameShape.ShapeType.Circle);
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+        // Sets the shape to Triangle according to the global manager reference
+        if (GUILayout.Button("Set Shape: Triangle"))
+        {
+            // Sets the color, makrs the scene as dirty for save
+            shape.SetShapeType(GameShape.ShapeType.Triangle);
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+        // Sets the shape to Diamond according to the global manager reference
+        if (GUILayout.Button("Set Shape: Diamond"))
+        {
+            // Sets the color, makrs the scene as dirty for save
+            shape.SetShapeType(GameShape.ShapeType.Diamond);
+            if (!EditorApplication.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+        #endregion
     }
 }
 #endif
