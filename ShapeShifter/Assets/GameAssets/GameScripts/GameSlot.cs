@@ -13,9 +13,10 @@ public class GameSlot : MonoBehaviour
     private GameShape slotShape => childShape != null ? childShape.GetComponent<GameShape>() : null;
 
     [Header("Control Variables")]
-    [SerializeField] private bool selected = false;
+    [SerializeField] private bool canSelect = true;
     [SerializeField] private Color deselectedColor = Color.white;
     [SerializeField] private Color selectedColor = Color.white;
+    private bool selected = false;
 
     private int slotIndex = -1;
 
@@ -24,8 +25,12 @@ public class GameSlot : MonoBehaviour
     /// </summary>
     public void OnMouseDown()
     {
-        // Checking for mouse input, toggle select if true
-        ToggleSelect();
+        // Checking whether or not the slot can be selected
+        if (canSelect)
+        {
+            // Checking for mouse input, toggle select if true
+            ToggleSelect();
+        }
     }
 
     /// <summary>
