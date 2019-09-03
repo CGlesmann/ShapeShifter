@@ -175,12 +175,12 @@ public class GameManager : MonoBehaviour
 
         // Formatting the time string
         if (dayCount > 0)
-            time += dayCount + "d ";
+            time += dayCount < 10 ? "0" + dayCount + ":" : dayCount + ":";
         if (hourCount > 0)
-            time += hourCount + "h ";
-        if (minuteCount > 0)
-            time += minuteCount + "m ";
-        time += seconds + "s";
+            time += hourCount < 10 ? "0" + hourCount + ":" : hourCount + ":";
+
+        time += minuteCount < 10 ? "0" + minuteCount + ":" : minuteCount + ":";
+        time += seconds < 10 ? "0" + seconds : seconds.ToString();
 
         // Returning the resulting time
         return time;
