@@ -6,6 +6,10 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    // Declaring Time Constants
+    private const int DAY_IN_SECOND = 86400, HOUR_IN_SECOND = 3600, MINUTE_IN_SECOND = 60;
+    
+    // Destroy Control Toggle
     public enum DestroyMethod { Shape, Color };
 
     [Header("Global Color Constants")]
@@ -22,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Control Variables")]
     [SerializeField] private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
+    public float levelTimer = 0f;
+
     private GameSlot slot1 = null, slot2 = null; // References for selected slots
     private bool checkVictory = false;
 
@@ -40,7 +46,8 @@ public class GameManager : MonoBehaviour
 
     [Header("GUI References")]
     [SerializeField] private TextMeshProUGUI destroyText = null;
-    [SerializeField] private Image destroyTimer = null;
+    [SerializeField] private TextMeshProUGUI gameTimerText = null;
+    [SerializeField] private Image solutionTimerUI = null;
 
     /// <summary>
     /// Setting Default State
@@ -67,9 +74,16 @@ public class GameManager : MonoBehaviour
             // Checking for solution board toggle
             if (solutionTimer <= 0f)
                 HideSolutionBoard();
-            else // Updating the timer element
-                destroyTimer.fillAmount = (solutionTimer / solutionDisplayTime);
+            else
+            {
+                // Updating the solution timer element
+                solutionTimerUI.fillAmount = (solutionTimer / solutionDisplayTime);
+            }
         }
+
+        // Updating Game Timer
+        levelTimer += Time.deltaTime;
+        gameTimerText.text = GetGameTime();
     }
 
     /// <summary>
@@ -138,6 +152,39 @@ public class GameManager : MonoBehaviour
     public Sprite GetDiamondSprite() { return DIAMOND_SPRITE; }
 
     public GameSlot GetGameBoardslot(int slotIndex) { return gameBoardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
+
+    public string GetGameTime()
+    {
+        // Declaring the store variable
+        string time = "";
+        int seconds = Mathf.RoundToInt(levelTimer);
+
+        // Checking days
+        int dayCount = Mathf.FloorToInt(seconds / DAY_IN_SECOND);
+
+        // Checking hours
+        seconds -= (dayCount * DAY_IN_SECOND);
+        int hourCount = Mathf.FloorToInt(seconds / HOUR_IN_SECOND);
+
+        // Checking Minutes
+        seconds -= (hourCount * HOUR_IN_SECOND);
+        int minuteCount = Mathf.FloorToInt(seconds / MINUTE_IN_SECOND);
+
+        // Removing minutes from seconds timer
+        seconds -= (minuteCount * 60);
+
+        // Formatting the time string
+        if (dayCount > 0)
+            time += dayCount + "d ";
+        if (hourCount > 0)
+            time += hourCount + "h ";
+        if (minuteCount > 0)
+            time += minuteCount + "m ";
+        time += seconds + "s";
+
+        // Returning the resulting time
+        return time;
+    }
     #endregion
 
     #region Setter Functions
@@ -200,8 +247,8 @@ public class GameManager : MonoBehaviour
             solutionTimer = solutionDisplayTime;
 
             // Enabling the timer element
-            destroyTimer.gameObject.SetActive(true);
-            destroyTimer.fillAmount = 1;
+            solutionTimerUI.gameObject.SetActive(true);
+            solutionTimerUI.fillAmount = 1;
 
             // Toggling the Solution board / Gameboard
             gameBoardParent.gameObject.SetActive(false);
@@ -215,7 +262,7 @@ public class GameManager : MonoBehaviour
     private void HideSolutionBoard()
     {
         // Disabling the timer element
-        destroyTimer.gameObject.SetActive(false);
+        solutionTimerUI.gameObject.SetActive(false);
 
         // Toggling the Solution board / Gameboard
         gameBoardParent.gameObject.SetActive(true);
