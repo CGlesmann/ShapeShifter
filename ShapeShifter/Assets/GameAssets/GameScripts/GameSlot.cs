@@ -37,18 +37,26 @@ public class GameSlot : MonoBehaviour
     #endif
 
     #if UNITY_IOS || UNITY_ANDROID
+    /// <summary>
+    /// Checking for touch input on mobile devices
+    /// </summary>
     private void Update()
     {
         // Checking for touch input
         if (canSelect && Input.touchCount == 1)
         {
-            // Getting Touch Point
-            Vector2 wp = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+            // Getting Touch Data
+            Touch inputData = Input.GetTouch(0);
 
-            // Checking for a collision
-            if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(wp))
+            // Checking for the appropiate touch phase
+            if (inputData.phase == TouchPhase.Ended)
             {
-                ToggleSelect();
+                // Getting the touch point
+                Vector2 wp = Camera.main.ScreenToWorldPoint(inputData.position);
+
+                // Checking for a collision
+                if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(wp))
+                    ToggleSelect();
             }
         }
     }
@@ -96,14 +104,11 @@ public class GameSlot : MonoBehaviour
         // Slot is selected, therefore deselect the Slot
         if (selected)
         {
-            Debug.Log("Deselecting " + name);
-
             slotRenderer.color = deselectedColor;
             selected = false;
             manager.DeselectSlot();
-        } else if (slotShape != null) {
-            Debug.Log("Selecting " + name);
-
+        }
+        else if (slotShape != null) {
             // Slot isn't selected, therefore select the Slot
             slotRenderer.color = selectedColor;
             selected = true;
@@ -121,9 +126,6 @@ public class GameSlot : MonoBehaviour
     /// </summary>
     public void ResetSlotState()
     {
-        // Debug Message
-        Debug.Log("Resetting" + name);
-
         // Resetting Slot State
         selected = false;
         slotRenderer.color = deselectedColor;
