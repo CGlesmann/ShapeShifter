@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider2D))]
 public class GameSlot : MonoBehaviour
 {
     [Header("Object References")]
@@ -20,10 +21,11 @@ public class GameSlot : MonoBehaviour
 
     private int slotIndex = -1;
 
+    #if UNITY_EDITOR || UNITY_STANDALONE_WIN
     /// <summary>
     /// Checks for tap input
     /// </summary>
-    public void OnMouseDown()
+    private void OnMouseDown()
     {
         // Checking whether or not the slot can be selected
         if (canSelect)
@@ -32,6 +34,25 @@ public class GameSlot : MonoBehaviour
             ToggleSelect();
         }
     }
+    #endif
+
+    #if UNITY_IOS || UNITY_ANDROID
+    private void Update()
+    {
+        // Checking for touch input
+        if (canSelect && Input.touchCount == 1)
+        {
+            // Getting Touch Point
+            Vector2 wp = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+
+            // Checking for a collision
+            if (GetComponent<Collider2D>() == Physics2D.OverlapPoint(wp))
+            {
+                ToggleSelect();
+            }
+        }
+    }
+    #endif
 
     /// <summary>
     /// Sets the shape of the current slot
