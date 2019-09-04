@@ -110,9 +110,9 @@ public class GameSlot : MonoBehaviour
         }
         else if (slotShape != null) {
             // Slot isn't selected, therefore select the Slot
-            slotRenderer.color = selectedColor;
-            selected = true;
-            manager.SelectSlot(this);
+            selected = manager.SelectSlot(this);
+            if (selected)
+                slotRenderer.color = selectedColor;
         }
     }
 

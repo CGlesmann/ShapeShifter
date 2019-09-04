@@ -17,6 +17,7 @@ public class GameShape : MonoBehaviour
 
     [Header("Component References")]
     [SerializeField] private SpriteRenderer shapeRenderer = null;
+    [SerializeField] private Animator shapeAnimator = null;
 
     [Header("Shape Variables")]
     [SerializeField] private ShapeType shapeType = ShapeType.Square;
@@ -113,6 +114,10 @@ public class GameShape : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public Color GetShapeColor() { return shapeRenderer.color; }
+
+    public void TriggerDestruction() { shapeAnimator.SetTrigger("Destroy"); }
+
+    public void DestroyShape() { manager.shapesBeingDestroyed--;  Destroy(gameObject); }
 }
 
 #if UNITY_EDITOR
