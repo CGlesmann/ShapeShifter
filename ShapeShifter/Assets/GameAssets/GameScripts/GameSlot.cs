@@ -28,7 +28,7 @@ public class GameSlot : MonoBehaviour
     private void OnMouseDown()
     {
         // Checking whether or not the slot can be selected
-        if (canSelect)
+        if (!GameState.gamePaused && canSelect)
         {
             // Checking for mouse input, toggle select if true
             ToggleSelect();
@@ -43,7 +43,7 @@ public class GameSlot : MonoBehaviour
     private void Update()
     {
         // Checking for touch input
-        if (canSelect && Input.touchCount == 1)
+        if (!GameState.gamePaused && canSelect && Input.touchCount == 1)
         {
             // Getting Touch Data
             Touch inputData = Input.GetTouch(0);

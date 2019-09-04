@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -24,6 +25,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite TRIANGLE_SPRITE = null;
     [SerializeField] private Sprite DIAMOND_SPRITE = null;
 
+    [Header("Scene Navigation Variables")]
+    [SerializeField] private string mainMenuScene = "";
+
     [Header("Control Variables")]
     [SerializeField] private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
     public float levelTimer = 0f;
@@ -45,15 +49,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform solutionBoardParent = null;
 
     [Header("GUI References")]
+    [SerializeField] private GameObject pauseMenuParent = null;
     [SerializeField] private TextMeshProUGUI destroyText = null;
     [SerializeField] private TextMeshProUGUI gameTimerText = null;
     [SerializeField] private Image solutionTimerUI = null;
 
+    #region Unity Functions
     /// <summary>
     /// Setting Default State
     /// </summary>
     private void Awake()
     {
+        Debug.Log("Target Frame rate: " + Application.targetFrameRate);
+
         currentDestoryMethod = DestroyMethod.Shape;
         destroyText.text = "Destroy by Shape";
 
@@ -65,25 +73,29 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // Checking for an active timer
-        if (solutionTimer > 0f)
+        // Checking for paused state
+        if (!GameState.gamePaused)
         {
-            // Decrementing the timer
-            solutionTimer -= Time.deltaTime;
-
-            // Checking for solution board toggle
-            if (solutionTimer <= 0f)
-                HideSolutionBoard();
-            else
+            // Checking for an active timer
+            if (solutionTimer > 0f)
             {
-                // Updating the solution timer element
-                solutionTimerUI.fillAmount = (solutionTimer / solutionDisplayTime);
-            }
-        }
+                // Decrementing the timer
+                solutionTimer -= Time.deltaTime;
 
-        // Updating Game Timer
-        levelTimer += Time.deltaTime;
-        gameTimerText.text = GetGameTime();
+                // Checking for solution board toggle
+                if (solutionTimer <= 0f)
+                    HideSolutionBoard();
+                else
+                {
+                    // Updating the solution timer element
+                    solutionTimerUI.fillAmount = (solutionTimer / solutionDisplayTime);
+                }
+            }
+
+            // Updating Game Timer
+            levelTimer += Time.deltaTime;
+            gameTimerText.text = GetGameTime();
+        }
     }
 
     /// <summary>
@@ -91,16 +103,21 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        // Checking for victory (if nessecary)
-        if (Input.GetKeyDown(KeyCode.Space) || checkVictory)
+        // Checking for paused state
+        if (!GameState.gamePaused)
         {
-            // Check for level completion
-            CheckForVictory();
+            // Checking for victory (if nessecary)
+            if (Input.GetKeyDown(KeyCode.Space) || checkVictory)
+            {
+                // Check for level completion
+                CheckForVictory();
 
-            // Mark as checked
-            checkVictory = false;
+                // Mark as checked
+                checkVictory = false;
+            }
         }
     }
+    #endregion
 
     #region Getter Functions
     /// <summary>
@@ -235,6 +252,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region In Game Functions
     /// <summary>
     /// Disables the game board and enables the solution board
     /// </summary>
@@ -485,7 +503,9 @@ public class GameManager : MonoBehaviour
         if (destoryCurrentSlot)
             GameObject.Destroy(centerSlot.GetSlotShape().gameObject);
     }
+    #endregion
 
+    #region State Check Functions
     /// <summary>
     /// Triggered after switching two shapes
     /// Compares the gameboard to the solution board
@@ -532,4 +552,46 @@ public class GameManager : MonoBehaviour
     /// Triggers end of level animation and menu
     /// </summary>
     public void CompleteLevel() { Debug.Log("Level Complete"); }
+    #endregion
+
+    #region GUI Functions
+    /// <summary>
+    /// Displays the Pause menu and sets the game state to paused
+    /// </summary>
+    public void PauseGame()
+    {
+        // Displaying the the pause menu
+        DisplayPauseMenu();
+
+        // Setting the game state to paused
+        GameState.gamePaused = true;
+    }
+
+    /// <summary>
+    /// Unpauses the game state and hides the pause menu
+    /// </summary>
+    public void ResumeGame()
+    {
+        // Hide the pause menu
+        HidePauseMenu();
+
+        // Setting the game state to unpaused
+        GameState.gamePaused = false;
+    }
+
+    /// <summary>
+    /// Displaying the pause menu
+    /// </summary>
+    public void DisplayPauseMenu() { pauseMenuParent.SetActive(true); }
+
+    /// <summary>
+    /// Hides the pause menu
+    /// </summary>
+    public void HidePauseMenu() { pauseMenuParent.SetActive(false); }
+
+    /// <summary>
+    /// Invokes navigation to the main menu
+    /// </summary>
+    public void ExitToMainMenu() { GameState.gamePaused = false; SceneManager.LoadScene(mainMenuScene); }
+    #endregion
 }
