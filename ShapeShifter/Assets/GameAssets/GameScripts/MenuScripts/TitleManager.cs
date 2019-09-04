@@ -8,10 +8,13 @@ public class TitleManager : MonoBehaviour
     [Header("Title Options")]
     [SerializeField] private string playMenu = ""; // Menu to navigate to when user selects "Play"
 
+    /// <summary>
+    /// Sets the default framerate
+    /// </summary>
     private void Awake()
     {
         // Setting frame count to 30fps
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 5;
     }
 
     /// <summary>

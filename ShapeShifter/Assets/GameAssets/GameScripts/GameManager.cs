@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Scene Navigation Variables")]
     [SerializeField] private string mainMenuScene = "";
+    [SerializeField] private string nextLevelScene = "";
 
     [Header("Control Variables")]
     [SerializeField] private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
@@ -50,6 +51,7 @@ public class GameManager : MonoBehaviour
 
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
+    [SerializeField] private GameObject endLevelMenuParent = null;
     [SerializeField] private TextMeshProUGUI destroyText = null;
     [SerializeField] private TextMeshProUGUI gameTimerText = null;
     [SerializeField] private Image solutionTimerUI = null;
@@ -551,7 +553,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Triggers end of level animation and menu
     /// </summary>
-    public void CompleteLevel() { Debug.Log("Level Complete"); }
+    public void CompleteLevel() { DisplayEndLevelMenu(); }
     #endregion
 
     #region GUI Functions
@@ -590,8 +592,20 @@ public class GameManager : MonoBehaviour
     public void HidePauseMenu() { pauseMenuParent.SetActive(false); }
 
     /// <summary>
+    /// Displays the end level menu, also pauses the game to restrict user control
+    /// </summary>
+    public void DisplayEndLevelMenu() { endLevelMenuParent.SetActive(true); GameState.gamePaused = true; }
+    #endregion
+
+    #region Scene Navigation Functions
+    /// <summary>
     /// Invokes navigation to the main menu
     /// </summary>
     public void ExitToMainMenu() { GameState.gamePaused = false; SceneManager.LoadScene(mainMenuScene); }
+
+    /// <summary>
+    /// Navigates to the declared nextLevel
+    /// </summary>
+    public void NavigateToNextLevel() { SceneManager.LoadScene(nextLevelScene); }
     #endregion
 }
