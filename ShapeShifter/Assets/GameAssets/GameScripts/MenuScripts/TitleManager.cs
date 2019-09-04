@@ -14,7 +14,7 @@ public class TitleManager : MonoBehaviour
     private void Awake()
     {
         // Setting frame count to 30fps
-        Application.targetFrameRate = 5;
+        Application.targetFrameRate = 24;
     }
 
     /// <summary>

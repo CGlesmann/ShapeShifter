@@ -371,7 +371,7 @@ public class GameManager : MonoBehaviour
         Transform shape1P = slot1.GetSlotShape().transform, shape2P = slot2.GetSlotShape().transform;
 
         Vector3 shape1StartPosition = shape1P.position, shape2StartPosition = shape2P.position;
-        float mult = 2.5f;
+        float mult = 1f / (10f/24f);
         float progress = 0;
 
         while (progress < 1f)
@@ -664,6 +664,6 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Navigates to the declared nextLevel
     /// </summary>
-    public void NavigateToNextLevel() { SceneManager.LoadScene(nextLevelScene); }
+    public void NavigateToNextLevel() { GameState.gamePaused = false; SceneManager.LoadScene(nextLevelScene); }
     #endregion
 }
