@@ -7,6 +7,7 @@ public class TitleManager : MonoBehaviour
 {
     [Header("Title Options")]
     [SerializeField] private string playMenu = ""; // Menu to navigate to when user selects "Play"
+    [SerializeField] private string tutorialLevel = ""; // Level that contains the FUE
 
     /// <summary>
     /// Sets the default framerate
@@ -20,5 +21,5 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// Navigates to the playMenu
     /// </summary>
-    public void BeginPlay() { SceneManager.LoadScene(playMenu); }
+    public void BeginPlay() { SceneManager.LoadScene(GameState.forcedTutorialCompleted ? playMenu : tutorialLevel); }
 }

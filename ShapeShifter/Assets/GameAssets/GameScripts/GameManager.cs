@@ -63,8 +63,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        Debug.Log("Target Frame rate: " + Application.targetFrameRate);
-
         currentDestoryMethod = DestroyMethod.Shape;
         destroyText.text = "Destroy by Shape";
 
@@ -97,7 +95,8 @@ public class GameManager : MonoBehaviour
 
             // Updating Game Timer
             levelTimer += Time.deltaTime;
-            gameTimerText.text = GetGameTime();
+            if (gameTimerText != null)
+                gameTimerText.text = GetGameTime();
         }
     }
 
@@ -333,18 +332,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void SwitchShapes()
     {
-        Debug.Log("switching " + slot1.name + " and " + slot2.name);
-
-        /*
-        // Get the shape references and store in temp veriables
-        GameShape.ShapeType shape1Type = slot1.GetSlotShape().GetShapeType(), shape2Type = slot2.GetSlotShape().GetShapeType();
-        Color shape1Color = slot1.GetSlotShape().GetShapeColor(), shape2Color = slot2.GetSlotShape().GetShapeColor();
-
-        // Sets each of the slots shapes
-        slot1.SetSlotShape(shape2Type, shape2Color);
-        slot2.SetSlotShape(shape1Type, shape1Color);
-        */
-
         // Setting the parents
         slot1.GetSlotShape().transform.SetParent(slot2.transform);
         slot2.GetSlotShape().transform.SetParent(slot1.transform);
