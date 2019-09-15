@@ -7,6 +7,7 @@ public class LevelManager : MonoBehaviour
 {
     [Header("Manager Variables")]
     [SerializeField] private string mainMenuScene = "";
+    [SerializeField] private string instructionsScene = "";
 
     /// <summary>
     /// Navigates to Main Menu
@@ -19,4 +20,6 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     /// <param name="levelName"></param>
     public void NavigateToLevel(string levelName) { SceneManager.LoadScene(levelName); }
+
+    public void NavigateToInstructions() { SceneManager.LoadScene(instructionsScene); }
 }

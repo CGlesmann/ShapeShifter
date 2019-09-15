@@ -643,6 +643,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Scene Navigation Functions
+    public void RestartCurrentLevel() { GameState.gamePaused = false; SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
+
     /// <summary>
     /// Invokes navigation to the main menu
     /// </summary>
