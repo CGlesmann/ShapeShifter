@@ -27,6 +27,9 @@ public class InstructionManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        // Enabling the tutorial (if needed)
+        instructionsParent.SetActive(!GameState.forcedTutorialCompleted);
+
         // Creating a new array
         panels = new Transform[screenParent.childCount];
 
@@ -58,7 +61,14 @@ public class InstructionManager : MonoBehaviour
     /// <summary>
     /// Disables the instructions
     /// </summary>
-    public void DisableInstructions() { instructionsParent.SetActive(false); }
+    public void DisableInstructions()
+    {
+        // Disabling the instructions
+        instructionsParent.SetActive(false);
+
+        // Marking the tutorial as complete
+        GameState.forcedTutorialCompleted = true;
+    }
 
     /// <summary>
     /// Begins a left transition
