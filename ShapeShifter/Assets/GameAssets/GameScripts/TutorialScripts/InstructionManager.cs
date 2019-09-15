@@ -55,6 +55,7 @@ public class InstructionManager : MonoBehaviour
         // Setting the default UI State
         screenParent.localPosition = new Vector3(0f, screenParent.localPosition.y, screenParent.localPosition.z);
         currentPanelIndex = 0;
+        UpdatePageCounter();
         startButton.SetActive(false);
     }
 
