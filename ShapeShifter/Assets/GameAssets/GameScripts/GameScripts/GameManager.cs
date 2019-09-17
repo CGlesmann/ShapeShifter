@@ -7,6 +7,9 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    // Declaring a singleton
+    public static GameManager manager = null;
+
     // Declaring Time Constants
     private const int DAY_IN_SECOND = 86400, HOUR_IN_SECOND = 3600, MINUTE_IN_SECOND = 60;
     
@@ -63,6 +66,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        // Setting the Singleton
+        manager = this;
+
         currentDestoryMethod = DestroyMethod.Shape;
         destroyText.text = "Destroy by Shape";
 
@@ -118,6 +124,11 @@ public class GameManager : MonoBehaviour
                 checkVictory = false;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        manager = null;
     }
     #endregion
 

@@ -277,8 +277,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: ResumeGame
+      - m_Target: {fileID: 4204862372797621589}
+        m_MethodName: RestartCurrentLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -731,6 +731,7 @@ GameObject:
   - component: {fileID: 5402361823121524228}
   - component: {fileID: 5402361823121524231}
   - component: {fileID: 5402361823121524230}
+  - component: {fileID: 4204862372797621589}
   m_Layer: 5
   m_Name: LevelUI
   m_TagString: Untagged
@@ -821,6 +822,41 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4204862372797621589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5402361823121524281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 600a945c7cdde2447a0737cf07261c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BLUE_COLOR: {r: 0, g: 0, b: 1, a: 1}
+  RED_COLOR: {r: 1, g: 0, b: 0, a: 1}
+  GREEN_COLOR: {r: 0, g: 1, b: 0, a: 1}
+  YELLOW_COLOR: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  SQUARE_SPRITE: {fileID: 21300000, guid: e40d5bccb9aacf540973d9d3e4a18ac5, type: 3}
+  CIRCLE_SPRITE: {fileID: 21300000, guid: a6ce7c39403dd7f4bae7a1ebcea34393, type: 3}
+  TRIANGLE_SPRITE: {fileID: 21300000, guid: 9d82c011044760f4e85c8a3b70955b83, type: 3}
+  DIAMOND_SPRITE: {fileID: 21300000, guid: 7aa3a839cb5825648ab7256d85ed54bd, type: 3}
+  mainMenuScene: LevelSelect
+  nextLevelScene: 
+  currentDestoryMethod: 0
+  levelTimer: 0
+  boardWidth: 3
+  boardHeight: 3
+  shapesBeingDestroyed: 0
+  solutionDisplayTime: 5
+  gameBoardParent: {fileID: 0}
+  solutionBoardParent: {fileID: 0}
+  pauseMenuParent: {fileID: 5402361823691899134}
+  endLevelMenuParent: {fileID: 5402361823046079387}
+  destroyText: {fileID: 5402361824584389591}
+  gameTimerText: {fileID: 5402361823274568107}
+  solutionTimerUI: {fileID: 5402361823411289913}
 --- !u!1 &5402361823165246048
 GameObject:
   m_ObjectHideFlags: 0
@@ -1074,7 +1110,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4204862372797621589}
         m_MethodName: ExitToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -1573,7 +1609,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4204862372797621589}
         m_MethodName: ExitToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -2648,7 +2684,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4204862372797621589}
         m_MethodName: PauseGame
         m_Mode: 1
         m_Arguments:
@@ -3095,7 +3131,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4204862372797621589}
         m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
@@ -3385,7 +3421,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4204862372797621589}
         m_MethodName: NavigateToNextLevel
         m_Mode: 1
         m_Arguments:
@@ -4425,6 +4461,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4374620554081234427, guid: 20de5efb95cb2d945bd4e91d0667b355,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20de5efb95cb2d945bd4e91d0667b355, type: 3}

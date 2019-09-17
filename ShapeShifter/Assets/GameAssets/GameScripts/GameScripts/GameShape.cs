@@ -13,7 +13,7 @@ public class GameShape : MonoBehaviour
     [System.Serializable] public enum ShapeType { Square, Circle, Triangle, Diamond };
 
     [Header("Object References")]
-    public GameManager manager = null;
+    private GameManager manager = GameManager.manager;
 
     [Header("Component References")]
     [SerializeField] private SpriteRenderer shapeRenderer = null;
@@ -22,6 +22,8 @@ public class GameShape : MonoBehaviour
     [Header("Shape Variables")]
     [SerializeField] private ShapeType shapeType = ShapeType.Square;
     [HideInInspector] public Color shapeColor => shapeRenderer.color;
+
+    public void Start() { manager = GameManager.manager; }
 
     public override string ToString()
     {
@@ -70,16 +72,16 @@ public class GameShape : MonoBehaviour
             switch (shapeType)
             {
                 case ShapeType.Square:
-                    shapeRenderer.sprite = manager.GetSqureSprite();
+                    shapeRenderer.sprite = ShapeSettings.SQUARE_SPRITE;
                     break;
                 case ShapeType.Circle:
-                    shapeRenderer.sprite = manager.GetCircleSprite();
+                    shapeRenderer.sprite = ShapeSettings.CIRCLE_SPRITE;
                     break;
                 case ShapeType.Triangle:
-                    shapeRenderer.sprite = manager.GetTriangleSprite();
+                    shapeRenderer.sprite = ShapeSettings.TRIANGLE_SPRITE;
                     break;
                 case ShapeType.Diamond:
-                    shapeRenderer.sprite = manager.GetDiamondSprite();
+                    shapeRenderer.sprite = ShapeSettings.DIAMOND_SPRITE;
                     break;
             };
         }
@@ -144,7 +146,7 @@ public class ShapeInspector : Editor
         if (GUILayout.Button("Set Color: Blue"))
         {
             // Sets the color, makrs the scene as dirty for save
-            shape.SetShapeColor(shape.manager.GetBlueColor());
+            shape.SetShapeColor(ShapeSettings.BLUE_COLOR);
             if (!EditorApplication.isPlaying)
                 EditorUtility.SetDirty(shape);
         }
@@ -153,7 +155,7 @@ public class ShapeInspector : Editor
         if (GUILayout.Button("Set Color: Red"))
         {
             // Sets the color, makrs the scene as dirty for save
-            shape.SetShapeColor(shape.manager.GetRedColor());
+            shape.SetShapeColor(ShapeSettings.RED_COLOR);
             if (!EditorApplication.isPlaying)
                 EditorUtility.SetDirty(shape);
         }
@@ -162,7 +164,7 @@ public class ShapeInspector : Editor
         if (GUILayout.Button("Set Color: Green"))
         {
             // Sets the color, makrs the scene as dirty for save
-            shape.SetShapeColor(shape.manager.GetGreenColor());
+            shape.SetShapeColor(ShapeSettings.GREEN_COLOR);
             if (!EditorApplication.isPlaying)
                 EditorUtility.SetDirty(shape);
         }
@@ -171,7 +173,7 @@ public class ShapeInspector : Editor
         if (GUILayout.Button("Set Color: Yellow"))
         {
             // Sets the color, makrs the scene as dirty for save
-            shape.SetShapeColor(shape.manager.GetYellowColor());
+            shape.SetShapeColor(ShapeSettings.YELLOW_COLOR);
             if (!EditorApplication.isPlaying)
                 EditorUtility.SetDirty(shape);
         }

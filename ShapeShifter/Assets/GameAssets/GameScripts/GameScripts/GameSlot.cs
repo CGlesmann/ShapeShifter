@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameSlot : MonoBehaviour
 {
     [Header("Object References")]
-    [SerializeField] private GameManager manager = null;
+    private GameManager manager = GameManager.manager;
     private SpriteRenderer slotRenderer => GetComponent<SpriteRenderer>();
 
     // private properties
@@ -20,6 +20,8 @@ public class GameSlot : MonoBehaviour
     private bool selected = false;
 
     private int slotIndex = -1;
+
+    public void Start() { manager = GameManager.manager; }
 
     #if UNITY_EDITOR || UNITY_STANDALONE_WIN
     /// <summary>
