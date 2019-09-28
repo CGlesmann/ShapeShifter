@@ -34,7 +34,7 @@ public class InstructionManager : MonoBehaviour
     {
         // Enabling the tutorial (if needed)
         if (tutorialInstance)
-            instructionsParent.SetActive(!GameState.forcedTutorialCompleted);
+            instructionsParent.SetActive(!DataTracker.gameData.initialTutorialComplete);
 
         // Creating a new array
         panels = new Transform[screenParent.childCount];
@@ -83,7 +83,7 @@ public class InstructionManager : MonoBehaviour
         instructionsParent.SetActive(false);
 
         // Marking the tutorial as complete
-        GameState.forcedTutorialCompleted = true;
+        DataTracker.gameData.initialTutorialComplete = true;
     }
 
     /// <summary>

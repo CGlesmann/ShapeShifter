@@ -609,7 +609,14 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Triggers end of level animation and menu
     /// </summary>
-    public void CompleteLevel() { shapesBeingDestroyed = 0; DisplayEndLevelMenu(); }
+    public void CompleteLevel()
+    {
+        shapesBeingDestroyed = 0;
+        DisplayEndLevelMenu();
+
+        DataTracker.gameData.levelsCompleted++;
+        DataTracker.dataTracker.SaveData();
+    }
     #endregion
 
     #region GUI Functions

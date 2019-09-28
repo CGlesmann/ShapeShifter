@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
     [Header("Manager Variables")]
     [SerializeField] private string mainMenuScene = "";
     [SerializeField] private string instructionsScene = "";
+
+    [Header("UI References")]
+    [SerializeField] private TextMeshProUGUI levelCountText = null;
+
+    private void Awake() { levelCountText.text = string.Format("Levels Completed: {0}", DataTracker.gameData.levelsCompleted.ToString()); }
 
     /// <summary>
     /// Navigates to Main Menu

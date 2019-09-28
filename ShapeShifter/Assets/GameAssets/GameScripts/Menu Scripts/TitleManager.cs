@@ -18,8 +18,14 @@ public class TitleManager : MonoBehaviour
         Application.targetFrameRate = 24;
     }
 
+    private void Start()
+    {
+        // Loading Existing Data
+        DataTracker.dataTracker.LoadData();
+    }
+
     /// <summary>
     /// Navigates to the playMenu
     /// </summary>
-    public void BeginPlay() { SceneManager.LoadScene(GameState.forcedTutorialCompleted ? playMenu : tutorialLevel); }
+    public void BeginPlay() { SceneManager.LoadScene(DataTracker.gameData.initialTutorialComplete ? playMenu : tutorialLevel); }
 }
