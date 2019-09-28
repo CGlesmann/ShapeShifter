@@ -27,5 +27,8 @@ public class LevelManager : MonoBehaviour
     /// <param name="levelName"></param>
     public void NavigateToLevel(string levelName) { SceneManager.LoadScene(levelName); }
 
+    /// <summary>
+    /// Navigates to the instructions screen
+    /// </summary>
     public void NavigateToInstructions() { SceneManager.LoadScene(instructionsScene); }
 }

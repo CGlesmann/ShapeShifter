@@ -7,6 +7,7 @@ public class InstructionManager : MonoBehaviour
 {
     [Header("Control Variable")]
     [SerializeField] private bool tutorialInstance = false;
+    [SerializeField] private int startPanel = 0;
 
     [Header("Slider References")]
     [SerializeField] private Transform screenParent = null;
@@ -16,6 +17,7 @@ public class InstructionManager : MonoBehaviour
 
     private bool scrolling = false;
     private int currentPanelIndex = 0;
+    private int activePanelCount = 0;
 
     [Header("GUI References")]
     [SerializeField] private GameObject instructionsParent = null;
@@ -26,6 +28,20 @@ public class InstructionManager : MonoBehaviour
 
     [Header("Slider Settings")]
     [SerializeField] private float scrollSpeed = 1f;
+
+    private void OnEnable()
+    {
+        if (panels != null)
+        {
+            // Setting the position to the default panel
+            screenParent.position = new Vector3(-panels[startPanel].position.x, screenParent.position.y, 0f);
+            currentPanelIndex = startPanel;
+
+            activePanelCount = 0;
+            foreach(Transform obj in panels)
+                activePanelCount += obj.gameObject.activeSelf ? 1 : 0;
+        }
+    }
 
     /// <summary>
     /// Get the arrow of how to panels
@@ -45,6 +61,10 @@ public class InstructionManager : MonoBehaviour
             // Grab a reference to the child's transform and store in array
             panels[i] = screenParent.GetChild(i);
         }
+
+        // Setting the position to the default panel
+        screenParent.position = new Vector3(-panels[startPanel].position.x, screenParent.position.y, 0f);
+        currentPanelIndex = startPanel;
 
         // Setting the default UI
         UpdatePageCounter();
@@ -66,12 +86,14 @@ public class InstructionManager : MonoBehaviour
         instructionsParent.SetActive(true);
 
         // Setting the default UI State
-        screenParent.localPosition = new Vector3(0f, screenParent.localPosition.y, screenParent.localPosition.z);
-        currentPanelIndex = 0;
+        screenParent.localPosition = new Vector3(-panels[startPanel].localPosition.x, screenParent.localPosition.y, screenParent.localPosition.z);
+        currentPanelIndex = startPanel;
         UpdatePageCounter();
 
+        previousButton.SetActive(currentPanelIndex != 0);
+        nextButton.SetActive(currentPanelIndex != panels.Length - 1);
         if (startButton != null)
-            startButton.SetActive(false);
+            startButton.SetActive(currentPanelIndex == panels.Length - 1);
     }
 
     /// <summary>
@@ -96,23 +118,28 @@ public class InstructionManager : MonoBehaviour
         {
             // Getting the two panels and starting the transition
             Transform targetPanel = panels[currentPanelIndex - 1];
-            StartCoroutine(PanelTransition(currentPanel, targetPanel));
 
-            // Incrementing the counter
-            currentPanelIndex--;
+            // Check for an active panel
+            if (targetPanel.gameObject.activeSelf)
+            {
+                StartCoroutine(PanelTransition(currentPanel, targetPanel));
 
-            // Checking for the end of the panels
-            nextButton.SetActive(true);
-            if (startButton != null)
-                startButton.SetActive(false);
+                // Incrementing the counter
+                currentPanelIndex--;
 
-            if (currentPanelIndex == 0)
-                previousButton.SetActive(false);
-            else
-                previousButton.SetActive(true);
+                // Checking for the end of the panels
+                nextButton.SetActive(true);
+                if (startButton != null)
+                    startButton.SetActive(false);
 
-            // Setting the scrolling state 
-            scrolling = true;
+                if (currentPanelIndex == 0)
+                    previousButton.SetActive(false);
+                else
+                    previousButton.SetActive(true);
+
+                // Setting the scrolling state 
+                scrolling = true;
+            }
         }
     }
 
@@ -126,30 +153,34 @@ public class InstructionManager : MonoBehaviour
         {
             // Getting the two panels and starting the transition
             Transform targetPanel = panels[currentPanelIndex + 1];
-            StartCoroutine(PanelTransition(currentPanel, targetPanel));
 
-            // Incrementing the counter
-            currentPanelIndex++;
-
-            // Checking for the end of the panels
-            previousButton.SetActive(true);
-            if (currentPanelIndex == panels.Length - 1)
+            if (targetPanel.gameObject.activeSelf)
             {
-                nextButton.SetActive(false);
+                StartCoroutine(PanelTransition(currentPanel, targetPanel));
 
-                if (startButton != null)
-                    startButton.SetActive(true);
+                // Incrementing the counter
+                currentPanelIndex++;
+
+                // Checking for the end of the panels
+                previousButton.SetActive(true);
+                if (currentPanelIndex == activePanelCount - 1)
+                {
+                    nextButton.SetActive(false);
+
+                    if (startButton != null)
+                        startButton.SetActive(true);
+                }
+                else
+                {
+                    nextButton.SetActive(true);
+
+                    if (startButton != null)
+                        startButton.SetActive(false);
+                }
+
+                // Setting the scrolling state 
+                scrolling = true;
             }
-            else
-            {
-                nextButton.SetActive(true);
-
-                if (startButton != null)
-                    startButton.SetActive(false);
-            }
-
-            // Setting the scrolling state 
-            scrolling = true;
         }
     }
 
@@ -202,5 +233,5 @@ public class InstructionManager : MonoBehaviour
     /// <summary>
     /// Updates the counter text
     /// </summary>
-    public void UpdatePageCounter() { pageCounterText.text = (currentPanelIndex + 1).ToString() + "/" + panels.Length; }
+    public void UpdatePageCounter() { pageCounterText.text = (currentPanelIndex + 1).ToString() + "/" + activePanelCount; }
 }
