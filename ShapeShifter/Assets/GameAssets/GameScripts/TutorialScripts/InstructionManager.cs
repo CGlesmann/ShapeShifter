@@ -5,6 +5,9 @@ using TMPro;
 
 public class InstructionManager : MonoBehaviour
 {
+    [Header("Control Variable")]
+    [SerializeField] private bool tutorialInstance = false;
+
     [Header("Slider References")]
     [SerializeField] private Transform screenParent = null;
 
@@ -17,6 +20,7 @@ public class InstructionManager : MonoBehaviour
     [Header("GUI References")]
     [SerializeField] private GameObject instructionsParent = null;
     [SerializeField] private GameObject startButton = null;
+    [SerializeField] private GameObject previousButton = null;
     [SerializeField] private GameObject nextButton = null;
     [SerializeField] private TextMeshProUGUI pageCounterText = null;
 
@@ -29,7 +33,8 @@ public class InstructionManager : MonoBehaviour
     private void Awake()
     {
         // Enabling the tutorial (if needed)
-        instructionsParent.SetActive(!GameState.forcedTutorialCompleted);
+        if (tutorialInstance)
+            instructionsParent.SetActive(!GameState.forcedTutorialCompleted);
 
         // Creating a new array
         panels = new Transform[screenParent.childCount];
@@ -43,6 +48,13 @@ public class InstructionManager : MonoBehaviour
 
         // Setting the default UI
         UpdatePageCounter();
+
+        // Disabling the previous button
+        previousButton.SetActive(false);
+        nextButton.SetActive(true);
+
+        if (startButton != null)
+            startButton.SetActive(false);
     }
 
     /// <summary>
@@ -89,6 +101,16 @@ public class InstructionManager : MonoBehaviour
             // Incrementing the counter
             currentPanelIndex--;
 
+            // Checking for the end of the panels
+            nextButton.SetActive(true);
+            if (startButton != null)
+                startButton.SetActive(false);
+
+            if (currentPanelIndex == 0)
+                previousButton.SetActive(false);
+            else
+                previousButton.SetActive(true);
+
             // Setting the scrolling state 
             scrolling = true;
         }
@@ -108,6 +130,23 @@ public class InstructionManager : MonoBehaviour
 
             // Incrementing the counter
             currentPanelIndex++;
+
+            // Checking for the end of the panels
+            previousButton.SetActive(true);
+            if (currentPanelIndex == panels.Length - 1)
+            {
+                nextButton.SetActive(false);
+
+                if (startButton != null)
+                    startButton.SetActive(true);
+            }
+            else
+            {
+                nextButton.SetActive(true);
+
+                if (startButton != null)
+                    startButton.SetActive(false);
+            }
 
             // Setting the scrolling state 
             scrolling = true;
@@ -158,22 +197,6 @@ public class InstructionManager : MonoBehaviour
 
         // Setting the scroll state to false
         scrolling = false;
-
-        // Checking for the end of the panels
-        if (currentPanelIndex == panels.Length - 1)
-        {
-            nextButton.SetActive(false);
-
-            if (startButton != null)
-                startButton.SetActive(true);
-        }
-        else
-        {
-            nextButton.SetActive(true);
-
-            if (startButton != null)
-                startButton.SetActive(false);
-        }
     }
 
     /// <summary>
