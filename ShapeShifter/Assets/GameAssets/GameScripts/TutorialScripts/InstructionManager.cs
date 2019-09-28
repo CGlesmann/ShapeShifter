@@ -17,6 +17,7 @@ public class InstructionManager : MonoBehaviour
     [Header("GUI References")]
     [SerializeField] private GameObject instructionsParent = null;
     [SerializeField] private GameObject startButton = null;
+    [SerializeField] private GameObject nextButton = null;
     [SerializeField] private TextMeshProUGUI pageCounterText = null;
 
     [Header("Slider Settings")]
@@ -56,7 +57,9 @@ public class InstructionManager : MonoBehaviour
         screenParent.localPosition = new Vector3(0f, screenParent.localPosition.y, screenParent.localPosition.z);
         currentPanelIndex = 0;
         UpdatePageCounter();
-        startButton.SetActive(false);
+
+        if (startButton != null)
+            startButton.SetActive(false);
     }
 
     /// <summary>
@@ -79,7 +82,6 @@ public class InstructionManager : MonoBehaviour
         // Checking for out of bounds
         if (!scrolling && currentPanelIndex > 0)
         {
-            
             // Getting the two panels and starting the transition
             Transform targetPanel = panels[currentPanelIndex - 1];
             StartCoroutine(PanelTransition(currentPanel, targetPanel));
@@ -89,7 +91,6 @@ public class InstructionManager : MonoBehaviour
 
             // Setting the scrolling state 
             scrolling = true;
-
         }
     }
 
@@ -160,9 +161,19 @@ public class InstructionManager : MonoBehaviour
 
         // Checking for the end of the panels
         if (currentPanelIndex == panels.Length - 1)
-            startButton.SetActive(true);
+        {
+            nextButton.SetActive(false);
+
+            if (startButton != null)
+                startButton.SetActive(true);
+        }
         else
-            startButton.SetActive(false);
+        {
+            nextButton.SetActive(true);
+
+            if (startButton != null)
+                startButton.SetActive(false);
+        }
     }
 
     /// <summary>
