@@ -49,5 +49,6 @@ public class DataTracker : MonoBehaviour
 public class GameData
 {
     public bool initialTutorialComplete = false;
+    public bool destroyTutorialComplete = false;
     public float levelsCompleted = 0;
 }

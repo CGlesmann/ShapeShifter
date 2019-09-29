@@ -6,16 +6,20 @@ using TMPro;
 public class InstructionManager : MonoBehaviour
 {
     [Header("Control Variable")]
-    [SerializeField] private bool tutorialInstance = false;
+    [SerializeField] private bool initialTutorial = false;
+    [SerializeField] private bool destroyTutorial = false;
     [SerializeField] private int startPanel = 0;
 
     [Header("Slider References")]
     [SerializeField] private Transform screenParent = null;
 
     private Transform[] panels = null;
+    private HTPScreen[] screenControllers = null;
+
     private Transform currentPanel => panels[currentPanelIndex];
 
     private bool scrolling = false;
+    private int previousPanelIndex = 0;
     private int currentPanelIndex = 0;
     private int activePanelCount = 0;
 
@@ -49,17 +53,33 @@ public class InstructionManager : MonoBehaviour
     private void Awake()
     {
         // Enabling the tutorial (if needed)
-        if (tutorialInstance)
+        if (initialTutorial)
             instructionsParent.SetActive(!DataTracker.gameData.initialTutorialComplete);
+        else if (destroyTutorial)
+        {
+            if (!DataTracker.gameData.destroyTutorialComplete)
+            {
+                instructionsParent.SetActive(true);
+                startPanel = 5;
+            } else {
+                instructionsParent.SetActive(false);
+                startPanel = 0;
+            }
+        }
 
         // Creating a new array
         panels = new Transform[screenParent.childCount];
+        screenControllers = new HTPScreen[screenParent.childCount];
 
         // Loop through each child of screenParent
         for (int i = 0; i < screenParent.childCount; i++)
         {
             // Grab a reference to the child's transform and store in array
             panels[i] = screenParent.GetChild(i);
+            screenControllers[i] = panels[i] != null ? panels[i].GetComponent<HTPScreen>() : null;
+
+            if (screenControllers[i] != null)
+                screenControllers[i].DeactivateScreen();
         }
 
         // Setting the position to the default panel
@@ -88,6 +108,8 @@ public class InstructionManager : MonoBehaviour
         // Setting the default UI State
         screenParent.localPosition = new Vector3(-panels[startPanel].localPosition.x, screenParent.localPosition.y, screenParent.localPosition.z);
         currentPanelIndex = startPanel;
+
+        screenControllers[currentPanelIndex].ActivateScreen();
         UpdatePageCounter();
 
         previousButton.SetActive(currentPanelIndex != 0);
@@ -105,7 +127,10 @@ public class InstructionManager : MonoBehaviour
         instructionsParent.SetActive(false);
 
         // Marking the tutorial as complete
-        DataTracker.gameData.initialTutorialComplete = true;
+        if (initialTutorial)
+            DataTracker.gameData.initialTutorialComplete = true;
+        if (destroyTutorial)
+            DataTracker.gameData.destroyTutorialComplete = true;
     }
 
     /// <summary>
@@ -122,10 +147,13 @@ public class InstructionManager : MonoBehaviour
             // Check for an active panel
             if (targetPanel.gameObject.activeSelf)
             {
+                // Start the screen transition
                 StartCoroutine(PanelTransition(currentPanel, targetPanel));
 
                 // Incrementing the counter
+                previousPanelIndex = currentPanelIndex;
                 currentPanelIndex--;
+                screenControllers[currentPanelIndex].ActivateScreen();
 
                 // Checking for the end of the panels
                 nextButton.SetActive(true);
@@ -159,7 +187,9 @@ public class InstructionManager : MonoBehaviour
                 StartCoroutine(PanelTransition(currentPanel, targetPanel));
 
                 // Incrementing the counter
+                previousPanelIndex = currentPanelIndex;
                 currentPanelIndex++;
+                screenControllers[currentPanelIndex].ActivateScreen();
 
                 // Checking for the end of the panels
                 previousButton.SetActive(true);
@@ -228,6 +258,7 @@ public class InstructionManager : MonoBehaviour
 
         // Setting the scroll state to false
         scrolling = false;
+        screenControllers[previousPanelIndex].DeactivateScreen();
     }
 
     /// <summary>
