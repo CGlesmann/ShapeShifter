@@ -16,18 +16,6 @@ public class GameManager : MonoBehaviour
     // Destroy Control Toggle
     public enum DestroyMethod { Shape, Color };
 
-    [Header("Global Color Constants")]
-    [SerializeField] private Color BLUE_COLOR = Color.blue;
-    [SerializeField] private Color RED_COLOR = Color.red;
-    [SerializeField] private Color GREEN_COLOR = Color.green;
-    [SerializeField] private Color YELLOW_COLOR = Color.yellow;
-
-    [Header("Global Shape Constants")]
-    [SerializeField] private Sprite SQUARE_SPRITE = null;
-    [SerializeField] private Sprite CIRCLE_SPRITE = null;
-    [SerializeField] private Sprite TRIANGLE_SPRITE = null;
-    [SerializeField] private Sprite DIAMOND_SPRITE = null;
-
     [Header("Scene Navigation Variables")]
     [SerializeField] private string mainMenuScene = "";
     [SerializeField] private string nextLevelScene = "";
@@ -132,55 +120,8 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+
     #region Getter Functions
-    /// <summary>
-    /// Returns the Global Blue Color
-    /// </summary>
-    /// <returns></returns>
-    public Color GetBlueColor() { return BLUE_COLOR; }
-
-    /// <summary>
-    /// Returns the Global Red Color
-    /// </summary>
-    /// <returns></returns>
-    public Color GetRedColor() { return RED_COLOR; }
-
-    /// <summary>
-    /// Returns the Global Green Color
-    /// </summary>
-    /// <returns></returns>
-    public Color GetGreenColor() { return GREEN_COLOR; }
-
-    /// <summary>
-    /// Returns the Global Yellow Color
-    /// </summary>
-    /// <returns></returns>
-    public Color GetYellowColor() { return YELLOW_COLOR; }
-
-    /// <summary>
-    /// Returns the global square sprite
-    /// </summary>
-    /// <returns></returns>
-    public Sprite GetSqureSprite() { return SQUARE_SPRITE; }
-
-    /// <summary>
-    /// Returns the global circle sprite
-    /// </summary>
-    /// <returns></returns>
-    public Sprite GetCircleSprite() { return CIRCLE_SPRITE; }
-
-    /// <summary>
-    /// Returns the global triangle sprite
-    /// </summary>
-    /// <returns></returns>
-    public Sprite GetTriangleSprite() { return TRIANGLE_SPRITE; }
-
-    /// <summary>
-    /// Returns the global diamond sprite
-    /// </summary>
-    /// <returns></returns>
-    public Sprite GetDiamondSprite() { return DIAMOND_SPRITE; }
-
     public GameSlot GetGameBoardslot(int slotIndex) { return gameBoardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
 
     public string GetGameTime()
