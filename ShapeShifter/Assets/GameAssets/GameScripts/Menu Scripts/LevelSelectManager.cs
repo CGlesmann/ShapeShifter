@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class LevelManager : MonoBehaviour
+public class LevelSelectManager : MonoBehaviour
 {
     [Header("Manager Variables")]
     [SerializeField] private string mainMenuScene = "";
     [SerializeField] private string instructionsScene = "";
+    [SerializeField] private string optionsScene = "";
 
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI levelCountText = null;
@@ -31,4 +32,9 @@ public class LevelManager : MonoBehaviour
     /// Navigates to the instructions screen
     /// </summary>
     public void NavigateToInstructions() { SceneManager.LoadScene(instructionsScene); }
+    
+    /// <summary>
+    /// Navigates to the options menu
+    /// </summary>
+    public void NavigateToOptions() { SceneManager.LoadScene(optionsScene); }
 }

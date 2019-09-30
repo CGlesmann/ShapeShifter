@@ -43,6 +43,19 @@ public class DataTracker : MonoBehaviour
             file.Close();
         }
     }
+
+    public void ResetSaveData()
+    {
+        if (File.Exists(filePath))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(filePath, FileMode.Open);
+
+            gameData = new GameData();
+            bf.Serialize(file, gameData);
+            file.Close();
+        }
+    }
 }
 
 [System.Serializable]

@@ -33,43 +33,15 @@ public class InstructionManager : MonoBehaviour
     [Header("Slider Settings")]
     [SerializeField] private float scrollSpeed = 1f;
 
-    private void OnEnable()
-    {
-        if (panels != null)
-        {
-            // Setting the position to the default panel
-            screenParent.position = new Vector3(-panels[startPanel].position.x, screenParent.position.y, 0f);
-            currentPanelIndex = startPanel;
-
-            activePanelCount = 0;
-            foreach(Transform obj in panels)
-                activePanelCount += obj.gameObject.activeSelf ? 1 : 0;
-        }
-    }
-
     /// <summary>
     /// Get the arrow of how to panels
     /// </summary>
     private void Awake()
     {
-        // Enabling the tutorial (if needed)
-        if (initialTutorial)
-            instructionsParent.SetActive(!DataTracker.gameData.initialTutorialComplete);
-        else if (destroyTutorial)
-        {
-            if (!DataTracker.gameData.destroyTutorialComplete)
-            {
-                instructionsParent.SetActive(true);
-                startPanel = 5;
-            } else {
-                instructionsParent.SetActive(false);
-                startPanel = 0;
-            }
-        }
-
         // Creating a new array
         panels = new Transform[screenParent.childCount];
         screenControllers = new HTPScreen[screenParent.childCount];
+        activePanelCount = 0;
 
         // Loop through each child of screenParent
         for (int i = 0; i < screenParent.childCount; i++)
@@ -78,13 +50,26 @@ public class InstructionManager : MonoBehaviour
             panels[i] = screenParent.GetChild(i);
             screenControllers[i] = panels[i] != null ? panels[i].GetComponent<HTPScreen>() : null;
 
+            activePanelCount += panels[i].gameObject.activeSelf ? 1 : 0;
             if (screenControllers[i] != null)
                 screenControllers[i].DeactivateScreen();
         }
 
-        // Setting the position to the default panel
-        screenParent.position = new Vector3(-panels[startPanel].position.x, screenParent.position.y, 0f);
-        currentPanelIndex = startPanel;
+        // Enabling the tutorial (if needed)
+        if (initialTutorial && !DataTracker.gameData.initialTutorialComplete)
+        {
+            startPanel = 0;
+            InvokeInstructions();
+        }
+        else if (destroyTutorial && !DataTracker.gameData.destroyTutorialComplete)
+        {
+            startPanel = 5;
+            InvokeInstructions();
+        } else {
+            // Setting the position to the default panel
+            screenParent.localPosition = new Vector3(-panels[startPanel].localPosition.x, screenParent.localPosition.y, screenParent.localPosition.z);
+            currentPanelIndex = startPanel;
+        }
 
         // Setting the default UI
         UpdatePageCounter();
@@ -128,9 +113,18 @@ public class InstructionManager : MonoBehaviour
 
         // Marking the tutorial as complete
         if (initialTutorial)
+        {
             DataTracker.gameData.initialTutorialComplete = true;
+            DataTracker.dataTracker.SaveData();
+        }
+
         if (destroyTutorial)
+        {
             DataTracker.gameData.destroyTutorialComplete = true;
+            DataTracker.dataTracker.SaveData();
+        }
+
+        startPanel = 0;
     }
 
     /// <summary>
