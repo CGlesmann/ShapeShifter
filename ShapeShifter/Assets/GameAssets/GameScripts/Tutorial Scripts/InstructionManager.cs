@@ -101,6 +101,8 @@ public class InstructionManager : MonoBehaviour
         nextButton.SetActive(currentPanelIndex != panels.Length - 1);
         if (startButton != null)
             startButton.SetActive(currentPanelIndex == panels.Length - 1);
+
+        GameState.gamePaused = true;
     }
 
     /// <summary>
@@ -125,6 +127,7 @@ public class InstructionManager : MonoBehaviour
         }
 
         startPanel = 0;
+        GameState.gamePaused = false;
     }
 
     /// <summary>

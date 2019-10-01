@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
         destroyText.text = "Destroy by Shape";
 
         SetGameSlotIndexes();
+        ShowSolutionBoard();
     }
 
     /// <summary>
@@ -114,10 +115,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        manager = null;
-    }
+    /// <summary>
+    /// Resets the Static reference
+    /// </summary>
+    private void OnDestroy() { manager = null; }
     #endregion
 
 

@@ -834,14 +834,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 600a945c7cdde2447a0737cf07261c78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BLUE_COLOR: {r: 0, g: 0, b: 1, a: 1}
-  RED_COLOR: {r: 1, g: 0, b: 0, a: 1}
-  GREEN_COLOR: {r: 0, g: 1, b: 0, a: 1}
-  YELLOW_COLOR: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  SQUARE_SPRITE: {fileID: 21300000, guid: e40d5bccb9aacf540973d9d3e4a18ac5, type: 3}
-  CIRCLE_SPRITE: {fileID: 21300000, guid: a6ce7c39403dd7f4bae7a1ebcea34393, type: 3}
-  TRIANGLE_SPRITE: {fileID: 21300000, guid: 9d82c011044760f4e85c8a3b70955b83, type: 3}
-  DIAMOND_SPRITE: {fileID: 21300000, guid: 7aa3a839cb5825648ab7256d85ed54bd, type: 3}
   mainMenuScene: LevelSelect
   nextLevelScene: 
   currentDestoryMethod: 0
@@ -849,7 +841,7 @@ MonoBehaviour:
   boardWidth: 3
   boardHeight: 3
   shapesBeingDestroyed: 0
-  solutionDisplayTime: 5
+  solutionDisplayTime: 1
   gameBoardParent: {fileID: 0}
   solutionBoardParent: {fileID: 0}
   pauseMenuParent: {fileID: 5402361823691899134}
