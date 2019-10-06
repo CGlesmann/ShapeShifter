@@ -63,7 +63,7 @@ public class InstructionManager : MonoBehaviour
         }
         else if (destroyTutorial && !DataTracker.gameData.destroyTutorialComplete)
         {
-            startPanel = 5;
+            startPanel = 4;
             InvokeInstructions();
         } else {
             // Setting the position to the default panel
@@ -98,9 +98,9 @@ public class InstructionManager : MonoBehaviour
         UpdatePageCounter();
 
         previousButton.SetActive(currentPanelIndex != 0);
-        nextButton.SetActive(currentPanelIndex != panels.Length - 1);
+        nextButton.SetActive(currentPanelIndex != activePanelCount - 1);
         if (startButton != null)
-            startButton.SetActive(currentPanelIndex == panels.Length - 1);
+            startButton.SetActive(currentPanelIndex == activePanelCount - 1);
 
         GameState.gamePaused = true;
     }

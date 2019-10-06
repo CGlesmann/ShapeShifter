@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public float levelTimer = 0f;
 
     private GameSlot slot1 = null, slot2 = null; // References for selected slots
+    private bool switching = false;
     private bool checkVictory = false;
 
     [Header("Board Settings")]
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenuParent = null;
     [SerializeField] private GameObject endLevelMenuParent = null;
     [SerializeField] private TextMeshProUGUI destroyText = null;
+    [SerializeField] private TextMeshProUGUI solutionText = null;
     [SerializeField] private TextMeshProUGUI gameTimerText = null;
     [SerializeField] private Image solutionTimerUI = null;
 
@@ -166,21 +168,26 @@ public class GameManager : MonoBehaviour
     /// <param name="targetSlot"></param>
     public bool SelectSlot(GameSlot targetSlot)
     {
-        // Checking for which reference
-        if (slot1 == null)
+        // Check for two shapes switching around
+        if (!switching)
         {
-            slot1 = targetSlot;
-            return true;
-        }
-        else if (slot2 == null)
-        {
-            // Two Slots Selected, switch the shapes
-            slot2 = targetSlot;
-            StartCoroutine(MoveShapes());
+            // Checking for which reference
+            if (slot1 == null)
+            {
+                slot1 = targetSlot;
+                return true;
+            }
+            else if (slot2 == null)
+            {
+                // Two Slots Selected, switch the shapes
+                slot2 = targetSlot;
+                StartCoroutine(MoveShapes());
 
-            return true;
+                return true;
+            }
         }
 
+        // Returning the default case
         return false;
     }
 
@@ -189,7 +196,7 @@ public class GameManager : MonoBehaviour
     /// This can only be called when one shape is selected
     /// Therefore this always reset shape1 reference
     /// </summary>
-    public void DeselectSlot() { slot1 = null; }
+    public void DeselectSlot() { if (!switching) slot1 = null; }
 
     /// <summary>
     /// Switches the current destroy method to the opposite method
@@ -216,6 +223,29 @@ public class GameManager : MonoBehaviour
 
     #region In Game Functions
     /// <summary>
+    /// Toggles the solution boards visibility
+    /// </summary>
+    public void ToggleSolutionBoard()
+    {
+        // Checks if two shapes are being switched
+        if (!switching)
+        {
+            // Checking for an active game board
+            if (gameBoardParent.gameObject.activeSelf)
+            {
+                ShowSolutionBoard();
+                solutionText.text = "View GameBoard";
+            }
+            else
+            {
+                // Checking for an active solution board
+                HideSolutionBoard();
+                solutionText.text = "View SolutionBoard";
+            }
+        }
+    }
+
+    /// <summary>
     /// Disables the game board and enables the solution board
     /// </summary>
     public void ShowSolutionBoard()
@@ -224,7 +254,7 @@ public class GameManager : MonoBehaviour
         if (solutionTimer <= 0f)
         {
             // Setting the Solution Timer
-            solutionTimer = solutionDisplayTime;
+            // solutionTimer = solutionDisplayTime;
 
             // Enabling the timer element
             solutionTimerUI.gameObject.SetActive(true);
@@ -263,8 +293,6 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < gameBoardParent.childCount; i++)
             {
                 slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-
-                Debug.Log("Setting " + slot.name + " to " + i);
                 slot.SetSlotIndex(i);
             }
         }
@@ -307,6 +335,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator MoveShapes()
     {
+        // Setting the control variable
+        switching = true;
+
         // Declaring temporary storeage variables
         Transform shape1P = slot1.GetSlotShape().transform, shape2P = slot2.GetSlotShape().transform;
 
@@ -328,6 +359,7 @@ public class GameManager : MonoBehaviour
         }
 
         SwitchShapes();
+        switching = false;
     }
 
     /// <summary>
@@ -338,7 +370,6 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     public bool CheckForMatch(GameShape shape1, GameShape shape2)
     {
-        Debug.Log("Shape 1: " + shape1 + " Shape2: " + shape2);
         switch(currentDestoryMethod)
         {
             case DestroyMethod.Shape:
