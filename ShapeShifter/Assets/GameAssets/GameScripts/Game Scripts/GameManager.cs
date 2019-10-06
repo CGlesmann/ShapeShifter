@@ -39,8 +39,8 @@ public class GameManager : MonoBehaviour
     private float solutionTimer = 0;
 
     [Header("Object References")]
-    [SerializeField] private Transform gameBoardParent = null;
-    [SerializeField] private Transform solutionBoardParent = null;
+    public Transform gameBoardParent = null;
+    public Transform solutionBoardParent = null;
 
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
