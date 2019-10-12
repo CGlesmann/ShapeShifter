@@ -44,11 +44,15 @@ public class GameManager : MonoBehaviour
 
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
-    [SerializeField] private GameObject endLevelMenuParent = null;
+    [SerializeField] private GameObject victoryMenuParent = null;
     [SerializeField] private TextMeshProUGUI destroyText = null;
     [SerializeField] private TextMeshProUGUI solutionText = null;
     [SerializeField] private TextMeshProUGUI gameTimerText = null;
     [SerializeField] private Image solutionTimerUI = null;
+
+    [Header("Defeat UI References")]
+    [SerializeField] private GameObject defeatScreenParent = null;
+    Dictionary<int, ShapeData> requiredShapes;
 
     #region Unity Functions
     /// <summary>
@@ -59,9 +63,26 @@ public class GameManager : MonoBehaviour
         // Setting the Singleton
         manager = this;
 
+        // Setting the default destroy settings
         currentDestoryMethod = DestroyMethod.Shape;
         destroyText.text = "Destroy by Shape";
 
+        // Getting the required shapes
+        GameShape shape;
+        requiredShapes = new Dictionary<int, ShapeData>();
+
+        // Getting the required Shapes/Slots
+        for(int i = 0; i < solutionBoardParent.childCount; i++)
+        {
+            // Attempting to get the shape at the given index
+            shape = solutionBoardParent.GetChild(i).gameObject.GetComponent<GameSlot>().GetSlotShape();
+
+            // Adding shape data if a shape exists
+            if (shape != null)
+                requiredShapes.Add(i, shape.GetShapeData());
+        }
+
+        // Setting the gameboard/solution board
         SetGameSlotIndexes();
         ShowSolutionBoard();
     }
@@ -109,7 +130,8 @@ public class GameManager : MonoBehaviour
             if ((Input.GetKeyDown(KeyCode.Space) || checkVictory) && shapesBeingDestroyed <= 0)
             {
                 // Check for level completion
-                CheckForVictory();
+                if (!CheckForVictory())
+                    CheckForDefeat();
 
                 // Mark as checked
                 checkVictory = false;
@@ -616,12 +638,59 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region State Check Functions
+    public bool CheckForDefeat()
+    {
+        // Declaring tracker variables
+        GameShape shape;
+
+        // Case 1: Critical slots are empty
+        foreach (KeyValuePair<int, ShapeData> pair in requiredShapes)
+        {
+            // Getting the corresponding shape on the game board
+            shape = gameBoardParent.GetChild(pair.Key).GetComponent<GameSlot>().GetSlotShape();
+
+            // If a shape isn't on the gameboard, critical slot is empty
+            if (shape == null)
+            {
+                // Display the defeat screen
+                DisplayDefeatScreen();
+                return true;
+            }
+        }
+
+        // Case 2: Not Enough shapes remain
+        List<ShapeData> shapes = new List<ShapeData>();
+        foreach (KeyValuePair<int, ShapeData> pair in requiredShapes)
+            shapes.Add(pair.Value);
+
+        for (int i = 0; i < gameBoardParent.childCount; i++)
+        {
+            // Getting the corresponding shape on the game board
+            shape = gameBoardParent.GetChild(i).GetComponent<GameSlot>().GetSlotShape();
+
+            if (shape != null && shapes.Contains(shape.GetShapeData()))
+                shapes.Remove(shape.GetShapeData());
+
+            if (shapes.Count == 0)
+                break;
+        }
+
+        if (shapes.Count != 0)
+        {
+            DisplayDefeatScreen();
+            return true;
+        }
+
+        // All cases pass, return true
+        return false;
+    }
+
     /// <summary>
     /// Triggered after switching two shapes
     /// Compares the gameboard to the solution board
     /// Triggers CompleteLevel if evaluates as true
     /// </summary>
-    public void CheckForVictory()
+    public bool CheckForVictory()
     {
         Debug.Log("Checking for Victory");
 
@@ -644,18 +713,19 @@ public class GameManager : MonoBehaviour
             if ((shape1 == null && shape2 != null) || (shape1 != null && shape2 == null))
             {
                 Debug.Log("Victory failed at index " + i.ToString() + "\nResults were...\n" + "Slot1: " + slot1.GetSlotShape() + "\nSlot2: " + slot2.GetSlotShape());
-                return;
+                return false;
             }
             else if (shape1 != null && shape2 != null)
                 if (!slot1.GetSlotShape().Equals(slot2.GetSlotShape()))
                 {
                     Debug.Log("Victory failed at index " + i.ToString() + "\nResults were...\n" + "Slot1: " + slot1.GetSlotShape() + "\nSlot2: " + slot2.GetSlotShape());
-                    return;
+                    return false;
                 }
         }
 
         // All the slots evaluate as true, trigger Complete Level
         CompleteLevel();
+        return true;
     }
 
     /// <summary>
@@ -664,7 +734,7 @@ public class GameManager : MonoBehaviour
     public void CompleteLevel()
     {
         shapesBeingDestroyed = 0;
-        DisplayEndLevelMenu();
+        DisplayVictoryScreen();
 
         DataTracker.gameData.levelsCompleted++;
         DataTracker.dataTracker.SaveData();
@@ -709,7 +779,12 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Displays the end level menu, also pauses the game to restrict user control
     /// </summary>
-    public void DisplayEndLevelMenu() { endLevelMenuParent.SetActive(true); GameState.gamePaused = true; }
+    public void DisplayVictoryScreen() { victoryMenuParent.SetActive(true); GameState.gamePaused = true; }
+
+    /// <summary>
+    /// Displays the end screen if the player looses
+    /// </summary>
+    public void DisplayDefeatScreen() { defeatScreenParent.SetActive(true); GameState.gamePaused = true; }
     #endregion
 
     #region Scene Navigation Functions

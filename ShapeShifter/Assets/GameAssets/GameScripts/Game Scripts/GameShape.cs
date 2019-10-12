@@ -121,9 +121,32 @@ public class GameShape : MonoBehaviour
     /// <returns></returns>
     public Color GetShapeColor() { return shapeRenderer.color; }
 
+    /// <summary>
+    /// Return the shapes data as a ShapeData struct
+    /// </summary>
+    /// <returns></returns>
+    public ShapeData GetShapeData() { return new ShapeData(shapeColor, shapeType); }
+
     public void TriggerDestruction() { shapeAnimator.SetTrigger("Destroy"); }
 
     public void DestroyShape() { manager.shapesBeingDestroyed--;  Destroy(gameObject); }
+}
+
+public struct ShapeData
+{
+    public Color shapeColor;
+    public GameShape.ShapeType shapeType;
+
+    public ShapeData(Color color, GameShape.ShapeType type)
+    {
+        shapeColor = color;
+        shapeType = type;
+    }
+
+    public override string ToString()
+    {
+        return shapeColor.ToString() + shapeType.ToString();
+    }
 }
 
 #if UNITY_EDITOR
