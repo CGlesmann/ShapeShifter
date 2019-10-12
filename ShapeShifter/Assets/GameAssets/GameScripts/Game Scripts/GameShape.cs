@@ -22,6 +22,7 @@ public class GameShape : MonoBehaviour
     [Header("Shape Variables")]
     [SerializeField] private ShapeType shapeType = ShapeType.Square;
     [HideInInspector] public Color shapeColor => shapeRenderer.color;
+    private bool markedForDestruct = false;
 
     public void Start() { manager = GameManager.manager; }
 
@@ -104,6 +105,9 @@ public class GameShape : MonoBehaviour
         else
             Debug.LogError("SpriteRenderer not set for " + name);
     }
+
+    public void MarkForDestruction() { markedForDestruct = true; }
+    public bool IsMarkedForDestruct() { return markedForDestruct; }
 
     /// <summary>
     /// Gets the current shape type

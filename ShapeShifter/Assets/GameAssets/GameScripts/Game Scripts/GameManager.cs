@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int boardWidth = 4;
     [SerializeField] private int boardHeight = 4;
     private int boardSize => boardWidth * boardHeight;
-    [HideInInspector] public int shapesBeingDestroyed = 0;
+    public int shapesBeingDestroyed = 0;
 
     [Header("Solution Board Settings")]
     [SerializeField] private float solutionDisplayTime = 10f; // In Seconds
@@ -398,6 +398,7 @@ public class GameManager : MonoBehaviour
         // Declaring temp storage variable
         bool destoryCurrentSlot = false;
         GameSlot slot;
+        GameShape shape;
         
         // Top left slot
         if (index % boardWidth != 0 && index - (boardWidth + 1) >= 0 && GetGameBoardslot(index - (boardWidth + 1)) != null)
@@ -408,9 +409,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -424,9 +434,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -440,9 +459,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -456,9 +484,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -472,9 +509,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -488,9 +534,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -504,9 +559,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -520,9 +584,18 @@ public class GameManager : MonoBehaviour
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null && CheckForMatch(centerSlot.GetSlotShape(), slot.GetSlotShape()))
             {
-                //slot.DestroyShape();
-                slot.GetSlotShape().TriggerDestruction();
-                shapesBeingDestroyed++;
+                // Get the shape reference
+                shape = slot.GetSlotShape();
+
+                // Check to make sure the shape is marked for destruction
+                if (!shape.IsMarkedForDestruct())
+                {
+                    shape.TriggerDestruction();
+                    shape.MarkForDestruction();
+                    shapesBeingDestroyed++;
+                }
+
+                // Marking the center shape for destruction
                 destoryCurrentSlot = true;
             }
         }
@@ -530,8 +603,14 @@ public class GameManager : MonoBehaviour
         // Center Slot
         if (destoryCurrentSlot)
         {
-            centerSlot.GetSlotShape().TriggerDestruction();
-            shapesBeingDestroyed++;
+            shape = centerSlot.GetSlotShape();
+
+            if (!shape.IsMarkedForDestruct())
+            {
+                shape.TriggerDestruction();
+                shape.MarkForDestruction();
+                shapesBeingDestroyed++;
+            }
         }
     }
     #endregion
