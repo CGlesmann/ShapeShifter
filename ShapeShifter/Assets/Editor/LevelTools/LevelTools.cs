@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 public class LevelTools
 {
@@ -35,6 +36,8 @@ public class LevelTools
                 if (slot.childCount > 0)
                     Object.DestroyImmediate(slot.GetChild(0).gameObject);
             }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
     }
 
@@ -61,6 +64,8 @@ public class LevelTools
                 if (slot.childCount > 0)
                     Object.DestroyImmediate(slot.GetChild(0).gameObject);
             }
+
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
     }
 }
