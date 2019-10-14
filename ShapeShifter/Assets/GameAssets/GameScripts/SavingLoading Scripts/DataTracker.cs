@@ -63,5 +63,6 @@ public class GameData
 {
     public bool initialTutorialComplete = false;
     public bool destroyTutorialComplete = false;
+    public bool defeatTutorialComplete = false;
     public float levelsCompleted = 0;
 }

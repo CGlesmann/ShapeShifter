@@ -39,8 +39,12 @@ public class GameManager : MonoBehaviour
     private float solutionTimer = 0;
 
     [Header("Object References")]
+    public UndoManager undoManager = null;
     public Transform gameBoardParent = null;
     public Transform solutionBoardParent = null;
+
+    [Header("Prefab REferences")]
+    [SerializeField] private GameObject shapePrefab = null;
 
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
@@ -52,6 +56,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Defeat UI References")]
     [SerializeField] private GameObject defeatScreenParent = null;
+    [SerializeField] private Instructions defeatInstructions = null;
     [SerializeField] private TextMeshProUGUI failureText = null;
     Dictionary<int, ShapeData> requiredShapes;
 
@@ -132,7 +137,8 @@ public class GameManager : MonoBehaviour
             {
                 // Check for level completion
                 if (!CheckForVictory())
-                    CheckForDefeat();
+                    if (!DataTracker.gameData.defeatTutorialComplete)
+                        CheckForDefeat();
 
                 // Mark as checked
                 checkVictory = false;
@@ -246,6 +252,54 @@ public class GameManager : MonoBehaviour
 
     #region In Game Functions
     /// <summary>
+    /// Restores the game board to a previous state, used by the undo function
+    /// </summary>
+    /// <param name="data"></param>
+    public void RestoreBoardState(BoardData data)
+    {
+        // Declaring Tracker Variables
+        GameSlot slot;
+        GameShape shape;
+
+        // Loop through the board and set the board state to the data
+        for (int i = 0; i < gameBoardParent.childCount; i++)
+        {
+            // Getting the Game Slot/Shape Reference
+            slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
+            shape = slot.GetSlotShape();
+
+            // Checking if a shape exists in the given slot
+            if (shape != null)
+            {
+                // Checking if a shape doesn't exist on the passed in data
+                if (data.board[i] == null)
+                    Destroy(shape.gameObject);
+                else if (shape.GetShapeData() != data.board[i])
+                {
+                    // Shape does exist but doesn't match the shape in the data, set them to be equivalent
+                    shape.SetShapeColor(data.board[i].shapeColor);
+                    shape.SetShapeType(data.board[i].shapeType);
+                }
+            }
+            else
+            {
+                // Checking to see if a shape exists in the data at the given spot, if so create a new one
+                if (data.board[i] != null)
+                {
+                    // Creating the shape
+                    GameObject newShape = Instantiate(shapePrefab, slot.transform);
+                    newShape.transform.localPosition = new Vector3(0.5f, -0.5f, 0f);
+
+                    // Getting the GameShape reference and setting it equal to the shape in the data
+                    GameShape shapeRef = newShape.GetComponent<GameShape>();
+                    shapeRef.SetShapeColor(data.board[i].shapeColor);
+                    shapeRef.SetShapeType(data.board[i].shapeType);
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Toggles the solution boards visibility
     /// </summary>
     public void ToggleSolutionBoard()
@@ -336,6 +390,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void SwitchShapes()
     {
+        // Storing Board state in the UndoManager
+        undoManager.ProcessGameBoard(gameBoardParent);
+
         // Setting the parents
         slot1.GetSlotShape().transform.SetParent(slot2.transform);
         slot2.GetSlotShape().transform.SetParent(slot1.transform);
@@ -594,8 +651,8 @@ public class GameManager : MonoBehaviour
                     // If a shape isn't on the gameboard, critical slot is empty
                     if (shape == null)
                     {
-                        // Display the defeat screen
-                        DisplayDefeatScreen("Critical slot(s) on the game board are empty, the solution board can't be matched");
+                        Debug.Log("Defeat based on case 1");
+                        defeatInstructions.InvokeInstructions();
                         return true;
                     }
                 }
@@ -603,29 +660,16 @@ public class GameManager : MonoBehaviour
 
             // Case 2: Not Enough shapes remain
             shape = gameBoardParent.GetChild(i).GetComponent<GameSlot>().GetSlotShape();
-            if (shape != null)
-            {
-                Debug.Log("Shape data for slot " + i + ": " + shape.ToString());
-                if (neededShapes.Contains(shape.GetShapeData()))
-                {
-                    neededShapes.Remove(shape.GetShapeData());
-                } else {
-                    if (CheckForSurroundingShapes(i).Count == 0)
-                    {
-                        // Display the defeat screen
-                        DisplayDefeatScreen("Un-needed shape(s) are on the game board and can't be destroyed");
-                        return true;
-                    }
-                }
-            }
+            if (shape != null && neededShapes.Contains(shape.GetShapeData()))
+                neededShapes.Remove(shape.GetShapeData());
 
-            if (neededShapes.Count == 0 && requiredShapes.Count != 0)
+            if (i == gameBoardParent.childCount - 1 && neededShapes.Count > 0)
             {
-                break;
-            }
-            else if (i == gameBoardParent.childCount - 1)
-            {
-                DisplayDefeatScreen("Not enough shapes remains on the gameboard to match the solution board");
+                Debug.Log("Defeat based on case 2");
+                foreach (ShapeData s in neededShapes)
+                    Debug.Log(s);
+
+                defeatInstructions.InvokeInstructions();
                 return true;
             }
         }

@@ -132,7 +132,7 @@ public class GameShape : MonoBehaviour
     public void DestroyShape() { manager.shapesBeingDestroyed--;  Destroy(gameObject); }
 }
 
-public struct ShapeData
+public class ShapeData
 {
     public Color shapeColor;
     public GameShape.ShapeType shapeType;
@@ -146,6 +146,17 @@ public struct ShapeData
     public override string ToString()
     {
         return shapeColor.ToString() + shapeType.ToString();
+    }
+
+    public override bool Equals(object obj)
+    {
+        ShapeData other = (ShapeData)obj;
+        return other.shapeColor == this.shapeColor && other.shapeType == this.shapeType;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }
 
