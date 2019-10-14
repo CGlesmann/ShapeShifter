@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Defeat UI References")]
     [SerializeField] private GameObject defeatScreenParent = null;
-    [SerializeField] private Instructions defeatInstructions = null;
+    [SerializeField] private DefeatInstructions defeatInstructions = null;
     [SerializeField] private TextMeshProUGUI failureText = null;
     Dictionary<int, ShapeData> requiredShapes;
 
