@@ -3720,7 +3720,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Slots that are filled on the solution board are empty of the game board.
+  m_text: 'Slots that are filled on the solution board are empty on the game board.
 
 '
   m_isRightToLeft: 0
@@ -16800,16 +16800,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5402361823121524229}
     m_Modifications:
-    - target: {fileID: 1592825633312400296, guid: 20de5efb95cb2d945bd4e91d0667b355,
-        type: 3}
-      propertyPath: m_Name
-      value: HowToPlay_Menu
-      objectReference: {fileID: 0}
-    - target: {fileID: 1592825633312400296, guid: 20de5efb95cb2d945bd4e91d0667b355,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1592825633312400297, guid: 20de5efb95cb2d945bd4e91d0667b355,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16914,6 +16904,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592825633312400296, guid: 20de5efb95cb2d945bd4e91d0667b355,
+        type: 3}
+      propertyPath: m_Name
+      value: HowToPlay_Menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592825633312400296, guid: 20de5efb95cb2d945bd4e91d0667b355,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4374620554081234427, guid: 20de5efb95cb2d945bd4e91d0667b355,
         type: 3}
