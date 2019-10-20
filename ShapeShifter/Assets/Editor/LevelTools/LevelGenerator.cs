@@ -50,27 +50,31 @@ public class LevelGenerator : EditorWindow
     /// </summary>
     private void OnGUI()
     {
-        // Getting tab selection
-        currentTab = GUILayout.Toolbar(currentTab, new string[] { "Generate Board", "Generate Solution"});
-        
-        // Drawing the currently selected tab
-        switch(currentTab)
+        if (manager != null)
         {
-            // Board Generator
-            case 0:
-                DrawBoardGenerator();
-                break;
+            // Getting tab selection
+            currentTab = GUILayout.Toolbar(currentTab, new string[] { "Generate Board", "Generate Solution" });
 
-            // Solution Generator
-            case 1:
-                DrawSolutionGenerator();
-                break;
+            // Drawing the currently selected tab
+            switch (currentTab)
+            {
+                // Board Generator
+                case 0:
+                    DrawBoardGenerator();
+                    break;
 
-            // Invalid input, draw error message
-            default:
-                EditorGUILayout.LabelField("currentTab set to invalid value: " + currentTab.ToString());
-                break;
-        }
+                // Solution Generator
+                case 1:
+                    DrawSolutionGenerator();
+                    break;
+
+                // Invalid input, draw error message
+                default:
+                    EditorGUILayout.LabelField("currentTab set to invalid value: " + currentTab.ToString());
+                    break;
+            }
+        } else
+            EditorGUILayout.LabelField("Level Generator isn't available in menu scenes", EditorStyles.boldLabel);
     }
 
     /// <summary>
