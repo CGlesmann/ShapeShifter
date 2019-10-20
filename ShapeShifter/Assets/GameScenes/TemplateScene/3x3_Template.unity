@@ -482,6 +482,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4204862372797621589, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: gameBoardParent
+      value: 
+      objectReference: {fileID: 1089353950}
+    - target: {fileID: 4204862372797621589, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: solutionBoardParent
+      value: 
+      objectReference: {fileID: 1582778281}
     - target: {fileID: 5402361824911747110, guid: 58eabc6b2b92b0042a133eb048f99ce1,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -526,11 +536,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.pageCount
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2675228787176530341, guid: 58eabc6b2b92b0042a133eb048f99ce1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5402361823038727690, guid: 58eabc6b2b92b0042a133eb048f99ce1,
         type: 3}
@@ -561,6 +566,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Level X
+      objectReference: {fileID: 0}
+    - target: {fileID: 2675228787176530341, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58eabc6b2b92b0042a133eb048f99ce1, type: 3}
