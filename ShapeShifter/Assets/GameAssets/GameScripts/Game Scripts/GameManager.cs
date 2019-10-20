@@ -154,6 +154,7 @@ public class GameManager : MonoBehaviour
 
     #region Getter Functions
     public GameSlot GetGameBoardslot(int slotIndex) { return gameBoardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
+    public GameSlot GetSolutionBoardSlot(int slotIndex) { return solutionBoardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
     public ShapeData GetSolutionBoardShapeData(int slotIndex)
     {
         GameShape solutionShape = solutionBoardParent.GetChild(slotIndex).GetComponent<GameSlot>().GetSlotShape();
@@ -417,6 +418,22 @@ public class GameManager : MonoBehaviour
         checkVictory = true;
     }
 
+    public void SwitchSolutionShapes(GameSlot s1, int s1Index, GameSlot s2, int s2Index)
+    {
+        // Setting the parents
+        GameShape s = s1.GetSlotShape();
+        s.transform.SetParent(s2.transform);
+        s.transform.localPosition = new Vector3(0.5f, -0.5f);
+
+        s = s2.GetSlotShape();
+        s.transform.SetParent(s1.transform);
+        s.transform.localPosition = new Vector3(0.5f, -0.5f);
+
+        // Triggering Shape Destruction(s)
+        TriggerSolutionShapeDestruction(s1Index);
+        TriggerSolutionShapeDestruction(s2Index);
+    }
+
     private IEnumerator MoveShapes()
     {
         // Setting the control variable
@@ -577,6 +594,113 @@ public class GameManager : MonoBehaviour
         return indexes;
     }
 
+    public List<int> CheckForSurroundingSolutionShapes(int index)
+    {
+        // Declaring temp storage variable
+        List<int> indexes = new List<int>();
+        int i;
+
+        GameSlot slot;
+
+        // Top left slot
+        i = index - (boardWidth + 1);
+        if (index % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        // Top Center Slot
+        i = (index - (boardWidth + 0));
+        if (index >= boardWidth && i >= 0 && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        // Top Right Slot
+        i = index - (boardWidth - 1);
+        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        // Middle Left Slot
+        i = index - 1;
+        if (index % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        // Middle Right Slot
+        i = index + 1;
+        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        // Bottom left slot
+        i = index + (boardWidth - 1);
+        if (index % boardWidth != 0 && i < boardSize && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        // Bottom Center Slot
+        i = index + boardWidth;
+        if (index <= (boardSize - boardWidth) && i < boardSize && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        // Bottom Right Slot
+        i = index + (boardWidth + 1);
+        if ((index + 1) % boardWidth != 0 && i < boardSize && GetGameBoardslot(i) != null)
+        {
+            // Getting Slot Reference
+            slot = GetSolutionBoardSlot(i);
+
+            // Checking for destorying the shape
+            if (slot.GetSlotShape() != null)
+                indexes.Add(i);
+        }
+
+        return indexes;
+    }
+
     /// <summary>
     /// Triggers a destruction of shapes around the given index
     /// </summary>
@@ -595,7 +719,7 @@ public class GameManager : MonoBehaviour
         List<int> targetIndexes = CheckForSurroundingShapes(index);
         bool destoryCurrentSlot = false;
         GameSlot slot;
-        GameShape shape;
+        GameShape shape = null;
 
         if (targetIndexes != null)
         {
@@ -628,6 +752,53 @@ public class GameManager : MonoBehaviour
                 centerShape.TriggerDestruction();
                 centerShape.MarkForDestruction();
                 shapesBeingDestroyed++;
+            }
+        }
+    }
+
+    public void TriggerSolutionShapeDestruction(int index)
+    {
+        // Getting the current slot
+        GameShape centerShape = solutionBoardParent.GetChild(index).GetComponent<GameSlot>().GetSlotShape();
+        if (centerShape == null)
+        {
+            Debug.LogError("Couldn't find shape when triggering destruction at slot " + index);
+            return;
+        }
+
+        // Declaring temp storage variable
+        List<int> targetIndexes = CheckForSurroundingSolutionShapes(index);
+        bool destoryCurrentSlot = false;
+        GameSlot slot;
+        GameShape shape = null;
+
+        if (targetIndexes != null)
+        {
+            foreach (int i in targetIndexes)
+            {
+                slot = solutionBoardParent.GetChild(i).GetComponent<GameSlot>();
+                shape = slot.GetSlotShape();
+
+                if (CheckForMatch(centerShape, shape))
+                {
+                    // Check to make sure the shape is marked for destruction
+                    if (!shape.IsMarkedForDestruct())
+                    {
+                        shape.DestroyShapeImmediate();
+                    }
+
+                    // Marking the center shape for destruction
+                    destoryCurrentSlot = true;
+                }
+            }
+        }
+
+        // Center Slot
+        if (destoryCurrentSlot)
+        {
+            if (!centerShape.IsMarkedForDestruct())
+            {
+                centerShape.DestroyShapeImmediate();
             }
         }
     }

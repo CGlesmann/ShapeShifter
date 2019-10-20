@@ -127,7 +127,18 @@ public class GameShape : MonoBehaviour
     /// <summary>
     /// Destroys the shape, informs the manager that the shape is destroyed
     /// </summary>
-    public void DestroyShape() { manager.shapesBeingDestroyed--;  Destroy(gameObject); }
+    public void DestroyShape()
+    {
+        if (manager != null)
+            manager.shapesBeingDestroyed--;
+
+        Destroy(gameObject);
+    }
+
+    public void DestroyShapeImmediate()
+    {
+        DestroyImmediate(gameObject);
+    }
 }
 
 public class ShapeData

@@ -7,7 +7,8 @@ public class LevelGenerator : EditorWindow
 {
     private static GameManager manager;
 
-    private BoardPreferences preferences;
+    private BoardPreferences boardPreferences;
+    private SolutionPreferences solutionPreferences;
     private int currentTab = 0;
         
     [MenuItem("Level Generator", menuItem = "Level Tools/Level Generator")]
@@ -35,8 +36,10 @@ public class LevelGenerator : EditorWindow
     /// </summary>
     private void OnFocus()
     {
-        if (preferences == null)
-            preferences = new BoardPreferences();
+        if (boardPreferences == null)
+            boardPreferences = new BoardPreferences();
+        if (solutionPreferences == null)
+            solutionPreferences = new SolutionPreferences();
 
         if (manager == null)
             GetManagerReference();
@@ -81,24 +84,24 @@ public class LevelGenerator : EditorWindow
 
         // Shape Toggles
         EditorGUILayout.BeginHorizontal();
-        preferences.squareEnabled = EditorGUILayout.Toggle("Square", preferences.squareEnabled);
-        preferences.circleEnabled = EditorGUILayout.Toggle("Circle", preferences.circleEnabled);
-        preferences.triangleEnabled = EditorGUILayout.Toggle("Triangle", preferences.triangleEnabled);
-        preferences.diamondEnabled = EditorGUILayout.Toggle("Diamond", preferences.diamondEnabled);
+        boardPreferences.squareEnabled = EditorGUILayout.Toggle("Square", boardPreferences.squareEnabled);
+        boardPreferences.circleEnabled = EditorGUILayout.Toggle("Circle", boardPreferences.circleEnabled);
+        boardPreferences.triangleEnabled = EditorGUILayout.Toggle("Triangle", boardPreferences.triangleEnabled);
+        boardPreferences.diamondEnabled = EditorGUILayout.Toggle("Diamond", boardPreferences.diamondEnabled);
         EditorGUILayout.EndHorizontal();
 
         // Color Toggles
         EditorGUILayout.BeginHorizontal();
-        preferences.redEnabled = EditorGUILayout.Toggle("Red", preferences.redEnabled);
-        preferences.blueEnabled = EditorGUILayout.Toggle("Blue", preferences.blueEnabled);
-        preferences.greenEnabled = EditorGUILayout.Toggle("Green", preferences.greenEnabled);
-        preferences.yellowEnabled = EditorGUILayout.Toggle("Yellow", preferences.yellowEnabled);
+        boardPreferences.redEnabled = EditorGUILayout.Toggle("Red", boardPreferences.redEnabled);
+        boardPreferences.blueEnabled = EditorGUILayout.Toggle("Blue", boardPreferences.blueEnabled);
+        boardPreferences.greenEnabled = EditorGUILayout.Toggle("Green", boardPreferences.greenEnabled);
+        boardPreferences.yellowEnabled = EditorGUILayout.Toggle("Yellow", boardPreferences.yellowEnabled);
         EditorGUILayout.EndHorizontal();
 
         // Drawing the Board Settings Group
         EditorGUILayout.Separator();
         EditorGUILayout.LabelField("Board Settings", EditorStyles.boldLabel);
-        preferences.shapeCount = (int)EditorGUILayout.Slider("Shape Count", preferences.shapeCount, 1, manager != null ? manager.boardSize : 1);
+        boardPreferences.shapeCount = (int)EditorGUILayout.Slider("Shape Count", boardPreferences.shapeCount, 1, manager != null ? manager.boardSize : 1);
 
         // Drawing the Tab Options
         EditorGUILayout.Separator();
@@ -133,8 +136,8 @@ public class LevelGenerator : EditorWindow
         }
 
         // Getting the List of available shape types / colors
-        List<GameShape.ShapeType> availableTypes = preferences.GetAvailableTypes();
-        List<Color> availableColors = preferences.GetAvailableColors();
+        List<GameShape.ShapeType> availableTypes = boardPreferences.GetAvailableTypes();
+        List<Color> availableColors = boardPreferences.GetAvailableColors();
 
         // Getting the board parent from the manager
         Transform boardParent = manager.gameBoardParent;
@@ -149,7 +152,7 @@ public class LevelGenerator : EditorWindow
         Transform slotTransform;
         int currentSlot;
 
-        for(int i = 0; i < preferences.shapeCount; i++)
+        for(int i = 0; i < boardPreferences.shapeCount; i++)
         {
             // Getting a random slot
             currentSlot = availableSlots[Random.Range(0, availableSlots.Count)];
@@ -173,7 +176,80 @@ public class LevelGenerator : EditorWindow
     /// </summary>
     private void DrawSolutionGenerator()
     {
-        EditorGUILayout.LabelField("This is the Solution generator");
+        EditorGUILayout.LabelField("Solution Settings", EditorStyles.boldLabel);
+        solutionPreferences.amountOfMoves = EditorGUILayout.IntField("Amount of Moves", solutionPreferences.amountOfMoves);
+        EditorGUILayout.Separator();
+
+        if (GUILayout.Button("Clear Solution"))
+            LevelTools.ClearSolutionBoard();
+
+        if (GUILayout.Button("Generate Solution"))
+            GenerateSolution();
+
+        if (GUILayout.Button("Toggle Active Boards"))
+            manager.ToggleSolutionBoard();
+    }
+
+    private void GenerateSolution()
+    {
+        // Clear the Solution Board
+        LevelTools.ClearSolutionBoard();
+
+        // Adding all of the shapes from the game board onto the solution board
+        List<int> availableSlots = new List<int>(); // This list tracks which slots have shapes, used for selecting slots
+
+        GameShape newShape, refShape;
+        GameSlot gbShapeSlot;
+        Transform gameBoardParent = manager.gameBoardParent;
+        Transform solutionBoardParent = manager.solutionBoardParent;
+        Transform gbSlot, sbSlot;
+
+        for (int i = 0; i < gameBoardParent.childCount; i++)
+        {
+            gbSlot = gameBoardParent.GetChild(i);
+            sbSlot = solutionBoardParent.GetChild(i);
+
+            gbShapeSlot = gbSlot.GetComponent<GameSlot>();
+            refShape = gbShapeSlot != null ? gbShapeSlot.GetSlotShape() : null;
+
+            if (refShape != null)
+            {
+                newShape = Instantiate(manager.shapePrefab, sbSlot).GetComponent<GameShape>();
+                newShape.transform.localPosition = new Vector3(0.5f, -0.5f);
+
+                newShape.SetShapeColor(refShape.GetShapeColor());
+                newShape.SetShapeType(refShape.GetShapeType());
+
+                availableSlots.Add(i);
+            }
+        }
+
+        // Making amountOfMoves moves on the solution board
+        int slot1Index, slot2Index;
+        GameSlot slot1, slot2;
+        for(int i = 0; i < solutionPreferences.amountOfMoves; i++)
+        {
+            // Getting two slot references
+            slot1Index = availableSlots[Random.Range(0, availableSlots.Count)];
+            slot1 = solutionBoardParent.GetChild(slot1Index).GetComponent<GameSlot>();
+            availableSlots.Remove(slot1Index);
+
+            slot2Index = availableSlots[Random.Range(0, availableSlots.Count)];
+            slot2 = solutionBoardParent.GetChild(slot2Index).GetComponent<GameSlot>();
+
+            Debug.Log("Switching SlotShape " + slot1Index + " and SlotShape " + slot2Index);
+
+            // Selecting two slots
+            manager.SwitchSolutionShapes(slot1, slot1Index, slot2, slot2Index);
+
+            availableSlots.Clear();
+            for(int j = 0; j < solutionBoardParent.childCount; j++)
+            {
+                if (solutionBoardParent.GetChild(j).GetComponent<GameSlot>().GetSlotShape() != null)
+                    availableSlots.Add(j);
+            }
+        }
+        
     }
 }
 
@@ -184,7 +260,7 @@ public class BoardPreferences
     public bool redEnabled = false, blueEnabled = false, greenEnabled = false, yellowEnabled = false;
 
     // Board Variables
-    public int shapeCount = 0;
+    public int shapeCount = 1;
 
     /// <summary>
     /// Public method for getting an enum list of type ShapeType
@@ -223,4 +299,9 @@ public class BoardPreferences
         // returning the resulting list, or null if nothing is in the list
         return types.Count > 0 ? types : null;
     }
+}
+
+public class SolutionPreferences
+{
+    public int amountOfMoves = 1;
 }
