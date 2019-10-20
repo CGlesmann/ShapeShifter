@@ -622,11 +622,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1582778281}
     m_Modifications:
-    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7529936902263075769, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
       propertyPath: m_Name
@@ -741,6 +736,11 @@ PrefabInstance:
         type: 3}
       propertyPath: canSelect
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7171540351153740156, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
@@ -1888,11 +1888,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1089353950}
     m_Modifications:
-    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7529936902263075769, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
       propertyPath: m_Name
@@ -2003,6 +1998,11 @@ PrefabInstance:
       propertyPath: deselectedColor.b
       value: 0.7264151
       objectReference: {fileID: 0}
+    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7171540351153740156, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
       propertyPath: m_RootOrder
@@ -2108,11 +2108,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1089353950}
     m_Modifications:
-    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7529936902263075769, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
       propertyPath: m_Name
@@ -2222,6 +2217,11 @@ PrefabInstance:
         type: 3}
       propertyPath: deselectedColor.b
       value: 0.7264151
+      objectReference: {fileID: 0}
+    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7171540351153740156, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
@@ -2652,6 +2652,11 @@ PrefabInstance:
       propertyPath: solutionBoardParent
       value: 
       objectReference: {fileID: 1582778281}
+    - target: {fileID: 4204862372797621589, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: mainMenuScene
+      value: LevelPack_1
+      objectReference: {fileID: 0}
     - target: {fileID: 5402361824911747110, guid: 58eabc6b2b92b0042a133eb048f99ce1,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -2701,31 +2706,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.pageCount
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7899925464938604531, guid: 58eabc6b2b92b0042a133eb048f99ce1,
-        type: 3}
-      propertyPath: tutorialInstance
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7899925464938604531, guid: 58eabc6b2b92b0042a133eb048f99ce1,
-        type: 3}
-      propertyPath: startPanel
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7899925464938604531, guid: 58eabc6b2b92b0042a133eb048f99ce1,
-        type: 3}
-      propertyPath: initialTutorial
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1121200758546821110, guid: 58eabc6b2b92b0042a133eb048f99ce1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2675228786348199207, guid: 58eabc6b2b92b0042a133eb048f99ce1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5752284492739990496, guid: 58eabc6b2b92b0042a133eb048f99ce1,
         type: 3}
@@ -2786,6 +2766,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7899925464938604531, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: tutorialInstance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7899925464938604531, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: startPanel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7899925464938604531, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: initialTutorial
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121200758546821110, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2675228786348199207, guid: 58eabc6b2b92b0042a133eb048f99ce1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 442336766928461871, guid: 58eabc6b2b92b0042a133eb048f99ce1,
         type: 3}
@@ -4444,11 +4449,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1089353950}
     m_Modifications:
-    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7529936902263075769, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
       propertyPath: m_Name
@@ -4543,6 +4543,11 @@ PrefabInstance:
         type: 3}
       propertyPath: manager
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5378385408028619248, guid: 97fe7f936be208d439a5013517985e16,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7171540351153740156, guid: 97fe7f936be208d439a5013517985e16,
         type: 3}
