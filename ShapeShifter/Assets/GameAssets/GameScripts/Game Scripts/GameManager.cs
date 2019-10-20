@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     [Header("Board Settings")]
     [SerializeField] private int boardWidth = 4;
     [SerializeField] private int boardHeight = 4;
-    private int boardSize => boardWidth * boardHeight;
+    public int boardSize => boardWidth * boardHeight;
     public int shapesBeingDestroyed = 0;
 
     [Header("Solution Board Settings")]
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     public Transform solutionBoardParent = null;
 
     [Header("Prefab REferences")]
-    [SerializeField] private GameObject shapePrefab = null;
+    public GameObject shapePrefab = null;
 
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
