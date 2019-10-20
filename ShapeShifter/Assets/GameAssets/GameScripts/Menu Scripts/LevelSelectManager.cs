@@ -7,33 +7,33 @@ using TMPro;
 public class LevelSelectManager : MonoBehaviour
 {
     [Header("Manager Variables")]
-    [SerializeField] private string mainMenuScene = "";
-    [SerializeField] private string instructionsScene = "";
-    [SerializeField] private string optionsScene = "";
+    [SerializeField] protected string mainMenuScene = "";
+    [SerializeField] protected string instructionsScene = "";
+    [SerializeField] protected string optionsScene = "";
 
     [Header("Control Variables")]
-    [SerializeField] private int startPanel = 0;
+    [SerializeField] protected int startPanel = 0;
 
     [Header("Slider References")]
-    [SerializeField] private Transform screenParent = null;
+    [SerializeField] protected Transform screenParent = null;
 
-    private Transform[] panels = null;
-    private Transform currentPanel => panels[currentPanelIndex];
+    protected Transform[] panels = null;
+    protected Transform currentPanel => panels[currentPanelIndex];
 
-    private bool scrolling = false;
-    private int previousPanelIndex = 0;
-    private int currentPanelIndex = 0;
-    private int activePanelCount = 0;
+    protected bool scrolling = false;
+    protected int previousPanelIndex = 0;
+    protected int currentPanelIndex = 0;
+    protected int activePanelCount = 0;
 
     [Header("GUI References")]
-    [SerializeField] private GameObject previousButton = null;
-    [SerializeField] private GameObject nextButton = null;
-    [SerializeField] private TextMeshProUGUI pageCounterText = null;
+    [SerializeField] protected GameObject previousButton = null;
+    [SerializeField] protected GameObject nextButton = null;
+    [SerializeField] protected TextMeshProUGUI pageCounterText = null;
 
     [Header("Slider Settings")]
-    [SerializeField] private float scrollSpeed = 1f;
+    [SerializeField] protected float scrollSpeed = 1f;
 
-    private void Awake()
+    protected void Awake()
     {
         // Creating a new array
         panels = new Transform[screenParent.childCount];
