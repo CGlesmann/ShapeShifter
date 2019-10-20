@@ -178,6 +178,10 @@ public class LevelGenerator : EditorWindow
     {
         EditorGUILayout.LabelField("Solution Settings", EditorStyles.boldLabel);
         solutionPreferences.amountOfMoves = EditorGUILayout.IntField("Amount of Moves", solutionPreferences.amountOfMoves);
+        EditorGUILayout.BeginHorizontal();
+        solutionPreferences.shapeDestroyEnabled = EditorGUILayout.Toggle("Destroy By Shape", solutionPreferences.shapeDestroyEnabled);
+        solutionPreferences.colorDestroyEnabled = EditorGUILayout.Toggle("Destroy By Color", solutionPreferences.colorDestroyEnabled);
+        EditorGUILayout.EndHorizontal();
         EditorGUILayout.Separator();
 
         if (GUILayout.Button("Clear Solution"))
@@ -225,10 +229,16 @@ public class LevelGenerator : EditorWindow
         }
 
         // Making amountOfMoves moves on the solution board
+        List<GameManager.DestroyMethod> availableMethods = solutionPreferences.GetAvailableDestroyMethods();
+        GameManager.DestroyMethod method;
         int slot1Index, slot2Index;
         GameSlot slot1, slot2;
         for(int i = 0; i < solutionPreferences.amountOfMoves; i++)
         {
+            // Setting the Destroy By Method...
+            method = availableMethods[Random.Range(0, availableMethods.Count)];
+            manager.ToggleDestoryMethod(method);
+
             // Getting two slot references
             slot1Index = availableSlots[Random.Range(0, availableSlots.Count)];
             slot1 = solutionBoardParent.GetChild(slot1Index).GetComponent<GameSlot>();
@@ -237,7 +247,7 @@ public class LevelGenerator : EditorWindow
             slot2Index = availableSlots[Random.Range(0, availableSlots.Count)];
             slot2 = solutionBoardParent.GetChild(slot2Index).GetComponent<GameSlot>();
 
-            Debug.Log("Switching SlotShape " + slot1Index + " and SlotShape " + slot2Index);
+            Debug.Log("DestroyMethod: " + method.ToString() + " | " + "Switching SlotShape " + slot1Index + " and SlotShape " + slot2Index);
 
             // Selecting two slots
             manager.SwitchSolutionShapes(slot1, slot1Index, slot2, slot2Index);
@@ -304,4 +314,19 @@ public class BoardPreferences
 public class SolutionPreferences
 {
     public int amountOfMoves = 1;
+    public bool colorDestroyEnabled = true, shapeDestroyEnabled = true;
+
+    public List<GameManager.DestroyMethod> GetAvailableDestroyMethods()
+    {
+        // Create the tracker list
+        List<GameManager.DestroyMethod> methods = new List<GameManager.DestroyMethod>();
+
+        // Adding available methods to tracker list
+        if (colorDestroyEnabled) methods.Add(GameManager.DestroyMethod.Color);
+        if (shapeDestroyEnabled) methods.Add(GameManager.DestroyMethod.Shape);
+
+        // return the resulting list
+        return methods.Count > 0 ? methods : null;
+    }
+
 }

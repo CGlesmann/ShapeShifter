@@ -253,6 +253,24 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    public void ToggleDestoryMethod(DestroyMethod method)
+    {
+        switch (method)
+        {
+            case DestroyMethod.Shape:
+                currentDestoryMethod = DestroyMethod.Shape;
+                destroyText.text = "Destroy by Shape";
+                break;
+            case DestroyMethod.Color:
+                currentDestoryMethod = DestroyMethod.Color;
+                destroyText.text = "Destroy by Color";
+                break;
+            default:
+                destroyText.text = "Unknown Destroy Method";
+                break;
+        }
+    }
     #endregion
 
     #region In Game Functions
