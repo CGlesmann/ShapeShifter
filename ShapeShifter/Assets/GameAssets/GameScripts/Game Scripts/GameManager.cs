@@ -152,9 +152,13 @@ public class GameManager : MonoBehaviour
     private void OnDestroy() { manager = null; }
     #endregion
 
-
     #region Getter Functions
     public GameSlot GetGameBoardslot(int slotIndex) { return gameBoardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
+    public ShapeData GetSolutionBoardShapeData(int slotIndex)
+    {
+        GameShape solutionShape = solutionBoardParent.GetChild(slotIndex).GetComponent<GameSlot>().GetSlotShape();
+        return solutionShape != null ? solutionShape.GetShapeData() : null;
+    }
 
     public string GetGameTime()
     {
@@ -364,22 +368,22 @@ public class GameManager : MonoBehaviour
         // Declaring the temp store variable
         GameSlot slot = null;
 
-        // Setting the indexes on the game board
-        if (gameBoardParent != null)
-        {
-            for (int i = 0; i < gameBoardParent.childCount; i++)
-            {
-                slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-                slot.SetSlotIndex(i);
-            }
-        }
-
         // Setting the indexes on the solution board
         if (solutionBoardParent != null)
         {
             for (int i = 0; i < solutionBoardParent.childCount; i++)
             {
                 slot = solutionBoardParent.GetChild(i).GetComponent<GameSlot>();
+                slot.SetSlotIndex(i);
+            }
+        }
+
+        // Setting the indexes on the game board
+        if (gameBoardParent != null)
+        {
+            for (int i = 0; i < gameBoardParent.childCount; i++)
+            {
+                slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
                 slot.SetSlotIndex(i);
             }
         }

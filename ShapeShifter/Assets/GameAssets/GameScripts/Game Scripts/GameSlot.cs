@@ -18,10 +18,15 @@ public class GameSlot : MonoBehaviour
     [SerializeField] private Color deselectedColor = Color.white;
     [SerializeField] private Color selectedColor = Color.white;
     private bool selected = false;
-
     private int slotIndex = -1;
 
-    public void Start() { manager = GameManager.manager; }
+    /// <summary>
+    /// Setting the static manager reference
+    /// </summary>
+    public void Start()
+    {
+        manager = GameManager.manager;
+    }
 
     #if UNITY_EDITOR || UNITY_STANDALONE_WIN
     /// <summary>

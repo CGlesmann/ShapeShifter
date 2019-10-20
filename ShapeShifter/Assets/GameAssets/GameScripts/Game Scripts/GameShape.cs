@@ -25,11 +25,8 @@ public class GameShape : MonoBehaviour
     private bool markedForDestruct = false;
 
     public void Start() { manager = GameManager.manager; }
-
-    public override string ToString()
-    {
-        return "Shape: " + shapeType.ToString() + " Color: " + shapeColor.ToString();
-    }
+    public override string ToString() { return "Shape: " + shapeType.ToString() + " Color: " + shapeColor.ToString(); }
+    public override int GetHashCode() { return base.GetHashCode(); }
 
     public override bool Equals(object other)
     {
@@ -38,11 +35,6 @@ public class GameShape : MonoBehaviour
             return (shapeType == otherShape.shapeType && shapeColor == otherShape.shapeColor);
         else
             return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
     }
 
     /// <summary>
@@ -127,8 +119,14 @@ public class GameShape : MonoBehaviour
     /// <returns></returns>
     public ShapeData GetShapeData() { return new ShapeData(shapeColor, shapeType); }
 
+    /// <summary>
+    /// Triggers the Shape Destroy Animation
+    /// </summary>
     public void TriggerDestruction() { shapeAnimator.SetTrigger("Destroy"); }
 
+    /// <summary>
+    /// Destroys the shape, informs the manager that the shape is destroyed
+    /// </summary>
     public void DestroyShape() { manager.shapesBeingDestroyed--;  Destroy(gameObject); }
 }
 
@@ -137,26 +135,14 @@ public class ShapeData
     public Color shapeColor;
     public GameShape.ShapeType shapeType;
 
-    public ShapeData(Color color, GameShape.ShapeType type)
-    {
-        shapeColor = color;
-        shapeType = type;
-    }
-
-    public override string ToString()
-    {
-        return shapeColor.ToString() + shapeType.ToString();
-    }
+    public ShapeData(Color color, GameShape.ShapeType type) { shapeColor = color; shapeType = type; }
+    public override string ToString() { return shapeColor.ToString() + shapeType.ToString(); }
+    public override int GetHashCode() { return base.GetHashCode(); }
 
     public override bool Equals(object obj)
     {
         ShapeData other = (ShapeData)obj;
         return other.shapeColor == this.shapeColor && other.shapeType == this.shapeType;
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
     }
 }
 
