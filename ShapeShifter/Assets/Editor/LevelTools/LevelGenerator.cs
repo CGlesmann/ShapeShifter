@@ -50,31 +50,36 @@ public class LevelGenerator : EditorWindow
     /// </summary>
     private void OnGUI()
     {
-        if (manager != null)
+        if (!Application.isPlaying)
         {
-            // Getting tab selection
-            currentTab = GUILayout.Toolbar(currentTab, new string[] { "Generate Board", "Generate Solution" });
-
-            // Drawing the currently selected tab
-            switch (currentTab)
+            if (manager != null)
             {
-                // Board Generator
-                case 0:
-                    DrawBoardGenerator();
-                    break;
+                // Getting tab selection
+                currentTab = GUILayout.Toolbar(currentTab, new string[] { "Generate Board", "Generate Solution" });
 
-                // Solution Generator
-                case 1:
-                    DrawSolutionGenerator();
-                    break;
+                // Drawing the currently selected tab
+                switch (currentTab)
+                {
+                    // Board Generator
+                    case 0:
+                        DrawBoardGenerator();
+                        break;
 
-                // Invalid input, draw error message
-                default:
-                    EditorGUILayout.LabelField("currentTab set to invalid value: " + currentTab.ToString());
-                    break;
+                    // Solution Generator
+                    case 1:
+                        DrawSolutionGenerator();
+                        break;
+
+                    // Invalid input, draw error message
+                    default:
+                        EditorGUILayout.LabelField("currentTab set to invalid value: " + currentTab.ToString());
+                        break;
+                }
             }
+            else
+                EditorGUILayout.LabelField("Level Generator isn't available in menu scenes", EditorStyles.boldLabel);
         } else
-            EditorGUILayout.LabelField("Level Generator isn't available in menu scenes", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Level Generator isn't available while testing", EditorStyles.boldLabel);
     }
 
     /// <summary>
@@ -185,6 +190,7 @@ public class LevelGenerator : EditorWindow
         EditorGUILayout.BeginHorizontal();
         solutionPreferences.shapeDestroyEnabled = EditorGUILayout.Toggle("Destroy By Shape", solutionPreferences.shapeDestroyEnabled);
         solutionPreferences.colorDestroyEnabled = EditorGUILayout.Toggle("Destroy By Color", solutionPreferences.colorDestroyEnabled);
+        solutionPreferences.chanceToChangeMethod = (int)EditorGUILayout.Slider("Chance To Change", solutionPreferences.chanceToChangeMethod + 1, 1, 100) - 1;
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.Separator();
 
@@ -241,7 +247,8 @@ public class LevelGenerator : EditorWindow
         {
             // Setting the Destroy By Method...
             method = availableMethods[Random.Range(0, availableMethods.Count)];
-            manager.ToggleDestoryMethod(method);
+            if (Random.Range(solutionPreferences.chanceToChangeMethod, 99) == 99)
+                manager.ToggleDestoryMethod(method);
 
             // Getting two slot references
             slot1Index = availableSlots[Random.Range(0, availableSlots.Count)];
@@ -317,7 +324,7 @@ public class BoardPreferences
 
 public class SolutionPreferences
 {
-    public int amountOfMoves = 1;
+    public int amountOfMoves = 1, chanceToChangeMethod = 0;
     public bool colorDestroyEnabled = true, shapeDestroyEnabled = true;
 
     public List<GameManager.DestroyMethod> GetAvailableDestroyMethods()
