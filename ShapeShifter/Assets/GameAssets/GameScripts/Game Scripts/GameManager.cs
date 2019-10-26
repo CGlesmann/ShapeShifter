@@ -357,7 +357,7 @@ public class GameManager : MonoBehaviour
             // solutionTimer = solutionDisplayTime;
 
             // Enabling the timer element
-            solutionTimerUI.gameObject.SetActive(true);
+            // solutionTimerUI.gameObject.SetActive(true);
             solutionTimerUI.fillAmount = 1;
 
             // Toggling the Solution board / Gameboard

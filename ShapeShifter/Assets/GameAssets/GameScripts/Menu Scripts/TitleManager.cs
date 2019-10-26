@@ -28,4 +28,8 @@ public class TitleManager : MonoBehaviour
     /// Navigates to the playMenu
     /// </summary>
     public void BeginPlay() { SceneManager.LoadScene(DataTracker.gameData.initialTutorialComplete ? playMenu : tutorialLevel); }
+
+    public void TransitionToMenu(string menu) { SceneManager.LoadScene(menu); }
+
+    public void QuitGame() { Application.Quit(); }
 }
