@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -64,5 +65,5 @@ public class GameData
     public bool initialTutorialComplete = false;
     public bool destroyTutorialComplete = false;
     public bool defeatTutorialComplete = false;
-    public float levelsCompleted = 0;
+    public int highestCompletedLevel = 0;
 }

@@ -10,7 +10,7 @@ public class GameSlot : MonoBehaviour
     private SpriteRenderer slotRenderer => GetComponent<SpriteRenderer>();
 
     // private properties
-    private Transform childShape => transform.childCount > 0 ? transform.GetChild(0) : null;
+    private Transform childShape => GetSlotShapeTransform();
     private GameShape slotShape => childShape != null ? childShape.GetComponent<GameShape>() : null;
 
     [Header("Control Variables")]
@@ -69,6 +69,21 @@ public class GameSlot : MonoBehaviour
     }
     #endif
 
+    public Transform GetSlotShapeTransform()
+    {
+        Transform t;
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            t = transform.GetChild(0);
+            if (t.GetComponent<GameShape>() != null)
+            {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// Sets the shape of the current slot
     /// </summary>
@@ -97,10 +112,17 @@ public class GameSlot : MonoBehaviour
     /// <returns></returns>
     public GameShape GetSlotShape()
     {
-        if (transform.childCount > 0)
-            return transform.GetChild(0).GetComponent<GameShape>();
+        Transform t = GetSlotShapeTransform();
+        if (t != null)
+        {
+            Debug.Log("Found shape");
+            return t.GetComponent<GameShape>();
+        }
         else
+        {
+            Debug.Log("Couldn't Find shape");
             return null;
+        }
     }
 
     /// <summary>
@@ -137,4 +159,7 @@ public class GameSlot : MonoBehaviour
         selected = false;
         slotRenderer.color = deselectedColor;
     }
+
+    public void DisableSlotSelection() { canSelect = false; }
+    public void EnableSlotSelection() { canSelect = true; }
 }

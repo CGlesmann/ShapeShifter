@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,9 +10,6 @@ public class GameManager : MonoBehaviour
 {
     // Declaring a singleton
     public static GameManager manager = null;
-
-    // Declaring Time Constants
-    private const int DAY_IN_SECOND = 86400, HOUR_IN_SECOND = 3600, MINUTE_IN_SECOND = 60;
     
     // Destroy Control Toggle
     public enum DestroyMethod { Shape, Color };
@@ -45,6 +43,15 @@ public class GameManager : MonoBehaviour
 
     [Header("Prefab REferences")]
     public GameObject shapePrefab = null;
+
+    public delegate void OnShapeSwap();
+    public static event OnShapeSwap onShapeSwap;
+
+    //public delegate void OnMarkDestroy();
+    //public static event OnMarkDestroy onMarkDestroy;
+
+    public delegate void OnUpdateBoard();
+    public static event OnUpdateBoard onUpdateBoard;
 
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
@@ -120,7 +127,7 @@ public class GameManager : MonoBehaviour
             // Updating Game Timer
             levelTimer += Time.deltaTime;
             if (gameTimerText != null)
-                gameTimerText.text = GetGameTime();
+                gameTimerText.text = GameTime.GetGameTimeFormat(levelTimer);
         }
     }
 
@@ -142,6 +149,9 @@ public class GameManager : MonoBehaviour
 
                 // Mark as checked
                 checkVictory = false;
+
+                // Update Board
+                onUpdateBoard?.Invoke();
             }
         }
     }
@@ -161,6 +171,7 @@ public class GameManager : MonoBehaviour
         return solutionShape != null ? solutionShape.GetShapeData() : null;
     }
 
+    /*
     public string GetGameTime()
     {
         // Declaring the store variable
@@ -193,6 +204,7 @@ public class GameManager : MonoBehaviour
         // Returning the resulting time
         return time;
     }
+    */
     #endregion
 
     #region Setter Functions
@@ -217,6 +229,7 @@ public class GameManager : MonoBehaviour
                 slot2 = targetSlot;
                 StartCoroutine(MoveShapes());
 
+                onShapeSwap?.Invoke();
                 return true;
             }
         }
@@ -922,8 +935,11 @@ public class GameManager : MonoBehaviour
         shapesBeingDestroyed = 0;
         DisplayVictoryScreen();
 
-        DataTracker.gameData.levelsCompleted++;
-        DataTracker.dataTracker.SaveData();
+        if (Int32.TryParse(SceneManager.GetActiveScene().name.Split('_')[1], out int completedLevel))
+        {
+            DataTracker.gameData.highestCompletedLevel = completedLevel;
+            DataTracker.dataTracker.SaveData();
+        }
     }
     #endregion
 
