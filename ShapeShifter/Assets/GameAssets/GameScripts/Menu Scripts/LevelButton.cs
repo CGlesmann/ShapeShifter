@@ -13,18 +13,16 @@ public class LevelButton : MonoBehaviour
     private bool locked = false;
 
     [Header("UI References")]
-    [SerializeField] private Image buttonImage = null;
+    [SerializeField] private GameObject lockImage = null;
     [SerializeField] private GameObject levelText = null;
-    [SerializeField] private Sprite unlockedButtonSprite = null;
-    [SerializeField] private Sprite lockedButtonSprite = null;
 
     private void Awake()
     {
         if (buttonIndex == 0 || DataTracker.gameData.highestCompletedLevel >= buttonIndex)
-            buttonImage.sprite = unlockedButtonSprite;
+            lockImage.SetActive(false);
         else
         {
-            buttonImage.sprite = lockedButtonSprite;
+            lockImage.SetActive(true);
             if (levelText != null)
                 levelText.SetActive(false);
 
