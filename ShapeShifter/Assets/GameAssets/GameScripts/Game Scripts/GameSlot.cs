@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(BoxCollider2D))]
 public class GameSlot : MonoBehaviour
 {
     [Header("Object References")]
     private GameManager manager = GameManager.manager;
-    private SpriteRenderer slotRenderer => GetComponent<SpriteRenderer>();
+    private Image slotRenderer => GetComponent<Image>();
 
     // private properties
     private Transform childShape => GetSlotShapeTransform();
@@ -49,6 +49,7 @@ public class GameSlot : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        /*
         // Checking for touch input
         if (!GameState.gamePaused && canSelect && Input.touchCount == 1)
         {
@@ -66,6 +67,7 @@ public class GameSlot : MonoBehaviour
                     ToggleSelect();
             }
         }
+        */
     }
     #endif
 

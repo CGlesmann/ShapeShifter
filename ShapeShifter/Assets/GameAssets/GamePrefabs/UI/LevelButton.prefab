@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 117, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4548087523306629013
 CanvasRenderer:
@@ -65,7 +65,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: f460ba1b980336d4cadc2bfa4dec25c0, type: 3}
+  m_Sprite: {fileID: -5620155193319629329, guid: f460ba1b980336d4cadc2bfa4dec25c0,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -87,6 +88,7 @@ GameObject:
   - component: {fileID: 7937078196237919758}
   - component: {fileID: 7937078196237919757}
   - component: {fileID: 7937078196237919756}
+  - component: {fileID: 8537581196149122035}
   - component: {fileID: 8120450958752523757}
   m_Layer: 5
   m_Name: LevelButton
@@ -186,7 +188,7 @@ MonoBehaviour:
     m_PressedSprite: {fileID: 4049663068208798998, guid: 316058d033f74384da710cd05cc694e1,
       type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 6d9cef50a90986242a22d5833581847e, type: 3}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -211,6 +213,25 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!95 &8537581196149122035
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937078196237919754}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e6481ec0e6a59ef458133af1de87454d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &8120450958752523757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   buttonIndex: 0
+  anim: {fileID: 8537581196149122035}
   lockImage: {fileID: 4502688566157616015}
   levelText: {fileID: 7937078196340112693}
 --- !u!1 &7937078196340112693

@@ -38,4 +38,6 @@ public static class GameTime
         // Returning the resulting time
         return time;
     }
+
+    public static int GetMinuteCount(float s) { return Mathf.FloorToInt(s / MINUTE_IN_SECOND); }
 }

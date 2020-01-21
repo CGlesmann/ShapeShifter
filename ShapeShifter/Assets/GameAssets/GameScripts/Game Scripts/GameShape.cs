@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,12 +17,12 @@ public class GameShape : MonoBehaviour
     private GameManager manager = GameManager.manager;
 
     [Header("Component References")]
-    [SerializeField] private SpriteRenderer shapeRenderer = null;
+    [SerializeField] private Image imageRenderer = null;
     [SerializeField] private Animator shapeAnimator = null;
 
     [Header("Shape Variables")]
     [SerializeField] private ShapeType shapeType = ShapeType.Square;
-    [HideInInspector] public Color shapeColor => shapeRenderer.color;
+    [HideInInspector] public Color shapeColor => imageRenderer.color;
     private bool markedForDestruct = false;
 
     public void Start() { manager = GameManager.manager; }
@@ -59,22 +60,22 @@ public class GameShape : MonoBehaviour
         shapeType = type;
 
         // Setting the shape sprite
-        if (shapeRenderer != null)
+        if (imageRenderer != null)
         {
             // Setting the Renderer Sprite
             switch (shapeType)
             {
                 case ShapeType.Square:
-                    shapeRenderer.sprite = ShapeSettings.SQUARE_SPRITE;
+                    imageRenderer.sprite = ShapeSettings.SQUARE_SPRITE;
                     break;
                 case ShapeType.Circle:
-                    shapeRenderer.sprite = ShapeSettings.CIRCLE_SPRITE;
+                    imageRenderer.sprite = ShapeSettings.CIRCLE_SPRITE;
                     break;
                 case ShapeType.Triangle:
-                    shapeRenderer.sprite = ShapeSettings.TRIANGLE_SPRITE;
+                    imageRenderer.sprite = ShapeSettings.TRIANGLE_SPRITE;
                     break;
                 case ShapeType.Diamond:
-                    shapeRenderer.sprite = ShapeSettings.DIAMOND_SPRITE;
+                    imageRenderer.sprite = ShapeSettings.DIAMOND_SPRITE;
                     break;
             };
         }
@@ -89,10 +90,10 @@ public class GameShape : MonoBehaviour
     public void SetShapeColor(Color targetColor)
     {
         // Checking for a null reference
-        if (shapeRenderer != null)
+        if (imageRenderer != null)
         {
             // Setting the Renderer Color
-            shapeRenderer.color = targetColor;
+            imageRenderer.color = targetColor;
         }
         else
             Debug.LogError("SpriteRenderer not set for " + name);
@@ -111,7 +112,7 @@ public class GameShape : MonoBehaviour
     /// Gets the current color of the shapeRenderer
     /// </summary>
     /// <returns></returns>
-    public Color GetShapeColor() { return shapeRenderer.color; }
+    public Color GetShapeColor() { return imageRenderer.color; }
 
     /// <summary>
     /// Return the shapes data as a ShapeData struct

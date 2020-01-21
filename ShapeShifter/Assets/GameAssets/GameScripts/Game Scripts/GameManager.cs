@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public enum DestroyMethod { Shape, Color };
 
     [Header("Scene Navigation Variables")]
+    [SerializeField] private int levelIndex = 0;
     [SerializeField] private string mainMenuScene = "";
     [SerializeField] private string nextLevelScene = "";
 
@@ -41,14 +42,11 @@ public class GameManager : MonoBehaviour
     public Transform gameBoardParent = null;
     public Transform solutionBoardParent = null;
 
-    [Header("Prefab REferences")]
+    [Header("Prefab References")]
     public GameObject shapePrefab = null;
 
     public delegate void OnShapeSwap();
     public static event OnShapeSwap onShapeSwap;
-
-    //public delegate void OnMarkDestroy();
-    //public static event OnMarkDestroy onMarkDestroy;
 
     public delegate void OnUpdateBoard();
     public static event OnUpdateBoard onUpdateBoard;
@@ -97,7 +95,7 @@ public class GameManager : MonoBehaviour
 
         // Setting the gameboard/solution board
         SetGameSlotIndexes();
-        ShowSolutionBoard();
+        //ShowSolutionBoard();
     }
 
     /// <summary>
@@ -127,7 +125,7 @@ public class GameManager : MonoBehaviour
             // Updating Game Timer
             levelTimer += Time.deltaTime;
             if (gameTimerText != null)
-                gameTimerText.text = GameTime.GetGameTimeFormat(levelTimer);
+                gameTimerText.text = string.Format("Level {0} - {1}", levelIndex, GameTime.GetGameTimeFormat(levelTimer));
         }
     }
 
@@ -140,7 +138,7 @@ public class GameManager : MonoBehaviour
         if (!GameState.gamePaused)
         {
             // Checking for victory (if nessecary)
-            if ((Input.GetKeyDown(KeyCode.Space) || checkVictory) && shapesBeingDestroyed <= 0)
+            if (checkVictory && shapesBeingDestroyed <= 0)
             {
                 // Check for level completion
                 if (!CheckForVictory())
@@ -163,48 +161,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Getter Functions
-    public GameSlot GetGameBoardslot(int slotIndex) { return gameBoardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
-    public GameSlot GetSolutionBoardSlot(int slotIndex) { return solutionBoardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
-    public ShapeData GetSolutionBoardShapeData(int slotIndex)
-    {
-        GameShape solutionShape = solutionBoardParent.GetChild(slotIndex).GetComponent<GameSlot>().GetSlotShape();
-        return solutionShape != null ? solutionShape.GetShapeData() : null;
-    }
-
-    /*
-    public string GetGameTime()
-    {
-        // Declaring the store variable
-        string time = "";
-        int seconds = Mathf.RoundToInt(levelTimer);
-
-        // Checking days
-        int dayCount = Mathf.FloorToInt(seconds / DAY_IN_SECOND);
-
-        // Checking hours
-        seconds -= (dayCount * DAY_IN_SECOND);
-        int hourCount = Mathf.FloorToInt(seconds / HOUR_IN_SECOND);
-
-        // Checking Minutes
-        seconds -= (hourCount * HOUR_IN_SECOND);
-        int minuteCount = Mathf.FloorToInt(seconds / MINUTE_IN_SECOND);
-
-        // Removing minutes from seconds timer
-        seconds -= (minuteCount * 60);
-
-        // Formatting the time string
-        if (dayCount > 0)
-            time += dayCount < 10 ? "0" + dayCount + ":" : dayCount + ":";
-        if (hourCount > 0)
-            time += hourCount < 10 ? "0" + hourCount + ":" : hourCount + ":";
-
-        time += minuteCount < 10 ? "0" + minuteCount + ":" : minuteCount + ":";
-        time += seconds < 10 ? "0" + seconds : seconds.ToString();
-
-        // Returning the resulting time
-        return time;
-    }
-    */
+    public GameSlot GetGameSlot(int slotIndex, Transform boardParent) { return boardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
+    public ShapeData GetBoardShapeData(int slotIndex, Transform boardParent) { return GetGameSlot(slotIndex, boardParent)?.GetSlotShape().GetShapeData() ?? null; }
     #endregion
 
     #region Setter Functions
@@ -287,10 +245,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region In Game Functions
-    /// <summary>
-    /// Restores the game board to a previous state, used by the undo function
-    /// </summary>
-    /// <param name="data"></param>
     public void RestoreBoardState(BoardData data)
     {
         // Declaring Tracker Variables
@@ -347,13 +301,15 @@ public class GameManager : MonoBehaviour
             if (gameBoardParent.gameObject.activeSelf)
             {
                 ShowSolutionBoard();
-                solutionText.text = "View GameBoard";
+                if (solutionText != null)
+                    solutionText.text = "View GameBoard";
             }
             else
             {
                 // Checking for an active solution board
                 HideSolutionBoard();
-                solutionText.text = "View SolutionBoard";
+                if (solutionText != null)
+                    solutionText.text = "View SolutionBoard";
             }
         }
     }
@@ -434,8 +390,8 @@ public class GameManager : MonoBehaviour
         slot2.GetSlotShape().transform.SetParent(slot1.transform);
 
         // Triggering Shape Destruction(s)
-        TriggerShapeDestruction(slot1.GetSlotIndex());
-        TriggerShapeDestruction(slot2.GetSlotIndex());
+        TriggerShapeDestruction(slot1.GetSlotIndex(), gameBoardParent);
+        TriggerShapeDestruction(slot2.GetSlotIndex(), gameBoardParent);
 
         // Reset each slot
         slot1.ResetSlotState();
@@ -461,8 +417,8 @@ public class GameManager : MonoBehaviour
         s.transform.localPosition = new Vector3(0.5f, -0.5f);
 
         // Triggering Shape Destruction(s)
-        TriggerSolutionShapeDestruction(s1Index);
-        TriggerSolutionShapeDestruction(s2Index);
+        TriggerShapeDestruction(s1Index, solutionBoardParent);
+        TriggerShapeDestruction(s2Index, solutionBoardParent);
     }
 
     private IEnumerator MoveShapes()
@@ -518,7 +474,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
-    public List<int> CheckForSurroundingShapes(int index)
+    public List<int> CheckForSurroundingShapes(int index, Transform boardParent)
     {
         // Declaring temp storage variable
         List<int> indexes = new List<int>();
@@ -528,10 +484,10 @@ public class GameManager : MonoBehaviour
 
         // Top left slot
         i = index - (boardWidth + 1);
-        if (index % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        if (index % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -540,10 +496,10 @@ public class GameManager : MonoBehaviour
 
         // Top Center Slot
         i = (index - (boardWidth + 0));
-        if (index >= boardWidth && i >= 0 && GetGameBoardslot(i) != null)
+        if (index >= boardWidth && i >= 0 && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -552,10 +508,10 @@ public class GameManager : MonoBehaviour
 
         // Top Right Slot
         i = index - (boardWidth - 1);
-        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -564,10 +520,10 @@ public class GameManager : MonoBehaviour
 
         // Middle Left Slot
         i = index - 1;
-        if (index % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        if (index % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -576,10 +532,10 @@ public class GameManager : MonoBehaviour
 
         // Middle Right Slot
         i = index + 1;
-        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
+        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -588,10 +544,10 @@ public class GameManager : MonoBehaviour
 
         // Bottom left slot
         i = index + (boardWidth - 1);
-        if (index % boardWidth != 0 && i < boardSize && GetGameBoardslot(i) != null)
+        if (index % boardWidth != 0 && i < boardSize && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -600,10 +556,10 @@ public class GameManager : MonoBehaviour
 
         // Bottom Center Slot
         i = index + boardWidth;
-        if (index <= (boardSize - boardWidth) && i < boardSize && GetGameBoardslot(i) != null)
+        if (index <= (boardSize - boardWidth) && i < boardSize && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -612,117 +568,10 @@ public class GameManager : MonoBehaviour
 
         // Bottom Right Slot
         i = index + (boardWidth + 1);
-        if ((index + 1) % boardWidth != 0 && i < boardSize && GetGameBoardslot(i) != null)
+        if ((index + 1) % boardWidth != 0 && i < boardSize && GetGameSlot(i, boardParent) != null)
         {
             // Getting Slot Reference
-            slot = GetGameBoardslot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        return indexes;
-    }
-
-    public List<int> CheckForSurroundingSolutionShapes(int index)
-    {
-        // Declaring temp storage variable
-        List<int> indexes = new List<int>();
-        int i;
-
-        GameSlot slot;
-
-        // Top left slot
-        i = index - (boardWidth + 1);
-        if (index % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        // Top Center Slot
-        i = (index - (boardWidth + 0));
-        if (index >= boardWidth && i >= 0 && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        // Top Right Slot
-        i = index - (boardWidth - 1);
-        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        // Middle Left Slot
-        i = index - 1;
-        if (index % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        // Middle Right Slot
-        i = index + 1;
-        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        // Bottom left slot
-        i = index + (boardWidth - 1);
-        if (index % boardWidth != 0 && i < boardSize && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        // Bottom Center Slot
-        i = index + boardWidth;
-        if (index <= (boardSize - boardWidth) && i < boardSize && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
-
-            // Checking for destorying the shape
-            if (slot.GetSlotShape() != null)
-                indexes.Add(i);
-        }
-
-        // Bottom Right Slot
-        i = index + (boardWidth + 1);
-        if ((index + 1) % boardWidth != 0 && i < boardSize && GetGameBoardslot(i) != null)
-        {
-            // Getting Slot Reference
-            slot = GetSolutionBoardSlot(i);
+            slot = GetGameSlot(i, boardParent);
 
             // Checking for destorying the shape
             if (slot.GetSlotShape() != null)
@@ -736,10 +585,10 @@ public class GameManager : MonoBehaviour
     /// Triggers a destruction of shapes around the given index
     /// </summary>
     /// <param name="index"></param>
-    public void TriggerShapeDestruction(int index)
+    public void TriggerShapeDestruction(int index, Transform boardParent)
     {
         // Getting the current slot
-        GameShape centerShape = gameBoardParent.GetChild(index).GetComponent<GameSlot>().GetSlotShape();
+        GameShape centerShape = boardParent.GetChild(index).GetComponent<GameSlot>().GetSlotShape();
         if (centerShape == null)
         {
             Debug.LogError("Couldn't find shape when triggering destruction at slot " + index);
@@ -747,7 +596,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Declaring temp storage variable
-        List<int> targetIndexes = CheckForSurroundingShapes(index);
+        List<int> targetIndexes = CheckForSurroundingShapes(index, boardParent);
         bool destoryCurrentSlot = false;
         GameSlot slot;
         GameShape shape = null;
@@ -756,7 +605,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (int i in targetIndexes)
             {
-                slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
+                slot = boardParent.GetChild(i).GetComponent<GameSlot>();
                 shape = slot.GetSlotShape();
 
                 if (CheckForMatch(centerShape, shape))
@@ -783,53 +632,6 @@ public class GameManager : MonoBehaviour
                 centerShape.TriggerDestruction();
                 centerShape.MarkForDestruction();
                 shapesBeingDestroyed++;
-            }
-        }
-    }
-
-    public void TriggerSolutionShapeDestruction(int index)
-    {
-        // Getting the current slot
-        GameShape centerShape = solutionBoardParent.GetChild(index).GetComponent<GameSlot>().GetSlotShape();
-        if (centerShape == null)
-        {
-            Debug.LogError("Couldn't find shape when triggering destruction at slot " + index);
-            return;
-        }
-
-        // Declaring temp storage variable
-        List<int> targetIndexes = CheckForSurroundingSolutionShapes(index);
-        bool destoryCurrentSlot = false;
-        GameSlot slot;
-        GameShape shape = null;
-
-        if (targetIndexes != null)
-        {
-            foreach (int i in targetIndexes)
-            {
-                slot = solutionBoardParent.GetChild(i).GetComponent<GameSlot>();
-                shape = slot.GetSlotShape();
-
-                if (CheckForMatch(centerShape, shape))
-                {
-                    // Check to make sure the shape is marked for destruction
-                    if (!shape.IsMarkedForDestruct())
-                    {
-                        shape.DestroyShapeImmediate();
-                    }
-
-                    // Marking the center shape for destruction
-                    destoryCurrentSlot = true;
-                }
-            }
-        }
-
-        // Center Slot
-        if (destoryCurrentSlot)
-        {
-            if (!centerShape.IsMarkedForDestruct())
-            {
-                centerShape.DestroyShapeImmediate();
             }
         }
     }
@@ -884,15 +686,8 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    /// <summary>
-    /// Triggered after switching two shapes
-    /// Compares the gameboard to the solution board
-    /// Triggers CompleteLevel if evaluates as true
-    /// </summary>
     public bool CheckForVictory()
     {
-        Debug.Log("Checking for Victory");
-
         // Setting the storage vars
         GameSlot slot1 = null, slot2 = null;
         GameShape shape1 = null, shape2 = null;
@@ -923,88 +718,42 @@ public class GameManager : MonoBehaviour
         }
 
         // All the slots evaluate as true, trigger Complete Level
+        Debug.Log("Level Completed");
         CompleteLevel();
         return true;
     }
 
-    /// <summary>
-    /// Triggers end of level animation and menu
-    /// </summary>
     public void CompleteLevel()
     {
         shapesBeingDestroyed = 0;
         DisplayVictoryScreen();
 
-        if (Int32.TryParse(SceneManager.GetActiveScene().name.Split('_')[1], out int completedLevel))
+        if (Int32.TryParse(SceneManager.GetActiveScene().name.Split('_')[1] ?? "", out int completedLevel))
         {
-            DataTracker.gameData.highestCompletedLevel = completedLevel;
+            if (completedLevel > DataTracker.gameData.highestCompletedLevel)
+                DataTracker.gameData.highestCompletedLevel = completedLevel;
+
             DataTracker.dataTracker.SaveData();
         }
     }
     #endregion
 
     #region GUI Functions
-    /// <summary>
-    /// Displays the Pause menu and sets the game state to paused
-    /// </summary>
-    public void PauseGame()
-    {
-        // Displaying the the pause menu
-        DisplayPauseMenu();
+    public void PauseGame() { DisplayPauseMenu(); GameState.gamePaused = true; }
+    public void ResumeGame() { HidePauseMenu(); GameState.gamePaused = false; }
 
-        // Setting the game state to paused
-        GameState.gamePaused = true;
-    }
-
-    /// <summary>
-    /// Unpauses the game state and hides the pause menu
-    /// </summary>
-    public void ResumeGame()
-    {
-        // Hide the pause menu
-        HidePauseMenu();
-
-        // Setting the game state to unpaused
-        GameState.gamePaused = false;
-    }
-
-    /// <summary>
-    /// Displaying the pause menu
-    /// </summary>
     public void DisplayPauseMenu() { pauseMenuParent.SetActive(true); }
-
-    /// <summary>
-    /// Hides the pause menu
-    /// </summary>
     public void HidePauseMenu() { pauseMenuParent.SetActive(false); }
 
-    /// <summary>
-    /// Displays the end level menu, also pauses the game to restrict user control
-    /// </summary>
     public void DisplayVictoryScreen() { victoryMenuParent.SetActive(true); GameState.gamePaused = true; }
+    public void HideVictoryScreen() { victoryMenuParent.SetActive(false); GameState.gamePaused = false; }
 
-    /// <summary>
-    /// Displays the end screen if the player looses
-    /// </summary>
-    public void DisplayDefeatScreen(string defeatText)
-    {
-        defeatScreenParent.SetActive(true);
-        failureText.text = defeatText;
-        GameState.gamePaused = true;
-    }
+    public void DisplayDefeatScreen(string defeatText) { defeatScreenParent.SetActive(true); failureText.text = defeatText; GameState.gamePaused = true; }
     #endregion
 
     #region Scene Navigation Functions
     public void RestartCurrentLevel() { GameState.gamePaused = false; SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
-
-    /// <summary>
-    /// Invokes navigation to the main menu
-    /// </summary>
     public void ExitToMainMenu() { GameState.gamePaused = false; SceneManager.LoadScene(mainMenuScene); }
-
-    /// <summary>
-    /// Navigates to the declared nextLevel
-    /// </summary>
-    public void NavigateToNextLevel() { GameState.gamePaused = false; SceneManager.LoadScene(nextLevelScene); }
+    public void NavigateToNextLevel() { AdManager.CheckForAutomaticAd(GameTime.GetMinuteCount(levelTimer), nextLevelScene); HideVictoryScreen(); }
     #endregion
 }
