@@ -309,6 +309,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2085109044775486730}
+  - component: {fileID: 7473873186613679592}
   m_Layer: 5
   m_Name: Challenge
   m_TagString: Untagged
@@ -337,3 +338,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1107, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7473873186613679592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508519255685690441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 458b5e94b4ec9e843b974fb8741de40c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  challengeText: {fileID: 7882791811565576587}
+  challengeCheck: {fileID: 8393967827965047164}

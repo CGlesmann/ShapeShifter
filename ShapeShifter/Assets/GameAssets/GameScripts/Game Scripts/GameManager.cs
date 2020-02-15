@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public enum DestroyMethod { Shape, Color };
 
     [Header("Scene Navigation Variables")]
-    [SerializeField] private int levelIndex = 0;
+    public int levelIndex = 0;
     [SerializeField] private string mainMenuScene = "";
     [SerializeField] private string nextLevelScene = "";
 
@@ -28,22 +28,27 @@ public class GameManager : MonoBehaviour
     private bool checkVictory = false;
 
     [Header("Board Settings")]
+    [SerializeField] private float shapeSize = 2.25f;
     [SerializeField] private int boardWidth = 4;
     [SerializeField] private int boardHeight = 4;
+    [HideInInspector] public int shapesBeingDestroyed = 0;
     public int boardSize => boardWidth * boardHeight;
-    public int shapesBeingDestroyed = 0;
 
     [Header("Solution Board Settings")]
     [SerializeField] private float solutionDisplayTime = 10f; // In Seconds
     private float solutionTimer = 0;
 
     [Header("Object References")]
+    public ChallengeManager challengeManager = null;
     public UndoManager undoManager = null;
     public Transform gameBoardParent = null;
     public Transform solutionBoardParent = null;
 
     [Header("Prefab References")]
     public GameObject shapePrefab = null;
+
+    public delegate void OnClockTick();
+    public static event OnClockTick onClockTick;
 
     public delegate void OnShapeSwap();
     public static event OnShapeSwap onShapeSwap;
@@ -66,14 +71,13 @@ public class GameManager : MonoBehaviour
     Dictionary<int, ShapeData> requiredShapes;
 
     #region Unity Functions
+    private void OnEnable() { manager = this; }
+
     /// <summary>
     /// Setting Default State
     /// </summary>
     private void Awake()
     {
-        // Setting the Singleton
-        manager = this;
-
         // Setting the default destroy settings
         currentDestoryMethod = DestroyMethod.Shape;
         destroyText.text = "Destroy by Shape";
@@ -95,7 +99,7 @@ public class GameManager : MonoBehaviour
 
         // Setting the gameboard/solution board
         SetGameSlotIndexes();
-        //ShowSolutionBoard();
+        shapesBeingDestroyed = 0;
     }
 
     /// <summary>
@@ -124,6 +128,8 @@ public class GameManager : MonoBehaviour
 
             // Updating Game Timer
             levelTimer += Time.deltaTime;
+            onClockTick?.Invoke();
+
             if (gameTimerText != null)
                 gameTimerText.text = string.Format("Level {0} - {1}", levelIndex, GameTime.GetGameTimeFormat(levelTimer));
         }
@@ -279,6 +285,7 @@ public class GameManager : MonoBehaviour
                     // Creating the shape
                     GameObject newShape = Instantiate(shapePrefab, slot.transform);
                     newShape.transform.localPosition = new Vector3(0.5f, -0.5f, 0f);
+                    newShape.transform.localScale = new Vector3(shapeSize, shapeSize, 0f);
 
                     // Getting the GameShape reference and setting it equal to the shape in the data
                     GameShape shapeRef = newShape.GetComponent<GameShape>();
@@ -739,13 +746,13 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region GUI Functions
-    public void PauseGame() { DisplayPauseMenu(); GameState.gamePaused = true; }
-    public void ResumeGame() { HidePauseMenu(); GameState.gamePaused = false; }
+    public void PauseGame() { GameState.gamePaused = true; }
+    public void ResumeGame() { GameState.gamePaused = false; }
 
     public void DisplayPauseMenu() { pauseMenuParent.SetActive(true); }
     public void HidePauseMenu() { pauseMenuParent.SetActive(false); }
 
-    public void DisplayVictoryScreen() { victoryMenuParent.SetActive(true); GameState.gamePaused = true; }
+    public void DisplayVictoryScreen() { GameState.gamePaused = true; checkVictory = false; victoryMenuParent.SetActive(true); challengeManager.UpdateChallengeEntries(); }
     public void HideVictoryScreen() { victoryMenuParent.SetActive(false); GameState.gamePaused = false; }
 
     public void DisplayDefeatScreen(string defeatText) { defeatScreenParent.SetActive(true); failureText.text = defeatText; GameState.gamePaused = true; }
@@ -754,6 +761,6 @@ public class GameManager : MonoBehaviour
     #region Scene Navigation Functions
     public void RestartCurrentLevel() { GameState.gamePaused = false; SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
     public void ExitToMainMenu() { GameState.gamePaused = false; SceneManager.LoadScene(mainMenuScene); }
-    public void NavigateToNextLevel() { AdManager.CheckForAutomaticAd(GameTime.GetMinuteCount(levelTimer), nextLevelScene); HideVictoryScreen(); }
+    public void NavigateToNextLevel() { AdManager.CheckForAutomaticAd(GameTime.GetMinuteCount(levelTimer), nextLevelScene); /*HideVictoryScreen();*/ GameState.gamePaused = false; }
     #endregion
 }

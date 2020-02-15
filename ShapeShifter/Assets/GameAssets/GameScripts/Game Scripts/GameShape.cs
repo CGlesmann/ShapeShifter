@@ -18,14 +18,15 @@ public class GameShape : MonoBehaviour
 
     [Header("Component References")]
     [SerializeField] private Image imageRenderer = null;
-    [SerializeField] private Animator shapeAnimator = null;
 
     [Header("Shape Variables")]
     [SerializeField] private ShapeType shapeType = ShapeType.Square;
     [HideInInspector] public Color shapeColor => imageRenderer.color;
+
+    private Vector3 baseSize = Vector3.zero;
     private bool markedForDestruct = false;
 
-    public void Start() { manager = GameManager.manager; }
+    public void Start() { manager = GameManager.manager; baseSize = transform.localScale; Debug.Log("BaseSize: " + baseSize.ToString()); }
     public override string ToString() { return "Shape: " + shapeType.ToString() + " Color: " + shapeColor.ToString(); }
     public override int GetHashCode() { return base.GetHashCode(); }
 
@@ -123,17 +124,28 @@ public class GameShape : MonoBehaviour
     /// <summary>
     /// Triggers the Shape Destroy Animation
     /// </summary>
-    public void TriggerDestruction() { shapeAnimator.SetTrigger("Destroy"); }
+    public void TriggerDestruction() { StartCoroutine(DisplayShapeDestruction()); /*shapeAnimator.SetTrigger("Destroy");*/ }
 
-    /// <summary>
-    /// Destroys the shape, informs the manager that the shape is destroyed
-    /// </summary>
+    private IEnumerator DisplayShapeDestruction()
+    {
+        float counter = 0;
+        while (counter < 1)
+        {
+            counter += Time.deltaTime * 2f;
+
+            transform.localScale = Vector3.Lerp(baseSize, Vector3.zero, counter);
+            yield return null;
+        }
+
+        DestroyShape();
+    }
+
     public void DestroyShape()
     {
         if (manager != null)
             manager.shapesBeingDestroyed--;
 
-        Destroy(gameObject);
+        DestroyImmediate(gameObject);
     }
 
     public void DestroyShapeImmediate()
@@ -184,7 +196,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(ShapeSettings.BLUE_COLOR);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape color to Red according to the global manager reference
@@ -193,7 +205,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(ShapeSettings.RED_COLOR);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape color to Green according to the global manager reference
@@ -202,7 +214,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(ShapeSettings.GREEN_COLOR);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape color to Yellow according to the global manager reference
@@ -211,7 +223,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeColor(ShapeSettings.YELLOW_COLOR);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
         #endregion
 
@@ -226,7 +238,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeType(GameShape.ShapeType.Square);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape to Circle according to the global manager reference
@@ -235,7 +247,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeType(GameShape.ShapeType.Circle);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape to Triangle according to the global manager reference
@@ -244,7 +256,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeType(GameShape.ShapeType.Triangle);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
         // Sets the shape to Diamond according to the global manager reference
@@ -253,7 +265,7 @@ public class ShapeInspector : Editor
             // Sets the color, makrs the scene as dirty for save
             shape.SetShapeType(GameShape.ShapeType.Diamond);
             if (!EditorApplication.isPlaying)
-                EditorUtility.SetDirty(shape);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
         #endregion
     }

@@ -13,9 +13,6 @@ public class LevelButton : MonoBehaviour
     private string levelName => string.Format("Level_{0}", buttonIndex + 1);
     private bool locked = false;
 
-    [Header("UI References")]
-    [SerializeField] private GameObject levelText = null;
-
     public void SelectLevel()
     {
         if (!locked)

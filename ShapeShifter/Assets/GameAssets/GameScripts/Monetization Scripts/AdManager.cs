@@ -6,11 +6,11 @@ using UnityEngine.Advertisements;
 
 public static class AdManager
 {
-    private static int roundCounter = 3;
+    private static int roundCounter = 5;
 
     public static void CheckForAutomaticAd(int minutesPassed, string nextScene)
     {
-        if (minutesPassed >= 5)
+        if (minutesPassed >= 4)
         {
             ShowAutomaticAd(nextScene);
             ResetCounters();
@@ -33,14 +33,16 @@ public static class AdManager
         if (Advertisement.IsReady("video"))
         {
             ShowOptions showOptions = new ShowOptions();
-            showOptions.resultCallback += ctx => SceneManager.LoadScene(nextScene);
+            showOptions.resultCallback += ctx => GameManager.manager.ResumeGame();
 
             Advertisement.Show("video", showOptions);
+            SceneManager.LoadScene(nextScene);
+            GameManager.manager.PauseGame();
         }
     }
 
     private static void ResetCounters()
     {
-        roundCounter = 3;
+        roundCounter = 5;
     }
 }

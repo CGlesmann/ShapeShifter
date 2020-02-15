@@ -116,15 +116,9 @@ public class GameSlot : MonoBehaviour
     {
         Transform t = GetSlotShapeTransform();
         if (t != null)
-        {
-            Debug.Log("Found shape");
             return t.GetComponent<GameShape>();
-        }
         else
-        {
-            Debug.Log("Couldn't Find shape");
             return null;
-        }
     }
 
     /// <summary>

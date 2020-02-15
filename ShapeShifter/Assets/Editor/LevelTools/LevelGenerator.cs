@@ -92,6 +92,7 @@ public class LevelGenerator : EditorWindow
         EditorGUILayout.LabelField("Shape Settings", EditorStyles.boldLabel);
 
         // Shape Toggles
+        boardPreferences.shapeSize = EditorGUILayout.Vector2Field("Shape Size", boardPreferences.shapeSize);
         EditorGUILayout.BeginHorizontal();
         boardPreferences.squareEnabled = EditorGUILayout.Toggle("Square", boardPreferences.squareEnabled);
         boardPreferences.circleEnabled = EditorGUILayout.Toggle("Circle", boardPreferences.circleEnabled);
@@ -170,6 +171,7 @@ public class LevelGenerator : EditorWindow
             slotTransform = boardParent.GetChild(currentSlot);
             newShape = Instantiate(manager.shapePrefab, slotTransform).GetComponent<GameShape>();
             newShape.transform.localPosition = new Vector3(0.5f, -0.5f);
+            newShape.transform.localScale = boardPreferences.shapeSize;
 
             newShape.SetShapeColor(availableColors[Random.Range(0, availableColors.Count)]);
             newShape.SetShapeType(availableTypes[Random.Range(0, availableTypes.Count)]);
@@ -185,6 +187,10 @@ public class LevelGenerator : EditorWindow
     /// </summary>
     private void DrawSolutionGenerator()
     {
+        EditorGUILayout.LabelField("Solution Settings", EditorStyles.boldLabel);
+        solutionPreferences.shapeSize = EditorGUILayout.Vector2Field("Shape Size", solutionPreferences.shapeSize);
+        EditorGUILayout.Separator();
+
         EditorGUILayout.LabelField("Solution Settings", EditorStyles.boldLabel);
         solutionPreferences.amountOfMoves = EditorGUILayout.IntField("Amount of Moves", solutionPreferences.amountOfMoves);
         EditorGUILayout.BeginHorizontal();
@@ -230,6 +236,7 @@ public class LevelGenerator : EditorWindow
             {
                 newShape = Instantiate(manager.shapePrefab, sbSlot).GetComponent<GameShape>();
                 newShape.transform.localPosition = new Vector3(0.5f, -0.5f);
+                newShape.transform.localScale = solutionPreferences.shapeSize;
 
                 newShape.SetShapeColor(refShape.GetShapeColor());
                 newShape.SetShapeType(refShape.GetShapeType());
@@ -277,6 +284,7 @@ public class LevelGenerator : EditorWindow
 public class BoardPreferences
 {
     // Shape Variables
+    public Vector2 shapeSize = new Vector2(2.25f, 2.25f);
     public bool squareEnabled = false, circleEnabled = false, triangleEnabled = false, diamondEnabled = false;
     public bool redEnabled = false, blueEnabled = false, greenEnabled = false, yellowEnabled = false;
 
@@ -324,6 +332,7 @@ public class BoardPreferences
 
 public class SolutionPreferences
 {
+    public Vector2 shapeSize = new Vector2(2.25f, 2.25f);
     public int amountOfMoves = 1, chanceToChangeMethod = 0;
     public bool colorDestroyEnabled = true, shapeDestroyEnabled = true;
 
