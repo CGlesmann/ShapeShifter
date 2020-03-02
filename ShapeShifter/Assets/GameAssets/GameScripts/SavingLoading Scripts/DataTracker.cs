@@ -68,4 +68,42 @@ public class GameData
 
     public int highestCompletedLevel = 0;
     public int highestDisplayedUnlock = 0;
+
+    public Dictionary<string, List<bool>> levelChallenges = new Dictionary<string, List<bool>>();
+
+    public void MarkLevelChallengeComplete(string key, int targetIndex)
+    {
+        if (levelChallenges.TryGetValue(key, out List<bool> challengeToggleList))
+        {
+            if (challengeToggleList == null)
+            {
+                challengeToggleList = new List<bool>();
+                for (int i = 0; i < 3; i++)
+                    challengeToggleList.Add(false);
+            }
+
+            challengeToggleList[targetIndex] = true;
+        } else
+        {
+            challengeToggleList = new List<bool>();
+            for (int i = 0; i < 3; i++)
+                challengeToggleList.Add(false);
+
+            challengeToggleList[targetIndex] = true;
+            levelChallenges.Add(key, challengeToggleList);
+        }
+    }
+
+    public bool GetLevelChallengeResult(string key, int challengeIndex)
+    {
+        if (levelChallenges.TryGetValue(key, out List<bool> challengeToggleList))
+        {
+            if (challengeToggleList == null || challengeIndex > challengeToggleList.Count - 1)
+                return false;
+
+            return challengeToggleList[challengeIndex];
+        }
+        else
+            return false;
+    }
 }

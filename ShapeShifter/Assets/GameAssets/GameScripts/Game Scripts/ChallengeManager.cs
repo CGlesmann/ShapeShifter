@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class ChallengeManager : MonoBehaviour
@@ -22,14 +23,19 @@ public class ChallengeManager : MonoBehaviour
 
             if (currentLevelChallengeList != null)
             {
-                foreach (IChallenge challenge in currentLevelChallengeList.challenges)
-                    challenge.SubscribeToCheck();
+                for (int i = 0; i < challengeEntries.Count; i++)
+                {
+                    if (!DataTracker.gameData.GetLevelChallengeResult(SceneManager.GetActiveScene().name, i) && i <= currentLevelChallengeList.challenges.Count - 1)
+                        currentLevelChallengeList.challenges[i].SubscribeToCheck();
+                }
             }
         }
     }
 
     public void UpdateChallengeEntries()
     {
+        bool needToSave = false;
+
         for(int i = 0; i < challengeEntries.Count; i++)
         {
             if (currentLevelChallengeList == null || currentLevelChallengeList.challenges == null || i > currentLevelChallengeList.challenges.Count - 1)
@@ -40,8 +46,16 @@ public class ChallengeManager : MonoBehaviour
                 challengeEntries[i].UpdateChallengeText(challenge.challengeDescription);
 
                 if (currentLevelChallengeList.challenges[i].CheckForCompletedChallenge())
+                {
                     challengeEntries[i].MarkAsCompleted();
+                    DataTracker.gameData.MarkLevelChallengeComplete(SceneManager.GetActiveScene().name, i);
+
+                    needToSave = true;
+                }
             }
         }
+
+        if (needToSave)
+            DataTracker.dataTracker.SaveData();
     }
 }

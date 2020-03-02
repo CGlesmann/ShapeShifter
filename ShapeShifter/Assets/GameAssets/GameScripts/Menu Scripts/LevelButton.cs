@@ -16,7 +16,7 @@ public class LevelButton : MonoBehaviour
     public void SelectLevel()
     {
         if (!locked)
-            manager.DisplayLevelPreview(levelName);
+            manager.DisplayLevelPreview(levelName, buttonIndex);
     }
 
     public void UnlockLevelButton()

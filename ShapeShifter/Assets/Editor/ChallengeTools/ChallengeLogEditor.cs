@@ -84,11 +84,18 @@ public class ChallengeLogEditor : EditorWindow
 
             EditorGUILayout.LabelField(string.Format("Level {0} Challenges", selectedLevel + 1), header, GUILayout.Height(32f));
 
+            EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Add Time Challenge", selectedLevelButtonStyle, GUILayout.Width(200f), GUILayout.Height(24f)))
             {
                 challengeLog.challengeLog[selectedLevel].challenges.Add(new TimeChallenge());
                 challengeFoldouts.Add(false);
             }
+            if (GUILayout.Button("Add Move Challenge", selectedLevelButtonStyle, GUILayout.Width(200f), GUILayout.Height(24f)))
+            {
+                challengeLog.challengeLog[selectedLevel].challenges.Add(new MoveChallenge());
+                challengeFoldouts.Add(false);
+            }
+            EditorGUILayout.EndHorizontal();
 
             if (challengeLog.challengeLog[selectedLevel].challenges.Count > 0)
             {
@@ -111,11 +118,13 @@ public class ChallengeLogEditor : EditorWindow
 
                         EditorGUILayout.Separator();
                         EditorGUILayout.LabelField("Base Challenge Fields", EditorStyles.boldLabel);
-                        challenge.challengeDescription = EditorGUILayout.TextField("Challenge Title", challenge.challengeDescription, GUILayout.Width(550f));
+                        challenge.challengeDescription = EditorGUILayout.TextField("Challenge Description", challenge.challengeDescription, GUILayout.Width(550f));
 
                         EditorGUILayout.Separator();
                         if (challenge.GetType() == typeof(TimeChallenge))
                             DrawTimeChallenge(challenge as TimeChallenge);
+                        if (challenge.GetType() == typeof(MoveChallenge))
+                            DrawMoveChallenge(challenge as MoveChallenge);
                     }
 
                     EditorGUILayout.EndFoldoutHeaderGroup();
@@ -138,5 +147,11 @@ public class ChallengeLogEditor : EditorWindow
     {
         EditorGUILayout.LabelField("Time Challenge Fields", EditorStyles.boldLabel);
         timeChallenge.requiredTime = EditorGUILayout.FloatField("Required Time (Seconds)", timeChallenge.requiredTime, GUILayout.Width(300f));
+    }
+
+    public void DrawMoveChallenge(MoveChallenge moveChallenge)
+    {
+        EditorGUILayout.LabelField("Move Challenge Fields", EditorStyles.boldLabel);
+        moveChallenge.requiredMoves = EditorGUILayout.IntField("Required Moves", moveChallenge.requiredMoves, GUILayout.Width(300f));
     }
 }

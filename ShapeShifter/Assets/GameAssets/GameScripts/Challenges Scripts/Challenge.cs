@@ -13,6 +13,16 @@ public class TimeChallenge : Challenge, IChallenge
     public bool CheckForCompletedChallenge() { return (passedTime <= requiredTime); }
 }
 
+public class MoveChallenge : Challenge, IChallenge
+{
+    public int requiredMoves = 0;
+    private int movesMade = 0;
+
+    public void SubscribeToCheck() { GameManager.onShapeSwap += UpdateTrackers; }
+    public void UpdateTrackers() { movesMade++; }
+    public bool CheckForCompletedChallenge() { return (movesMade <= requiredMoves); }
+}
+
 public class Challenge
 {
     public string challengeDescription = "";

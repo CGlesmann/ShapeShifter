@@ -12,6 +12,9 @@ public class LevelSelectManager : HorizontalPanelController
     [SerializeField] protected string optionsScene = "";
     public int levelPackIndex = 0;
 
+    [Header("Object References")]
+    [SerializeField] private ChallengePreview challengePreview = null;
+
     [Header("Level GUI References")]
     [SerializeField] private GameObject levelPreviewPanel = null;
     [SerializeField] private Transform[] levelSelectParentList = null;
@@ -78,7 +81,7 @@ public class LevelSelectManager : HorizontalPanelController
     /// </summary>
     public void NavigateToMainMenu() { SceneManager.LoadScene(mainMenuScene); }
 
-    public void DisplayLevelPreview(string levelName)
+    public void DisplayLevelPreview(string levelName, int levelIndex)
     {
         // Storing the input
         currentLevel = levelName;
@@ -86,6 +89,8 @@ public class LevelSelectManager : HorizontalPanelController
         // Displaying The Level Investigation Screen
         levelPreviewPanel.SetActive(true);
         levelNameText.text = levelName.Replace('_', ' ');
+
+        challengePreview.SetLevelChallengePreview(levelName, levelIndex);
     }
 
     public void HideLevelPreview()
