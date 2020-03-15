@@ -67,7 +67,8 @@ public class GameData
     public bool defeatTutorialComplete = false;
 
     public int highestCompletedLevel = 0;
-    public int highestDisplayedUnlock = 0;
+    public int highestLevelUnlocked = 0;
+    public int highestPackUnlocked = 0;
 
     public Dictionary<string, List<bool>> levelChallenges = new Dictionary<string, List<bool>>();
 

@@ -22,7 +22,7 @@ public class SaveDataViewer : EditorWindow
         EditorGUILayout.LabelField(string.Format("highestCompletedLevel: {0}", DataTracker.gameData.highestCompletedLevel));
         EditorGUILayout.Separator();
 
-        EditorGUILayout.LabelField(string.Format("highestDisplayedUnlock: {0}", DataTracker.gameData.highestDisplayedUnlock));
+        EditorGUILayout.LabelField(string.Format("highestDisplayedUnlock: {0}", DataTracker.gameData.highestLevelUnlocked));
         EditorGUILayout.Separator();
     }
 }

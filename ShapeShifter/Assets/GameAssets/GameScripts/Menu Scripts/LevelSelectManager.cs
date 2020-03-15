@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class LevelSelectManager : HorizontalPanelController
+public class LevelSelectManager : MonoBehaviour
 {
     [Header("Manager Variables")]
     [SerializeField] protected string mainMenuScene = "";
@@ -13,6 +13,7 @@ public class LevelSelectManager : HorizontalPanelController
     public int levelPackIndex = 0;
 
     [Header("Object References")]
+    [SerializeField] private MenuSwipeController levelSelectPanelController = null;
     [SerializeField] private ChallengePreview challengePreview = null;
 
     [Header("Level GUI References")]
@@ -21,11 +22,7 @@ public class LevelSelectManager : HorizontalPanelController
     [SerializeField] private TextMeshProUGUI levelNameText = null;
     private string currentLevel = "";
 
-    public override void Awake()
-    {
-        base.Awake();
-        StartCoroutine(SetLevelButtonStates());
-    }
+    public void Awake() { StartCoroutine(SetLevelButtonStates()); }
 
     private IEnumerator SetLevelButtonStates()
     {
@@ -44,14 +41,14 @@ public class LevelSelectManager : HorizontalPanelController
                     if (totalCounter <= DataTracker.gameData.highestCompletedLevel + 1)
                     {
                         unlockedCounter++;
-                        if (totalCounter <= DataTracker.gameData.highestDisplayedUnlock)
+                        if (totalCounter <= DataTracker.gameData.highestLevelUnlocked)
                             currentButton.SetUnlockDisplay();
                         else
                         {
-                            if (packCounter > currentPanelIndex)
+                            if (packCounter > levelSelectPanelController.currentPanelIndex)
                             {
                                 yield return new WaitForSeconds(1f);
-                                BeginRightTransition();
+                                levelSelectPanelController.BeginRightTransition();
                                 yield return new WaitForSeconds(0.5f);
                             }
 
@@ -66,21 +63,15 @@ public class LevelSelectManager : HorizontalPanelController
                 packCounter++;
             }
 
-            if (unlockedCounter > DataTracker.gameData.highestDisplayedUnlock)
+            if (unlockedCounter > DataTracker.gameData.highestLevelUnlocked)
             {
-                DataTracker.gameData.highestDisplayedUnlock = unlockedCounter;
+                DataTracker.gameData.highestLevelUnlocked = unlockedCounter;
                 DataTracker.dataTracker.SaveData();
             }
         }
     }
 
-    #region Navigation Methods
-    /// <summary>
-    /// Navigates to Main Menu
-    /// Used by the back button
-    /// </summary>
     public void NavigateToMainMenu() { SceneManager.LoadScene(mainMenuScene); }
-
     public void DisplayLevelPreview(string levelName, int levelIndex)
     {
         // Storing the input
@@ -99,20 +90,11 @@ public class LevelSelectManager : HorizontalPanelController
         levelPreviewPanel.SetActive(false);
     }
 
-    /// <summary>
-    /// Navigate to the selected level
-    /// </summary>
-    /// <param name="levelName"></param>
     public void NavigateToLevel() { SceneManager.LoadScene(currentLevel); }
-
-    /// <summary>
-    /// Navigates to the instructions screen
-    /// </summary>
     public void NavigateToInstructions() { SceneManager.LoadScene(instructionsScene); }
-    
-    /// <summary>
-    /// Navigates to the options menu
-    /// </summary>
-    public void NavigateToOptions() { SceneManager.LoadScene(optionsScene); }
-    #endregion
+    public void NavigateToOptions()
+    {
+        OptionManager.SetPreviousMenu(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(optionsScene);
+    }
 }

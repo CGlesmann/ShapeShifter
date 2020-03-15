@@ -3,17 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class OptionManager : MonoBehaviour
 {
-    [Header("Navigation Options")]
-    [SerializeField] private string menuNavigation = "";
+    public static string previousMenu = "";
+    public static void SetPreviousMenu(string sceneName) { previousMenu = sceneName; }
 
-    /// <summary>
-    /// Invokes Navigation to the Level Select Screen
-    /// </summary>
-    public void ExitToMenu() { SceneManager.LoadScene(menuNavigation); }
-
-    /// <summary>
-    /// Resets all game data
-    /// </summary>
+    public void ExitToPreviousMenu() { SceneManager.LoadScene(previousMenu); }
     public void ResetGameData() { DataTracker.dataTracker.ResetSaveData(); }
 }
 

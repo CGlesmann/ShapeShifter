@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6865046877693456504
 RectTransform:
   m_ObjectHideFlags: 0
@@ -63,8 +63,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: -5620155193319629329, guid: f460ba1b980336d4cadc2bfa4dec25c0,
     type: 3}
   m_Type: 0
@@ -144,8 +142,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 1ae3f91906308d84cb3aa3e715329671, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -211,8 +207,6 @@ MonoBehaviour:
           m_StringArgument: Level_1
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!95 &8537581196149122035
 Animator:
   serializedVersion: 3
@@ -247,8 +241,6 @@ MonoBehaviour:
   manager: {fileID: 0}
   buttonIndex: 0
   anim: {fileID: 8537581196149122035}
-  lockImage: {fileID: 4502688566157616015}
-  levelText: {fileID: 7937078196340112693}
 --- !u!1 &7937078196340112693
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,8 +304,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: '1
 
 '

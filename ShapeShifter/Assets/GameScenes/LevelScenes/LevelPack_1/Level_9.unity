@@ -763,7 +763,7 @@ RectTransform:
   m_GameObject: {fileID: 253321099}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
+  m_LocalScale: {x: 2.25, y: 2.25, z: 0}
   m_Children: []
   m_Father: {fileID: 1097509343}
   m_RootOrder: 0
@@ -873,7 +873,7 @@ RectTransform:
   m_GameObject: {fileID: 266082350}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
+  m_LocalScale: {x: 2.25, y: 2.25, z: 0}
   m_Children: []
   m_Father: {fileID: 162488807}
   m_RootOrder: 0
@@ -5611,7 +5611,7 @@ RectTransform:
   m_GameObject: {fileID: 911988377}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
+  m_LocalScale: {x: 2.25, y: 2.25, z: 0}
   m_Children: []
   m_Father: {fileID: 233896299}
   m_RootOrder: 0
@@ -5846,7 +5846,7 @@ RectTransform:
   m_GameObject: {fileID: 1064463522}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
+  m_LocalScale: {x: 2.25, y: 2.25, z: 0}
   m_Children: []
   m_Father: {fileID: 1945920827}
   m_RootOrder: 0
@@ -6117,6 +6117,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 6138016375346929673, guid: 73b7480abd070eb469fe6a77447f9649,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6138016375346929674, guid: 73b7480abd070eb469fe6a77447f9649,
         type: 3}
       propertyPath: m_Name
@@ -6287,7 +6292,7 @@ RectTransform:
   m_GameObject: {fileID: 1341513645}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
+  m_LocalScale: {x: 2.25, y: 2.25, z: 0}
   m_Children: []
   m_Father: {fileID: 1478958905}
   m_RootOrder: 0
@@ -6403,7 +6408,7 @@ RectTransform:
   m_GameObject: {fileID: 1518934226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
+  m_LocalScale: {x: 2.25, y: 2.25, z: 0}
   m_Children: []
   m_Father: {fileID: 1004175294}
   m_RootOrder: 0
@@ -7429,6 +7434,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138016375346929673, guid: 73b7480abd070eb469fe6a77447f9649,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6138016375346929674, guid: 73b7480abd070eb469fe6a77447f9649,
         type: 3}

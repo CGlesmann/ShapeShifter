@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     private bool checkVictory = false;
 
     [Header("Board Settings")]
-    [SerializeField] private float shapeSize = 2.25f;
+    [SerializeField] public float shapeSize = 2.25f;
     [SerializeField] private int boardWidth = 4;
     [SerializeField] private int boardHeight = 4;
     [HideInInspector] public int shapesBeingDestroyed = 0;
