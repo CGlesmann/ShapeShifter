@@ -14,9 +14,20 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
 
     private Vector3 panelStartPosition = Vector3.zero;
     [HideInInspector] public int currentPanelIndex = 0;
+    private int activePanelCount = 0;
     private float remainingTransitionTime = 0;
 
-    private void Awake() { panelStartPosition = panelParent.localPosition; }
+    private void Awake()
+    {
+        panelStartPosition = panelParent.localPosition;
+
+        int activePanelCounter = 0;
+        for(int i = 0; i < panelParent.childCount; i++)
+            if (panelParent.GetChild(i).gameObject.activeSelf) activePanelCounter++;
+
+        activePanelCount = activePanelCounter;
+    }
+
     public void OnDrag(PointerEventData eventData)
     {
         float pointerXDifference = eventData.pressPosition.x - eventData.position.x;
@@ -31,7 +42,7 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
             Vector3 newLocation = panelStartPosition;
             if (percentage > 0)
             {
-                if (currentPanelIndex < panelParent.childCount - 1)
+                if (currentPanelIndex < activePanelCount - 1)
                 {
                     newLocation += new Vector3(-panelSpacing, 0f, 0f);
                     currentPanelIndex++;
@@ -59,7 +70,7 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
 
     public void BeginRightTransition()
     {
-        if (currentPanelIndex < panelParent.childCount - 1)
+        if (currentPanelIndex < activePanelCount - 1)
         {
             currentPanelIndex++;
             StartCoroutine(SmoothMove(panelParent.localPosition, panelParent.localPosition + new Vector3(-panelSpacing, 0f, 0f), transitionTime));
@@ -68,7 +79,7 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
 
     public void TransitionToPanel(int targetIndex)
     {
-        int index = Mathf.Clamp(targetIndex, 0, panelParent.childCount - 1);
+        int index = Mathf.Clamp(targetIndex, 0, activePanelCount - 1);
         int indexDiff = targetIndex - currentPanelIndex;
         Vector3 targetPosition = new Vector3(panelParent.localPosition.x + (-indexDiff * panelSpacing), panelParent.localPosition.y, panelParent.localPosition.z);
 

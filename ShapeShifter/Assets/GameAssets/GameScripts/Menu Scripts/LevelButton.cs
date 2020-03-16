@@ -34,4 +34,5 @@ public class LevelButton : MonoBehaviour
     public void DisplayUnlockAnimation() { UnlockLevelButton(); anim.SetTrigger("Unlock"); }
     public void SetLockDisplay() { LockLevelButton(); anim.SetBool("Unlocked", false); }
     public void SetUnlockDisplay() { UnlockLevelButton(); anim.SetBool("Unlocked", true); }
+    public int GetIndex() { return buttonIndex; }
 }

@@ -33,6 +33,9 @@ public class ChallengePreview : MonoBehaviour
                             challengeEntries[i].MarkAsCompleted();
                     }
                 }
+            } else {
+                for (int i = 0; i < challengeEntries.Count; i++)
+                    challengeEntries[i].DisableChallengeEntry();
             }
         }
     }

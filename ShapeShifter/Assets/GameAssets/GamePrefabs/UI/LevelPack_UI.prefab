@@ -325,10 +325,10 @@ RectTransform:
   m_Father: {fileID: 5931827039817785113}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2560, y: 1440}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &993183462795797913
 CanvasRenderer:
@@ -851,7 +851,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelParent: {fileID: 5931827039437382824}
   dragThreshold: 0.2
-  transitionTime: 0.175
+  transitionTime: 0.25
   panelSpacing: 3000
   currentPanelIndex: 0
 --- !u!1 &5931827039500978617
@@ -1260,12 +1260,11 @@ MonoBehaviour:
   instructionsScene: HowToPlay
   optionsScene: OptionsMenu
   levelPackIndex: 0
-  levelSelectPanelController: {fileID: 0}
+  levelSelectPanelController: {fileID: 8638048575361772320}
   challengePreview: {fileID: 3706814823721347613}
   levelPreviewPanel: {fileID: 1308453895886084786}
   levelSelectParentList:
   - {fileID: 1945871981}
-  - {fileID: 0}
   levelNameText: {fileID: 361232980802253451}
 --- !u!114 &3706814823721347613
 MonoBehaviour:

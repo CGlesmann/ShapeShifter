@@ -29,6 +29,7 @@ public class LevelSelectManager : MonoBehaviour
         if (levelSelectParentList != null && levelSelectParentList.Length > 0)
         {
             LevelButton currentButton = null;
+            int startingCounterIndex = levelSelectParentList[0].GetChild(0).GetComponent<LevelButton>().GetIndex();
             int unlockedCounter = 0, totalCounter = 0, packCounter = 0;
 
             foreach (Transform levelGroupParent in levelSelectParentList)
@@ -75,11 +76,11 @@ public class LevelSelectManager : MonoBehaviour
     public void DisplayLevelPreview(string levelName, int levelIndex)
     {
         // Storing the input
-        currentLevel = levelName;
+        currentLevel = $"Level_{levelPackIndex +1 }-{levelIndex + 1}";
 
         // Displaying The Level Investigation Screen
         levelPreviewPanel.SetActive(true);
-        levelNameText.text = levelName.Replace('_', ' ');
+        levelNameText.text = $"Level {levelPackIndex + 1}-{levelIndex + 1}";
 
         challengePreview.SetLevelChallengePreview(levelName, levelIndex);
     }

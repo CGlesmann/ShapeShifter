@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public int levelIndex = 0;
     [SerializeField] private string mainMenuScene = "";
     [SerializeField] private string nextLevelScene = "";
+    private string currentLevelName = "";
 
     [Header("Control Variables")]
     [SerializeField] private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
@@ -78,6 +79,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        currentLevelName = SceneManager.GetActiveScene().name.Split('_')[1];
+        gameTimerText.text = $"Level {currentLevelName} : 00:00";
+
         // Setting the default destroy settings
         currentDestoryMethod = DestroyMethod.Shape;
         destroyText.text = "Destroy by Shape";
@@ -131,7 +135,7 @@ public class GameManager : MonoBehaviour
             onClockTick?.Invoke();
 
             if (gameTimerText != null)
-                gameTimerText.text = string.Format("Level {0} - {1}", levelIndex, GameTime.GetGameTimeFormat(levelTimer));
+                gameTimerText.text = string.Format("Level {0} : {1}", currentLevelName, GameTime.GetGameTimeFormat(levelTimer));
         }
     }
 

@@ -5,6 +5,9 @@ using TMPro;
 
 public class InstructionManager : Instructions
 {
+    [Header("Object References")]
+    [SerializeField] private MenuSwipeController menuSwipeController = null;
+
     [Header("Control Variable")]
     [SerializeField] private bool initialTutorial = false;
     [SerializeField] private bool destroyTutorial = false;
@@ -14,48 +17,19 @@ public class InstructionManager : Instructions
     /// </summary>
     public override void Awake()
     {
-        // Creating a new array
-        panels = new Transform[screenParent.childCount];
-        screenControllers = new HTPScreen[screenParent.childCount];
-        activePanelCount = 0;
-
-        // Loop through each child of screenParent
-        for (int i = 0; i < screenParent.childCount; i++)
-        {
-            // Grab a reference to the child's transform and store in array
-            panels[i] = screenParent.GetChild(i);
-            screenControllers[i] = panels[i] != null ? panels[i].GetComponent<HTPScreen>() : null;
-
-            activePanelCount += panels[i].gameObject.activeSelf ? 1 : 0;
-            if (screenControllers[i] != null)
-                screenControllers[i].DeactivateScreen();
-        }
+        base.Awake();
 
         // Enabling the tutorial (if needed)
         if (initialTutorial && !DataTracker.gameData.initialTutorialComplete)
         {
-            startPanel = 0;
             InvokeInstructions();
+            menuSwipeController.TransitionToPanel(0);
         }
         else if (destroyTutorial && !DataTracker.gameData.destroyTutorialComplete)
         {
-            startPanel = 4;
             InvokeInstructions();
-        } else {
-            // Setting the position to the default panel
-            screenParent.localPosition = new Vector3(-panels[startPanel].localPosition.x, screenParent.localPosition.y, screenParent.localPosition.z);
-            currentPanelIndex = startPanel;
+            menuSwipeController.TransitionToPanel(3);
         }
-
-        // Setting the default UI
-        UpdatePageCounter();
-
-        // Disabling the previous button
-        previousButton.SetActive(false);
-        nextButton.SetActive(true);
-
-        if (startButton != null)
-            startButton.SetActive(false);
     }
 
     public override void DisableInstructions()
@@ -76,7 +50,6 @@ public class InstructionManager : Instructions
             DataTracker.dataTracker.SaveData();
         }
 
-        startPanel = 0;
         GameState.gamePaused = false;
     }
 }
