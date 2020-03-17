@@ -739,7 +739,7 @@ public class GameManager : MonoBehaviour
         shapesBeingDestroyed = 0;
         DisplayVictoryScreen();
 
-        if (Int32.TryParse(SceneManager.GetActiveScene().name.Split('_')[1] ?? "", out int completedLevel))
+        if (Int32.TryParse(SceneManager.GetActiveScene().name.Split('-')[1] ?? "", out int completedLevel))
         {
             if (completedLevel > DataTracker.gameData.highestCompletedLevel)
                 DataTracker.gameData.highestCompletedLevel = completedLevel;

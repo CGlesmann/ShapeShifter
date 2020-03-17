@@ -29,7 +29,6 @@ public class LevelSelectManager : MonoBehaviour
         if (levelSelectParentList != null && levelSelectParentList.Length > 0)
         {
             LevelButton currentButton = null;
-            int startingCounterIndex = levelSelectParentList[0].GetChild(0).GetComponent<LevelButton>().GetIndex();
             int unlockedCounter = 0, totalCounter = 0, packCounter = 0;
 
             foreach (Transform levelGroupParent in levelSelectParentList)
