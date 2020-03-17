@@ -4,6 +4,9 @@ using UnityEngine.EventSystems;
 
 public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
 {
+    public delegate void OnPanelSwitch(int panelIndex);
+    public event OnPanelSwitch onPanelSwitch;
+
     [Header("Object References")]
     [SerializeField] private Transform panelParent = null;
 
@@ -107,5 +110,7 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
         panelParent.localPosition = endPosition;
         panelStartPosition = endPosition;
         remainingTransitionTime = 0f;
+
+        onPanelSwitch?.Invoke(currentPanelIndex);
     }
 }
