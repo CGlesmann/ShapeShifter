@@ -19,7 +19,7 @@ public class ChallengeManager : MonoBehaviour
         ChallengeLog challengeLog = Resources.Load<ChallengeLog>("ChallengeLog/Challenge Log");
         if (challengeLog != null)
         {
-            currentLevelChallengeList = challengeLog.GetLevelChallengeList(manager.levelIndex - 1);
+            currentLevelChallengeList = challengeLog.GetLevelChallengeList(0);
 
             if (currentLevelChallengeList != null)
             {

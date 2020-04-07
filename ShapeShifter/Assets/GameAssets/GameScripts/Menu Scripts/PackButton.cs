@@ -5,6 +5,7 @@ using UnityEngine;
 public class PackButton : MonoBehaviour
 {
     [Header("Pack Settings")]
+    [SerializeField] private bool requireCompletionToUnlock = true;
     [SerializeField] private int packIndex = 0;
     [SerializeField] private int minRequiredLevel = 0;
     private Animator anim;
@@ -15,16 +16,19 @@ public class PackButton : MonoBehaviour
     public void TriggerUnlock() { anim.SetTrigger("Unlock"); }
     public bool CheckForUnlock()
     {
-        int highestLevelCompleted = DataTracker.gameData.highestCompletedLevel;
-        int highestPackUnlocked = DataTracker.gameData.highestPackUnlocked;
-
-        if (highestLevelCompleted >= minRequiredLevel)
+        if (DataTracker.gameData.completedLevels.TryGetValue(packIndex, out int highestLevelCompleted))
         {
-            if (highestPackUnlocked >= packIndex)
-                SetUnlockState();
-            else
-                return true;
-        }
+            int highestPackUnlocked = DataTracker.gameData.highestPackUnlocked;
+
+            if (highestLevelCompleted >= minRequiredLevel)
+            {
+                if (highestPackUnlocked >= packIndex)
+                    SetUnlockState();
+                else
+                    return true;
+            }
+        } else if (!requireCompletionToUnlock)
+            SetUnlockState();
 
         return false;
     }

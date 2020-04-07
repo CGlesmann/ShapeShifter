@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PackSelectManager : MonoBehaviour
 {
+    private static int lastSelectPackIndex = 0;
+
     [Header("Scene Name References")]
     [SerializeField] private string mainMenuScene = "";
     [SerializeField] private string optionScene = "";
@@ -12,16 +14,23 @@ public class PackSelectManager : MonoBehaviour
     [Header("Object References")]
     [SerializeField] private Transform packButtonParent = null;
     [SerializeField] private MenuSwipeController menuSwipeController = null;
+    [SerializeField] private Animator menuAnimator = null;
+
+    private string targetLevel = "";
 
     private void Start() { StartCoroutine(SetPackButtonStates()); }
     private IEnumerator SetPackButtonStates()
     {
         PackButton packButton = null;
+        bool overrideLocationSet = false;
+
         for (int i = 0; i < packButtonParent.childCount; i++)
         {
             packButton = packButtonParent.GetChild(i).GetComponent<PackButton>();
             if (packButton.CheckForUnlock())
             {
+                overrideLocationSet = true;
+
                 menuSwipeController.TransitionToPanel(i);
                 yield return new WaitForSeconds(menuSwipeController.GetRemainingTransitionTime() + 0.25f);
                 packButton.TriggerUnlock();
@@ -30,14 +39,38 @@ public class PackSelectManager : MonoBehaviour
             }
         }
 
+        if (!overrideLocationSet)    
+            menuSwipeController.SetCurrentPanel(lastSelectPackIndex);
         DataTracker.dataTracker.SaveData();
     }
 
-    public void NavigateToLevelSelect(string packScreen) { SceneManager.LoadScene(packScreen); }
-    public void NavigateToMainMenu() { SceneManager.LoadScene(mainMenuScene); }
+    public void NavigateToLevelSelect(string packScreen)
+    {
+        lastSelectPackIndex = menuSwipeController.currentPanelIndex;
+        targetLevel = packScreen;
+
+        menuAnimator.SetTrigger("Exit");
+    }
+
+    public void NavigateToMainMenu()
+    {
+        lastSelectPackIndex = menuSwipeController.currentPanelIndex;
+        targetLevel = mainMenuScene;
+
+        menuAnimator.SetTrigger("Exit");
+    }
+
     public void NavigateToOptions()
     {
+        lastSelectPackIndex = menuSwipeController.currentPanelIndex;
         OptionManager.SetPreviousMenu(SceneManager.GetActiveScene().name);
-        SceneManager.LoadScene(optionScene);
+        targetLevel = optionScene;
+
+        menuAnimator.SetTrigger("Exit");
+    }
+
+    public void ExecuteExitLevel()
+    {
+        SceneManager.LoadScene(targetLevel);
     }
 }

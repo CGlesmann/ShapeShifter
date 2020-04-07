@@ -19,8 +19,12 @@ public class SaveDataViewer : EditorWindow
             return;
         }
 
-        EditorGUILayout.LabelField(string.Format("highestCompletedLevel: {0}", DataTracker.gameData.highestCompletedLevel));
-        EditorGUILayout.Separator();
+        EditorGUILayout.LabelField("Highest Completed Levels (Per Packs)");
+        foreach (KeyValuePair<int, int> pair in DataTracker.gameData.completedLevels)
+        {
+            EditorGUILayout.LabelField($"highestCompletedLevel: {pair.Value} ({pair.Key})");
+            EditorGUILayout.Separator();
+        }
 
         EditorGUILayout.LabelField(string.Format("highestDisplayedUnlock: {0}", DataTracker.gameData.highestLevelUnlocked));
         EditorGUILayout.Separator();

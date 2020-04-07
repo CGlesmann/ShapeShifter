@@ -11,10 +11,12 @@ public class LevelSelectManager : MonoBehaviour
     [SerializeField] protected string instructionsScene = "";
     [SerializeField] protected string optionsScene = "";
     public int levelPackIndex = 0;
+    private string targetLevel = "";
 
     [Header("Object References")]
     [SerializeField] private MenuSwipeController levelSelectPanelController = null;
     [SerializeField] private ChallengePreview challengePreview = null;
+    [SerializeField] private Animator levelSelectAnimator = null;
 
     [Header("Level GUI References")]
     [SerializeField] private GameObject levelPreviewPanel = null;
@@ -22,8 +24,7 @@ public class LevelSelectManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelNameText = null;
     private string currentLevel = "";
 
-    public void Awake() { StartCoroutine(SetLevelButtonStates()); }
-
+    public void Awake()  { StartCoroutine(SetLevelButtonStates()); }
     private IEnumerator SetLevelButtonStates()
     {
         if (levelSelectParentList != null && levelSelectParentList.Length > 0)
@@ -38,26 +39,34 @@ public class LevelSelectManager : MonoBehaviour
                     currentButton = levelGroupParent.GetChild(i).GetComponent<LevelButton>();
                     totalCounter++;
 
-                    if (totalCounter <= DataTracker.gameData.highestCompletedLevel + 1)
+                    if (DataTracker.gameData.completedLevels.TryGetValue(levelPackIndex + 1, out int highestCompletedLevel))
                     {
-                        unlockedCounter++;
-                        if (totalCounter <= DataTracker.gameData.highestLevelUnlocked)
-                            currentButton.SetUnlockDisplay();
-                        else
+                        highestCompletedLevel++;
+                        if (totalCounter <= highestCompletedLevel)
                         {
-                            if (packCounter > levelSelectPanelController.currentPanelIndex)
+                            unlockedCounter++;
+                            if (totalCounter <= DataTracker.gameData.highestLevelUnlocked)
+                                currentButton.SetUnlockDisplay();
+                            else
                             {
-                                yield return new WaitForSeconds(1f);
-                                levelSelectPanelController.BeginRightTransition();
-                                yield return new WaitForSeconds(0.5f);
-                            }
+                                if (packCounter > levelSelectPanelController.currentPanelIndex)
+                                {
+                                    yield return new WaitForSeconds(1f);
+                                    levelSelectPanelController.BeginRightTransition();
+                                    yield return new WaitForSeconds(0.5f);
+                                }
 
-                            currentButton.DisplayUnlockAnimation();
-                            yield return new WaitForSeconds(0.1f);
+                                currentButton.DisplayUnlockAnimation();
+                                yield return new WaitForSeconds(0.1f);
+                            }
                         }
+                        else
+                            currentButton.SetLockDisplay();
                     }
-                    else
+                    else if (currentButton.requireLevelUnlock)
                         currentButton.SetLockDisplay();
+                    else
+                        currentButton.SetUnlockDisplay();
                 }
 
                 packCounter++;
@@ -71,7 +80,7 @@ public class LevelSelectManager : MonoBehaviour
         }
     }
 
-    public void NavigateToMainMenu() { SceneManager.LoadScene(mainMenuScene); }
+    public void NavigateToMainMenu() { targetLevel = mainMenuScene; levelSelectAnimator.SetTrigger("Exit"); }
     public void DisplayLevelPreview(string levelName, int levelIndex)
     {
         // Storing the input
@@ -90,11 +99,15 @@ public class LevelSelectManager : MonoBehaviour
         levelPreviewPanel.SetActive(false);
     }
 
-    public void NavigateToLevel() { SceneManager.LoadScene(currentLevel); }
-    public void NavigateToInstructions() { SceneManager.LoadScene(instructionsScene); }
+    public void NavigateToLevel() { targetLevel = currentLevel; levelSelectAnimator.SetTrigger("LevelExit"); }
+    public void NavigateToInstructions() { targetLevel = instructionsScene; levelSelectAnimator.SetTrigger("Exit"); }
     public void NavigateToOptions()
     {
         OptionManager.SetPreviousMenu(SceneManager.GetActiveScene().name);
-        SceneManager.LoadScene(optionsScene);
+        targetLevel = optionsScene;
+
+        levelSelectAnimator.SetTrigger("Exit");
     }
+
+    public void ExecuteExitTransitionFinish() { SceneManager.LoadScene(targetLevel); }
 }

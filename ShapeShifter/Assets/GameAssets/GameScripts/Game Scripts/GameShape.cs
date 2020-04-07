@@ -145,11 +145,13 @@ public class GameShape : MonoBehaviour
         if (manager != null)
             manager.shapesBeingDestroyed--;
 
+        transform.parent.GetComponent<GameSlot>().SetSlotShapeReference(null);
         DestroyImmediate(gameObject);
     }
 
     public void DestroyShapeImmediate()
     {
+        transform.parent.GetComponent<GameSlot>().SetSlotShapeReference(null);
         DestroyImmediate(gameObject);
     }
 }

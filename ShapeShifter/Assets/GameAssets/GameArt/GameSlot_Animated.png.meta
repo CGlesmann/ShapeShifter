@@ -8,6 +8,12 @@ TextureImporter:
   - first:
       213: 4049663068208798998
     second: UIBox_Animated_Pressed
+  - first:
+      213: 7650805482676481073
+    second: GameSlot_Idle
+  - first:
+      213: 5628570046100474067
+    second: GameSlot_Pressed
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -37,7 +43,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
+    filterMode: 2
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -51,7 +57,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -116,43 +122,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UIBox_Animated
+      name: GameSlot_Idle
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
-      alignment: 1
-      pivot: {x: 0, y: 1}
-      border: {x: 16, y: 16, z: 16, w: 16}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 7}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ae9bf4816b66254eab3a23f247bc34f
-      internalID: -5724467105333037685
+      spriteID: da9e0dd273103014bb64623935175bae
+      internalID: 7650805482676481073
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UIBox_Animated_Pressed
+      name: GameSlot_Pressed
       rect:
         serializedVersion: 2
-        x: 64
+        x: 33
         y: 0
-        width: 64
-        height: 64
-      alignment: 1
-      pivot: {x: 0, y: 1}
-      border: {x: 16, y: 16, z: 16, w: 16}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 7}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d3586db60de791549a020dfafc6cae56
-      internalID: 4049663068208798998
+      spriteID: c1818e24a8c324c47b4448e16ed41138
+      internalID: 5628570046100474067
       vertices: []
       indices: 
       edges: []

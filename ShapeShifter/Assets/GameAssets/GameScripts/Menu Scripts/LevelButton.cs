@@ -7,6 +7,7 @@ public class LevelButton : MonoBehaviour
 {
     [Header("Button Settings")]
     [SerializeField] private LevelSelectManager manager = null;
+    public bool requireLevelUnlock = true;
     [SerializeField] private int buttonIndex = 0;
     [SerializeField] private Animator anim = null;
 

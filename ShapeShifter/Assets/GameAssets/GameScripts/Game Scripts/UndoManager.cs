@@ -13,9 +13,6 @@ public class UndoManager : MonoBehaviour
     private Color undoImageColor;
     private Color disabledUndoImageColor => new Color(undoImageColor.r, undoImageColor.g, undoImageColor.b, undoImageColor.a * 0.4f);
 
-    /// <summary>
-    /// Initially Disables the Undo Button
-    /// </summary>
     private void Awake()
     {
         undoImageColor = undoImage.color;
@@ -34,9 +31,6 @@ public class UndoManager : MonoBehaviour
         undoImage.color = undoImageColor;
     }
 
-    /// <summary>
-    /// Takes in the game board parent and stores the current state in the undoStack
-    /// </summary>
     public void ProcessGameBoard(Transform gameBoardParent)
     {
         if (undoStack == null)
@@ -46,10 +40,6 @@ public class UndoManager : MonoBehaviour
         EnableUndoButton();
     }
 
-    /// <summary>
-    /// Pops off the most recent BoardData reference
-    /// </summary>
-    /// <returns></returns>
     public BoardData GetPreviousBoardState()
     {
         if (undoStack.Count == 1)
@@ -58,34 +48,114 @@ public class UndoManager : MonoBehaviour
         return (undoStack.Count > 0) ? undoStack.Pop() : null;
     }
 
-    /// <summary>
-    /// Gets the previous board state and uses the GameManager to restore the state
-    /// </summary>
     public void UndoMove()
     {
         BoardData data = GetPreviousBoardState();
         if (data != null)
-            GameManager.manager.RestoreBoardState(data);
+            RestoreBoardState(data);
+    }
+
+    public void RestoreBoardState(BoardData data)
+    {
+        // Getting board parents
+        GameObject shapePrefab = GameManager.manager.shapePrefab;
+        Transform gameBoardParent = GameManager.manager.gameBoardParent;
+        float shapeSize = GameManager.manager.shapeSize;
+
+        // Declaring Tracker Variables
+        GameSlot slot;
+        GameShape shape;
+        SlotLock slotLock;
+
+        // Loop through the board and set the board state to the data
+        for (int i = 0; i < gameBoardParent.childCount; i++)
+        {
+            // Getting the Game Slot/Shape Reference
+            slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
+            shape = slot.GetSlotShape();
+            slotLock = slot.GetSlotLock();
+
+            #region Generating Slot Shape
+            if (shape != null)
+            {
+                // Checking if a shape doesn't exist on the passed in data
+                if (data.board[i] == null)
+                    Destroy(shape.gameObject);
+                else if (shape.GetShapeData() != data.board[i])
+                {
+                    // Shape does exist but doesn't match the shape in the data, set them to be equivalent
+                    shape.SetShapeColor(data.board[i].shapeColor);
+                    shape.SetShapeType(data.board[i].shapeType);
+                }
+            }
+            else
+            {
+                // Checking to see if a shape exists in the data at the given spot, if so create a new one
+                if (data.board[i] != null)
+                {
+                    // Creating the shape
+                    GameObject newShape = Instantiate(shapePrefab, slot.transform);
+                    newShape.transform.localPosition = new Vector3(0.5f, -0.5f, 0f);
+                    newShape.transform.localScale = new Vector3(shapeSize, shapeSize, 0f);
+
+                    // Getting the GameShape reference and setting it equal to the shape in the data
+                    GameShape shapeRef = newShape.GetComponent<GameShape>();
+                    shapeRef.SetShapeColor(data.board[i].shapeColor);
+                    shapeRef.SetShapeType(data.board[i].shapeType);
+
+                    slot.SetSlotShapeReference(shapeRef.transform);
+                }
+            }
+            #endregion
+
+            #region Generating Slot Lock
+            if (slotLock != null)
+            {
+                LockData lockData = data.locks[i];
+                if (lockData != null)
+                {
+                    // Active
+                    if (lockData.lockTimer > 0)
+                    {
+                        slotLock.SetLockToActive();
+                        slotLock.SetLockSettings(lockData.lockType, lockData.lockTimer);
+                        slot.LockGameSlot();
+                    }
+                    else
+                        slotLock.SetLockToDestruct();
+                }
+            }
+            #endregion
+        }
     }
 }
 
 public class BoardData
 {
     public List<ShapeData> board;
+    public List<LockData> locks;
 
     public BoardData(Transform gameBoardParent)
     {
         // Creating a new list
         board = new List<ShapeData>();
+        locks = new List<LockData>();
 
         // Looping through the game board, get all the shapes and store them in the board list
+        GameSlot slot;
         GameShape shape;
-        for(int i = 0; i < gameBoardParent.childCount; i++)
+        SlotLock slotLock;
+        for (int i = 0; i < gameBoardParent.childCount; i++)
         {
-            shape = gameBoardParent.GetChild(i).GetComponent<GameSlot>().GetSlotShape();
+            slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
+            shape = slot.GetSlotShape();
+            slotLock = slot.GetSlotLock();
 
             ShapeData newShape = shape != null ? new ShapeData(shape.GetShapeColor(), shape.GetShapeType()) : null;
             board.Add(newShape);
+
+            LockData newLock = slotLock != null ? new LockData(slotLock.GetLockType(), slotLock.GetLockCounter()) : null;
+            locks.Add(newLock);
         }
     }
 }

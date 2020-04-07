@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 3129396535979578381}
   - component: {fileID: 3129396535979578382}
   - component: {fileID: 2595357337591266947}
-  - component: {fileID: 6334305924533615534}
   - component: {fileID: 5802104369857099377}
   - component: {fileID: 844692325654160016}
+  - component: {fileID: 6334305924533615534}
+  - component: {fileID: 5976591229818430387}
   m_Layer: 5
   m_Name: GameSlot
   m_TagString: Untagged
@@ -62,12 +63,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5724467105333037685, guid: 35191d725332fa94f9c832b5b2db5b39,
+  m_Sprite: {fileID: 7650805482676481073, guid: 35191d725332fa94f9c832b5b2db5b39,
     type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -107,7 +108,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: -5724467105333037685, guid: 35191d725332fa94f9c832b5b2db5b39,
+    m_PressedSprite: {fileID: 5628570046100474067, guid: 35191d725332fa94f9c832b5b2db5b39,
       type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 21300000, guid: 6d9cef50a90986242a22d5833581847e, type: 3}
@@ -133,21 +134,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6334305924533615534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3129396535979578368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53ebb670a635da044a3bbe04fd024857, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canSelect: 1
-  deselectedColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedColor: {r: 0.01027944, g: 0.71932805, b: 0.7264151, a: 1}
 --- !u!223 &5802104369857099377
 Canvas:
   m_ObjectHideFlags: 0
@@ -165,9 +151,9 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!114 &844692325654160016
 MonoBehaviour:
@@ -186,3 +172,32 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6334305924533615534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3129396535979578368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53ebb670a635da044a3bbe04fd024857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotLock: {fileID: 0}
+  shapeTransform: {fileID: 0}
+  canSelect: 1
+  deselectedColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  selectedColor: {r: 0.11320752, g: 0.11320752, b: 0.11320752, a: 1}
+--- !u!114 &5976591229818430387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3129396535979578368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 561491a92c3e53841bae0556c9781f6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

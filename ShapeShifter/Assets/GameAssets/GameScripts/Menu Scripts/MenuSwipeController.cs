@@ -90,6 +90,18 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
         StartCoroutine(SmoothMove(panelParent.localPosition, targetPosition, transitionTime * Mathf.Abs(indexDiff)));
     }
 
+    public void SetCurrentPanel(int targetIndex)
+    {
+        int index = Mathf.Clamp(targetIndex, 0, activePanelCount - 1);
+        int indexDiff = targetIndex - currentPanelIndex;
+
+        panelParent.localPosition = new Vector3(panelParent.localPosition.x + (-indexDiff * panelSpacing), panelParent.localPosition.y, panelParent.localPosition.z);
+        panelStartPosition = panelParent.localPosition;
+        currentPanelIndex = targetIndex;
+
+        onPanelSwitch?.Invoke(currentPanelIndex);
+    }
+
     public float GetRemainingTransitionTime() { return remainingTransitionTime; }
     private IEnumerator SmoothMove(Vector3 startPosition, Vector3 endPosition, float transitionTime)
     {
