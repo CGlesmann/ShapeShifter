@@ -19,7 +19,6 @@ public class SlotLock : MonoBehaviour
 
     [Header("Object References")]
     [SerializeField] private Animator anim = null;
-    [SerializeField] private GameObject slotLock = null;
     [SerializeField] private TextMeshProUGUI counterText = null;
     private GameSlot gameSlot = null;
 

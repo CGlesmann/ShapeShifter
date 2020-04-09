@@ -39,11 +39,6 @@ public class GameShape : MonoBehaviour
             return false;
     }
 
-    /// <summary>
-    /// Automatically calls SetShapeType/Color
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="newColor"></param>
     public void ConfigureShape(ShapeType type, Color newColor)
     {
         // Setting the Type/Color
@@ -51,19 +46,12 @@ public class GameShape : MonoBehaviour
         SetShapeColor(newColor);
     }
 
-    /// <summary>
-    /// Sets the type enum
-    /// </summary>
-    /// <param name="type"></param>
     public void SetShapeType(ShapeType type)
     {
-        // Storing the shape type
         shapeType = type;
 
-        // Setting the shape sprite
         if (imageRenderer != null)
         {
-            // Setting the Renderer Sprite
             switch (shapeType)
             {
                 case ShapeType.Square:
@@ -80,52 +68,22 @@ public class GameShape : MonoBehaviour
                     break;
             };
         }
-        else
-            Debug.LogError("SpriteRenderer not set for " + name);
     }
 
-    /// <summary>
-    /// Setting the renderer color to the targetColor
-    /// </summary>
-    /// <param name="targetColor"></param>
     public void SetShapeColor(Color targetColor)
     {
-        // Checking for a null reference
         if (imageRenderer != null)
-        {
-            // Setting the Renderer Color
             imageRenderer.color = targetColor;
-        }
-        else
-            Debug.LogError("SpriteRenderer not set for " + name);
     }
 
     public void MarkForDestruction() { markedForDestruct = true; }
     public bool IsMarkedForDestruct() { return markedForDestruct; }
 
-    /// <summary>
-    /// Gets the current shape type
-    /// </summary>
-    /// <returns></returns>
     public ShapeType GetShapeType() { return shapeType; }
-
-    /// <summary>
-    /// Gets the current color of the shapeRenderer
-    /// </summary>
-    /// <returns></returns>
     public Color GetShapeColor() { return imageRenderer.color; }
-
-    /// <summary>
-    /// Return the shapes data as a ShapeData struct
-    /// </summary>
-    /// <returns></returns>
     public ShapeData GetShapeData() { return new ShapeData(shapeColor, shapeType); }
 
-    /// <summary>
-    /// Triggers the Shape Destroy Animation
-    /// </summary>
-    public void TriggerDestruction() { StartCoroutine(DisplayShapeDestruction()); /*shapeAnimator.SetTrigger("Destroy");*/ }
-
+    public void TriggerDestruction() { StartCoroutine(DisplayShapeDestruction());}
     private IEnumerator DisplayShapeDestruction()
     {
         float counter = 0;
@@ -176,9 +134,6 @@ public class ShapeData
 [CustomEditor(typeof(GameShape))]
 public class ShapeInspector : Editor
 {
-    /// <summary>
-    /// Draws Helper buttons for setting colors
-    /// </summary>
     public override void OnInspectorGUI()
     {
         // Draws the base UI
