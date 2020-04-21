@@ -834,6 +834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 201518466}
   shapeType: 0
+  colorType: 2
 --- !u!114 &201518466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,6 +1064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 229054017}
   shapeType: 0
+  colorType: 1
 --- !u!114 &229054017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4769,6 +4771,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 963209869573389748, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1239706982372551304, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -5404,6 +5411,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3687426101606347845, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3715690720811381323, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -5643,6 +5655,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270710826222599829, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: shapeSize
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4524518327141422847, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
@@ -5914,6 +5931,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5490510550160902320, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5620089299486149193, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -6092,6 +6114,11 @@ PrefabInstance:
     - target: {fileID: 6362031289577866607, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6614779435597831558, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6950758754515026716, guid: 085cfc577a2bb8e49af68a84a9e42caa,
@@ -6547,6 +6574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 715447041}
   shapeType: 2
+  colorType: 0
 --- !u!114 &715447041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6657,6 +6685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 739166754}
   shapeType: 0
+  colorType: 0
 --- !u!114 &739166754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6897,6 +6926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 792023516}
   shapeType: 1
+  colorType: 2
 --- !u!114 &792023516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7126,6 +7156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 983447300}
   shapeType: 0
+  colorType: 1
 --- !u!114 &983447300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7236,6 +7267,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 996980293}
   shapeType: 2
+  colorType: 0
 --- !u!114 &996980293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7661,6 +7693,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1288407555}
   shapeType: 3
+  colorType: 1
 --- !u!114 &1288407555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7890,6 +7923,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1343020484}
   shapeType: 2
+  colorType: 0
 --- !u!114 &1343020484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8000,6 +8034,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1362667021}
   shapeType: 2
+  colorType: 0
 --- !u!114 &1362667021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8240,6 +8275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1489187838}
   shapeType: 0
+  colorType: 2
 --- !u!114 &1489187838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9450,6 +9486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1904990889}
   shapeType: 3
+  colorType: 0
 --- !u!114 &1904990889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9560,6 +9597,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1999761398}
   shapeType: 1
+  colorType: 2
 --- !u!114 &1999761398
 MonoBehaviour:
   m_ObjectHideFlags: 0

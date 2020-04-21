@@ -11,6 +11,7 @@ public class InstructionManager : Instructions
     [Header("Control Variable")]
     [SerializeField] private bool initialTutorial = false;
     [SerializeField] private bool destroyTutorial = false;
+    [SerializeField] private bool lockTutorial = false;
 
     /// <summary>
     /// Get the arrow of how to panels
@@ -23,12 +24,16 @@ public class InstructionManager : Instructions
         if (initialTutorial && !DataTracker.gameData.initialTutorialComplete)
         {
             InvokeInstructions();
-            menuSwipeController.TransitionToPanel(0);
+            NavigateToBasicInstructions();
         }
         else if (destroyTutorial && !DataTracker.gameData.destroyTutorialComplete)
         {
             InvokeInstructions();
-            menuSwipeController.TransitionToPanel(3);
+            NavigateToDestructInstructions();
+        } else if (lockTutorial && !DataTracker.gameData.lockTutorialComplete)
+        {
+            InvokeInstructions();
+            NavigateToLockInstructions();
         }
     }
 
@@ -50,6 +55,16 @@ public class InstructionManager : Instructions
             DataTracker.dataTracker.SaveData();
         }
 
+        if (lockTutorial)
+        {
+            DataTracker.gameData.lockTutorialComplete = true;
+            DataTracker.dataTracker.SaveData();
+        }
+
         GameState.gamePaused = false;
     }
+
+    public void NavigateToBasicInstructions() { menuSwipeController.TransitionToPanel(0); }
+    public void NavigateToDestructInstructions() { menuSwipeController.TransitionToPanel(3); }
+    public void NavigateToLockInstructions() { menuSwipeController.TransitionToPanel(5); }
 }

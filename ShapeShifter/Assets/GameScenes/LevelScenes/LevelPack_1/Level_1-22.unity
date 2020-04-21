@@ -195,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 9013035}
   shapeType: 1
+  colorType: 0
 --- !u!114 &9013035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 24231785}
   shapeType: 0
+  colorType: 2
 --- !u!114 &24231785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,6 +547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 37294518}
   shapeType: 2
+  colorType: 1
 --- !u!114 &37294518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -785,6 +788,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 71316677}
   shapeType: 3
+  colorType: 1
 --- !u!114 &71316677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1274,6 +1278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 211741259}
   shapeType: 1
+  colorType: 0
 --- !u!114 &211741259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1871,6 +1876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 369343029}
   shapeType: 2
+  colorType: 0
 --- !u!114 &369343029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2706,6 +2712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 644551062}
   shapeType: 3
+  colorType: 1
 --- !u!114 &644551062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5319,6 +5326,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 963209869573389748, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1239706982372551304, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -5954,6 +5966,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3687426101606347845, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3715690720811381323, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -6193,6 +6210,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270710826222599829, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: shapeSize
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270710826222599829, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: boardWidth
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270710826222599829, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: boardHeight
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4524518327141422847, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
@@ -6464,6 +6496,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5490510550160902320, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5620089299486149193, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -6642,6 +6679,11 @@ PrefabInstance:
     - target: {fileID: 6362031289577866607, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6614779435597831558, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6950758754515026716, guid: 085cfc577a2bb8e49af68a84a9e42caa,
@@ -7227,6 +7269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 878007369}
   shapeType: 2
+  colorType: 0
 --- !u!114 &878007369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7337,6 +7380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 896109574}
   shapeType: 0
+  colorType: 0
 --- !u!114 &896109574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7577,6 +7621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 987938254}
   shapeType: 1
+  colorType: 0
 --- !u!114 &987938254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8110,6 +8155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1348720715}
   shapeType: 2
+  colorType: 0
 --- !u!114 &1348720715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8220,6 +8266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1405190336}
   shapeType: 2
+  colorType: 2
 --- !u!114 &1405190336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9571,6 +9618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 1971367619}
   shapeType: 2
+  colorType: 0
 --- !u!114 &1971367619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9681,6 +9729,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageRenderer: {fileID: 2004625604}
   shapeType: 1
+  colorType: 0
 --- !u!114 &2004625604
 MonoBehaviour:
   m_ObjectHideFlags: 0

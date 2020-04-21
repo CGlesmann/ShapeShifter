@@ -7,6 +7,9 @@ public class UndoManager : MonoBehaviour
     [Header("Undo Stack Reference")]
     [SerializeField] Stack<BoardData> undoStack = null;
 
+    [Header("Object References")]
+    [SerializeField] private BoardManager boardManager = null;
+
     [Header("GUI References")]
     [SerializeField] private Button undoButton = null;
     [SerializeField] private Image undoImage = null;
@@ -60,7 +63,7 @@ public class UndoManager : MonoBehaviour
         // Getting board parents
         GameObject shapePrefab = GameManager.manager.shapePrefab;
         Transform gameBoardParent = GameManager.manager.gameBoardParent;
-        float shapeSize = GameManager.manager.shapeSize;
+        float shapeSize = boardManager.shapeSize;
 
         // Declaring Tracker Variables
         GameSlot slot;
@@ -117,11 +120,13 @@ public class UndoManager : MonoBehaviour
                     // Active
                     if (lockData.lockTimer > 0)
                     {
-                        slotLock.SetLockToActive();
+                        if (slotLock.GetLockCounter() <= 0)
+                            slotLock.SetLockToActive();
+
                         slotLock.SetLockSettings(lockData.lockType, lockData.lockTimer);
                         slot.LockGameSlot();
                     }
-                    else
+                    else if (slotLock.GetLockCounter() > 0)
                         slotLock.SetLockToDestruct();
                 }
             }

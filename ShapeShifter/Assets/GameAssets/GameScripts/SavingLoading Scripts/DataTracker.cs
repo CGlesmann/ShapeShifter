@@ -65,6 +65,7 @@ public class GameData
     public bool initialTutorialComplete = false;
     public bool destroyTutorialComplete = false;
     public bool defeatTutorialComplete = false;
+    public bool lockTutorialComplete = false;
 
     public int highestLevelUnlocked = 0;
     public int highestPackUnlocked = 0;

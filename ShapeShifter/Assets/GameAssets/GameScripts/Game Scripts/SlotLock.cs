@@ -10,12 +10,11 @@ public class SlotLock : MonoBehaviour
     public enum LockType { Switch, Destruct };
 
     [Header("Lock Settings")]
-    [SerializeField] private float revealTime = 2f;
     public LockData lockData = null;
 
     private ILockState lockStateMachine;
-    private bool faded = false;
-    private float revealTimer = 0;
+    private bool minimized = false;
+    private bool destroyed = false;
 
     [Header("Object References")]
     [SerializeField] private Animator anim = null;
@@ -30,32 +29,31 @@ public class SlotLock : MonoBehaviour
         ActivateLock();
     }
 
-    private void Update()
+    public void ResetLockState() { minimized = false; anim.ResetTrigger("Activate"); }
+    public void SetLockToActive() { anim.SetTrigger("Activate"); }
+    public void SetLockToDestruct() { anim.SetTrigger("Destroy"); }
+
+    public void ToggleLockSize()
     {
-        if (revealTimer > 0)
-        {
-            revealTimer -= Time.deltaTime;
-            if (revealTimer <= 0f)
-                RevealLockImage();
-        }
+        if (minimized)
+            ResizeLock();
+        else
+            MinimizeLock();
     }
 
-    public void FadeLockImage()
+    public void ResizeLock() { anim.SetTrigger("Resize"); }
+    public void MinimizeLock()
     {
-        if (!faded)
+        if (!minimized)
         {
-            anim.SetTrigger("Disappear");
-            faded = true;
+            anim.SetTrigger("Minimize");
+            minimized = true;
         }
     }
 
     public LockType GetLockType() { return lockData?.lockType ?? LockType.Destruct; }
     public int GetLockCounter() { return lockData?.lockTimer ?? -1; }
 
-    public void SetLockToDestruct() { anim.SetTrigger("ImmediateDestruct"); }
-    public void SetLockToActive() { anim.SetTrigger("ImmediateActive"); }
-
-    public void SetLockTimer() { revealTimer = revealTime; }
     public void SetLockStateMachine(ILockState newStateMachine) { lockStateMachine = newStateMachine; }
     public void SetLockStateMachine(LockType lockType)
     {
@@ -82,14 +80,11 @@ public class SlotLock : MonoBehaviour
         UpdateCounterText();
     }
 
-    public void RevealLockImage() { anim.SetTrigger("Reappear"); }
-    public void ResetLockState() { faded = false; revealTimer = 0; }
-
     public void ActivateLock()
     {
         LockGameSlot();
         UpdateCounterText();
-        lockStateMachine.ActivateLock();
+        lockStateMachine?.ActivateLock();
     }
 
     public void DeactivateLock()
@@ -99,9 +94,13 @@ public class SlotLock : MonoBehaviour
         anim.SetTrigger("Destroy");
     }
 
-    public void LockGameSlot() { gameSlot.LockGameSlot(); }
+    public void LockGameSlot() { gameSlot?.LockGameSlot(); }
     public void UpdateLock() { lockStateMachine.UpdateLock(); }
-    public void UpdateCounterText() { counterText.text = lockData.lockTimer.ToString(); }
+    public void UpdateCounterText()
+    {
+        int newValue = (int)Mathf.Clamp(lockData.lockTimer, 0, Mathf.Infinity);
+        counterText.text = newValue.ToString();
+    }
 }
 
 [System.Serializable]
@@ -135,10 +134,10 @@ public class SwitchLockState : ILockState
     public void UpdateLock()
     {
         slotLock.lockData.lockTimer--;
-        if (slotLock.lockData.lockTimer == 0)
+        slotLock.UpdateCounterText();
+
+        if (slotLock.lockData.lockTimer <= 0)
             slotLock.DeactivateLock();
-        else
-            slotLock.UpdateCounterText();
     }
 }
 
@@ -147,8 +146,8 @@ public class DestructLockState : ILockState
     SlotLock slotLock;
 
     public DestructLockState(SlotLock lockReference) { slotLock = lockReference; }
-    public void ActivateLock() { GameManager.onShapeDestroy += MarkShapesDestroyed; }
-    public void DeactivateLock() { GameManager.onShapeDestroy -= MarkShapesDestroyed; }
+    public void ActivateLock() { BoardManager.onShapeDestroy += MarkShapesDestroyed; }
+    public void DeactivateLock() { BoardManager.onShapeDestroy -= MarkShapesDestroyed; }
 
     public void MarkShapesDestroyed(int count)
     {
@@ -161,9 +160,8 @@ public class DestructLockState : ILockState
 
     public void UpdateLock()
     {
-        if (slotLock.lockData.lockTimer == 0)
+        slotLock.UpdateCounterText();
+        if (slotLock.lockData.lockTimer <= 0)
             slotLock.DeactivateLock();
-        else
-            slotLock.UpdateCounterText();
     }
 }

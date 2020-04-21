@@ -11,36 +11,53 @@ public static class GameboardTools
 
     private static void GetGameManager() { gameManager = GameObject.Find("LevelManager").GetComponent<GameManager>(); }
 
+    private static void ClearBoard(Transform boardParent, bool deleteShapes, bool deleteLocks)
+    {
+        if (boardParent != null)
+        {
+            Transform shape;
+            GameSlot gameSlot;
+            SlotLock slotLock;
+            for (int i = 0; i < boardParent.childCount; i++)
+            {
+                gameSlot = boardParent.GetChild(i).GetComponent<GameSlot>();
+
+                if (gameSlot != null)
+                {
+                    if (deleteShapes)
+                    {
+                        shape = gameSlot.GetSlotShapeTransform();
+                        if (shape != null)
+                            GameObject.DestroyImmediate(shape.gameObject);
+                    }
+
+                    if (deleteLocks)
+                    {
+                        slotLock = gameSlot.GetSlotLock();
+                        if (slotLock != null)
+                            GameObject.DestroyImmediate(slotLock.gameObject);
+                    }
+                }
+            }
+        }
+    }
+
     public static void ClearGameboard(bool deleteShapes, bool deleteLocks)
     {
         if (gameManager == null)
             GetGameManager();
 
         Transform gameBoardParent = gameManager.gameBoardParent;
-        Transform shape;
-        GameSlot gameSlot;
-        SlotLock slotLock;
-        for (int i = 0; i < gameBoardParent.childCount; i++)
-        {
-            gameSlot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
+        ClearBoard(gameBoardParent, deleteShapes, deleteLocks);
+    }
 
-            if (gameSlot != null)
-            {
-                if (deleteShapes)
-                {
-                    shape = gameSlot.GetSlotShapeTransform();
-                    if (shape != null)
-                        GameObject.DestroyImmediate(shape.gameObject);
-                }
+    public static void ClearSolutionboard(bool deleteShapes, bool deleteLocks)
+    {
+        if (gameManager == null)
+            GetGameManager();
 
-                if (deleteLocks)
-                {
-                    slotLock = gameSlot.GetSlotLock();
-                    if (slotLock != null)
-                        GameObject.DestroyImmediate(slotLock.gameObject);
-                }
-            }
-        }
+        Transform solutionBoardParent = gameManager.solutionBoardParent;
+        ClearBoard(solutionBoardParent, deleteShapes, deleteLocks);
     }
 
     #region Lock Manipulation

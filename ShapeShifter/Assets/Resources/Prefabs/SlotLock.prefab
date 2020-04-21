@@ -182,7 +182,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1065765077868949693}
-        m_MethodName: FadeLockImage
+        m_MethodName: ToggleLockSize
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -204,14 +204,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc4375f771eef3f468ad0b268f2b444b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  revealTime: 2
-  lockType: 0
-  turnTimer: 1
-  switchLockImage: {fileID: 21300000, guid: af9c9ac3429659c4d865fa40c9a46899, type: 3}
-  destructLockImage: {fileID: 21300000, guid: 0ba10cf44de3cb847b72ae0bbd377204, type: 3}
+  lockData:
+    lockType: 0
+    lockTimer: 0
   anim: {fileID: 5764960829199149548}
-  slotLock: {fileID: 1065765077868949688}
-  lockTypeImage: {fileID: 8252288633198586511}
   counterText: {fileID: 1065765078973396270}
 --- !u!114 &7111639676492495159
 MonoBehaviour:
@@ -336,7 +332,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 53, y: -117.000015}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 125, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1065765078973396269
 CanvasRenderer:

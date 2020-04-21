@@ -34,7 +34,7 @@ public static class GameSlotTools
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
 
-    public static void CreateSlotShape(Transform slot, GameShape.ShapeType shapeType, Color shapeColor, float shapeSize)
+    public static void CreateSlotShape(Transform slot, GameShape.ShapeType shapeType, GameShape.ColorType shapeColor, float shapeSize)
     {
         GameObject shapePrefab = Resources.Load<GameObject>("Prefabs/GameShape");
 
@@ -52,7 +52,7 @@ public static class GameSlotTools
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
 
-    public static void EditSlotShape(Transform slot, GameShape.ShapeType shapeType, Color shapeColor, float shapeSize)
+    public static void EditSlotShape(Transform slot, GameShape.ShapeType shapeType, GameShape.ColorType shapeColor, float shapeSize)
     {
         GameShape newShape = slot.GetComponent<GameSlot>().GetSlotShapeTransform().GetComponent<GameShape>();
         newShape.transform.localScale = new Vector3(shapeSize, shapeSize);

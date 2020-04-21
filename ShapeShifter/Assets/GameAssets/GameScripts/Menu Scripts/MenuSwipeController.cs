@@ -11,12 +11,14 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
     [SerializeField] private Transform panelParent = null;
 
     [Header("Drag Settings")]
+    [SerializeField] private Vector3 baseMenuOffset = Vector3.zero;
     [Range(0, 1)] [SerializeField] private float dragThreshold = 0f;
     [SerializeField] private float transitionTime = 2f;
     [SerializeField] private float panelSpacing = 0f;
 
+    private Coroutine currentCoroutine = null;
     private Vector3 panelStartPosition = Vector3.zero;
-    [HideInInspector] public int currentPanelIndex = 0;
+    public int currentPanelIndex = 0;
     private int activePanelCount = 0;
     private float remainingTransitionTime = 0;
 
@@ -47,28 +49,38 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
             {
                 if (currentPanelIndex < activePanelCount - 1)
                 {
-                    newLocation += new Vector3(-panelSpacing, 0f, 0f);
-                    currentPanelIndex++;
+                    newLocation = new Vector3(++currentPanelIndex * -panelSpacing, 0f, 0f) + baseMenuOffset;
 
-                    StartCoroutine(SmoothMove(panelParent.localPosition, newLocation, transitionTime));
-                } else
-                    StartCoroutine(SmoothMove(panelParent.localPosition, panelStartPosition, transitionTime));
+                    currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, newLocation, transitionTime));
+                    Debug.Log($"Moving from {panelParent.localPosition} to {newLocation} (Index{currentPanelIndex}) in {transitionTime}s");
+                }
+                else
+                {
+                    currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, panelStartPosition, transitionTime));
+                    Debug.Log($"Moving from {panelParent.localPosition} to {panelStartPosition} in {transitionTime}s");
+                }
             }
             else if (percentage < 0)
             {
                 if (currentPanelIndex > 0)
                 {
-                    newLocation += new Vector3(panelSpacing, 0f, 0f);
-                    currentPanelIndex--;
+                    newLocation = new Vector3(--currentPanelIndex * -panelSpacing, 0f, 0f) + baseMenuOffset;
 
-                    StartCoroutine(SmoothMove(panelParent.localPosition, newLocation, transitionTime));
+                    currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, newLocation, transitionTime));
+                    Debug.Log($"Moving from {panelParent.localPosition} to {newLocation} (Index{currentPanelIndex}) in {transitionTime}s");
                 }
                 else
-                    StartCoroutine(SmoothMove(panelParent.localPosition, panelStartPosition, transitionTime));
+                {
+                    currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, panelStartPosition, transitionTime));
+                    Debug.Log($"Moving from {panelParent.localPosition} to {panelStartPosition} in {transitionTime}s");
+                }
             }
         }
         else
-            StartCoroutine(SmoothMove(panelParent.localPosition, panelStartPosition, transitionTime));
+        {
+            currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, panelStartPosition, transitionTime));
+            Debug.Log($"Moving from {panelParent.localPosition} to {panelStartPosition} in {transitionTime}s");
+        }
     }
 
     public void BeginRightTransition()
@@ -76,7 +88,7 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
         if (currentPanelIndex < activePanelCount - 1)
         {
             currentPanelIndex++;
-            StartCoroutine(SmoothMove(panelParent.localPosition, panelParent.localPosition + new Vector3(-panelSpacing, 0f, 0f), transitionTime));
+            currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, panelParent.localPosition + new Vector3(-panelSpacing, 0f, 0f), transitionTime));
         }
     }
 
@@ -84,10 +96,17 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         int index = Mathf.Clamp(targetIndex, 0, activePanelCount - 1);
         int indexDiff = targetIndex - currentPanelIndex;
-        Vector3 targetPosition = new Vector3(panelParent.localPosition.x + (-indexDiff * panelSpacing), panelParent.localPosition.y, panelParent.localPosition.z);
+        Vector3 targetPosition = new Vector3(index * -panelSpacing, panelParent.localPosition.y, panelParent.localPosition.z);
 
         currentPanelIndex = targetIndex;
-        StartCoroutine(SmoothMove(panelParent.localPosition, targetPosition, transitionTime * Mathf.Abs(indexDiff)));
+
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+            currentCoroutine = null;
+        }
+
+        currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, targetPosition, transitionTime * Mathf.Abs(indexDiff)));
     }
 
     public void SetCurrentPanel(int targetIndex)

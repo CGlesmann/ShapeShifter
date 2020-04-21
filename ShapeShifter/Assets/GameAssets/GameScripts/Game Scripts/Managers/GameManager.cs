@@ -27,20 +27,9 @@ public class GameManager : MonoBehaviour
 
     private GameSlot slot1 = null, slot2 = null;
     private bool switching = false;
-    private bool checkVictory = false;
-
-    [Header("Board Settings")]
-    [SerializeField] public float shapeSize = 2.25f;
-    [SerializeField] private int boardWidth = 4;
-    [SerializeField] private int boardHeight = 4;
-    public int shapesBeingDestroyed = 0;
-    public int boardSize => boardWidth * boardHeight;
-
-    [Header("Solution Board Settings")]
-    [SerializeField] private float solutionDisplayTime = 10f;
-    private float solutionTimer = 0;
 
     [Header("Object References")]
+    public BoardManager boardManager = null;
     public ChallengeManager challengeManager = null;
     public UndoManager undoManager = null;
     public Transform gameBoardParent = null;
@@ -58,21 +47,14 @@ public class GameManager : MonoBehaviour
     public delegate void OnUpdateBoard();
     public static event OnUpdateBoard onUpdateBoard;
 
-    public delegate void OnShapeDestroy(int count);
-    public static event OnShapeDestroy onShapeDestroy;
-
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
     [SerializeField] private GameObject victoryMenuParent = null;
     [SerializeField] private TextMeshProUGUI destroyText = null;
-    [SerializeField] private TextMeshProUGUI solutionText = null;
     [SerializeField] private TextMeshProUGUI gameTimerText = null;
-    [SerializeField] private Image solutionTimerUI = null;
 
     [Header("Defeat UI References")]
-    [SerializeField] private GameObject defeatScreenParent = null;
     [SerializeField] private DefeatInstructions defeatInstructions = null;
-    [SerializeField] private TextMeshProUGUI failureText = null;
     private Dictionary<int, ShapeData> requiredShapes;
 
     #region Unity Functions
@@ -106,8 +88,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Setting the gameboard/solution board
-        SetGameSlotIndexes();
-        shapesBeingDestroyed = 0;
+        boardManager.SetGameSlotIndexes();
     }
 
     private void Update()
@@ -115,22 +96,6 @@ public class GameManager : MonoBehaviour
         // Checking for paused state
         if (!GameState.gamePaused)
         {
-            // Checking for an active timer
-            if (solutionTimer > 0f)
-            {
-                // Decrementing the timer
-                solutionTimer -= Time.deltaTime;
-
-                // Checking for solution board toggle
-                if (solutionTimer <= 0f)
-                    HideSolutionBoard();
-                else
-                {
-                    // Updating the solution timer element
-                    solutionTimerUI.fillAmount = (solutionTimer / solutionDisplayTime);
-                }
-            }
-
             // Updating Game Timer
             levelTimer += Time.deltaTime;
             onClockTick?.Invoke();
@@ -140,47 +105,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        // Checking for paused state
-        if (!GameState.gamePaused)
-        {
-            // Checking for victory (if nessecary)
-            if (checkVictory && shapesBeingDestroyed <= 0)
-            {
-                // Check for level completion
-                if (!CheckForVictory())
-                    if (!DataTracker.gameData.defeatTutorialComplete)
-                        CheckForDefeat();
-
-                // Mark as checked
-                checkVictory = false;
-
-                // Update Board
-                onUpdateBoard?.Invoke();
-            }
-        }
-    }
-
     private void OnDestroy() { manager = null; }
-    #endregion
-
-    #region Getter Functions
-    public GameSlot GetGameSlot(int slotIndex, Transform boardParent) { return boardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
-    public ShapeData GetBoardShapeData(int slotIndex, Transform boardParent)
-    {
-        GameSlot slot = GetGameSlot(slotIndex, boardParent);
-
-        if (slot.CheckCanInteract())
-        {
-            GameShape shape = slot.GetSlotShape();
-            if (shape != null)
-                return shape.GetShapeData() ?? null;
-            else
-                return null;
-        } else
-            return null;
-    }
     #endregion
 
     #region Setter Functions
@@ -201,7 +126,7 @@ public class GameManager : MonoBehaviour
                 // Two Slots Selected, switch the shapes
                 slot2 = targetSlot;
                 undoManager.ProcessGameBoard(gameBoardParent);
-                StartCoroutine(MoveShapes());
+                StartCoroutine(boardManager.MoveShapes(slot1, slot2));
 
                 onShapeSwap?.Invoke();
                 return true;
@@ -250,158 +175,16 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region In Game Functions
-    public void ToggleSolutionBoard()
+    public void MarkSwitchingAsComplete()
     {
-        // Checks if two shapes are being switched
-        if (!switching)
-        {
-            // Checking for an active game board
-            if (gameBoardParent.gameObject.activeSelf)
-            {
-                ShowSolutionBoard();
-                if (solutionText != null)
-                    solutionText.text = "View GameBoard";
-            }
-            else
-            {
-                // Checking for an active solution board
-                HideSolutionBoard();
-                if (solutionText != null)
-                    solutionText.text = "View SolutionBoard";
-            }
-        }
-    }
-
-    public void ShowSolutionBoard()
-    {
-        // Checking for an active timer
-        if (solutionTimer <= 0f)
-        {
-            // Setting the Solution Timer
-            // solutionTimer = solutionDisplayTime;
-
-            // Enabling the timer element
-            // solutionTimerUI.gameObject.SetActive(true);
-            solutionTimerUI.fillAmount = 1;
-
-            // Toggling the Solution board / Gameboard
-            gameBoardParent.gameObject.SetActive(false);
-            solutionBoardParent.gameObject.SetActive(true);
-        }
-    }
-
-    private void HideSolutionBoard()
-    {
-        // Disabling the timer element
-        solutionTimerUI.gameObject.SetActive(false);
-
-        // Toggling the Solution board / Gameboard
-        gameBoardParent.gameObject.SetActive(true);
-        solutionBoardParent.gameObject.SetActive(false);
-    }
-
-    public void SetGameSlotIndexes()
-    {
-        // Declaring the temp store variable
-        GameSlot slot = null;
-
-        // Setting the indexes on the solution board
-        if (solutionBoardParent != null)
-        {
-            for (int i = 0; i < solutionBoardParent.childCount; i++)
-            {
-                slot = solutionBoardParent.GetChild(i).GetComponent<GameSlot>();
-                slot.SetSlotIndex(i);
-            }
-        }
-
-        // Setting the indexes on the game board
-        if (gameBoardParent != null)
-        {
-            for (int i = 0; i < gameBoardParent.childCount; i++)
-            {
-                slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-                slot.SetSlotIndex(i);
-            }
-        }
-    }
-
-    public void SwitchShapes()
-    {
-        // Setting the parents
-        Transform shape1 = slot1.GetSlotShape().transform;
-        Transform shape2 = slot2.GetSlotShape().transform;
-
-        shape1.SetParent(slot2.transform);
-        shape2.SetParent(slot1.transform);
-
-        slot1.SetSlotShapeReference(shape2);
-        slot2.SetSlotShapeReference(shape1);
-
-        // Triggering Shape Destruction(s)
-        TriggerShapeDestruction(slot1.GetSlotIndex(), gameBoardParent);
-        TriggerShapeDestruction(slot2.GetSlotIndex(), gameBoardParent);
-
-        // Reset each slot
-        slot1.ResetSlotState();
-        slot2.ResetSlotState();
-
-        // Resetting Slot References
+        switching = false;
         slot1 = null;
         slot2 = null;
-
-        // Flag Victory Check
-        checkVictory = true;
-    }
-
-    public void SwitchSolutionShapes(GameSlot s1, int s1Index, GameSlot s2, int s2Index)
-    {
-        // Setting the parents
-        GameShape s = s1.GetSlotShape();
-        s.transform.SetParent(s2.transform);
-        s.transform.localPosition = new Vector3(0.5f, -0.5f);
-
-        s = s2.GetSlotShape();
-        s.transform.SetParent(s1.transform);
-        s.transform.localPosition = new Vector3(0.5f, -0.5f);
-
-        // Triggering Shape Destruction(s)
-        TriggerShapeDestruction(s1Index, solutionBoardParent);
-        TriggerShapeDestruction(s2Index, solutionBoardParent);
-    }
-
-    private IEnumerator MoveShapes()
-    {
-        // Setting the control variable
-        switching = true;
-
-        // Declaring temporary storeage variables
-        Transform shape1P = slot1.GetSlotShape().transform, shape2P = slot2.GetSlotShape().transform;
-
-        Vector3 shape1StartPosition = shape1P.position, shape2StartPosition = shape2P.position;
-        float mult = 1f / (10f/24f);
-        float progress = 0;
-
-        while (progress < 1f)
-        {
-            // Incrementing the progress
-            progress += Mathf.Clamp(Time.deltaTime * mult, 0f, 1f);
-
-            // Moving the shapes
-            shape1P.position = Vector3.Lerp(shape1StartPosition, shape2StartPosition, progress);
-            shape2P.position = Vector3.Lerp(shape2StartPosition, shape1StartPosition, progress);
-
-            // Frame delay
-            yield return null;
-        }
-
-        SwitchShapes();
-        switching = false;
     }
 
     public bool CheckForMatch(GameShape shape1, GameShape shape2)
     {
-        switch(currentDestoryMethod)
+        switch (currentDestoryMethod)
         {
             case DestroyMethod.Shape:
                 return (shape1.GetShapeType() == shape2.GetShapeType());
@@ -411,170 +194,22 @@ public class GameManager : MonoBehaviour
                 return false;
         }
     }
-
-    public List<int> CheckForSurroundingShapes(int index, Transform boardParent)
-    {
-        // Declaring temp storage variable
-        List<int> indexes = new List<int>();
-        int i;
-
-        GameSlot slot;
-
-        // Top left slot
-        i = index - (boardWidth + 1);
-        if (index % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            // slot.GetSlotShape()
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        // Top Center Slot
-        i = (index - (boardWidth + 0));
-        if (index >= boardWidth && i >= 0 && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        // Top Right Slot
-        i = index - (boardWidth - 1);
-        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        // Middle Left Slot
-        i = index - 1;
-        if (index % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        // Middle Right Slot
-        i = index + 1;
-        if ((index + 1) % boardWidth != 0 && i >= 0 && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        // Bottom left slot
-        i = index + (boardWidth - 1);
-        if (index % boardWidth != 0 && i < boardSize && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        // Bottom Center Slot
-        i = index + boardWidth;
-        if (index <= (boardSize - boardWidth) && i < boardSize && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        // Bottom Right Slot
-        i = index + (boardWidth + 1);
-        if ((index + 1) % boardWidth != 0 && i < boardSize && GetGameSlot(i, boardParent) != null)
-        {
-            // Getting Slot Reference
-            slot = GetGameSlot(i, boardParent);
-
-            // Checking for destorying the shape
-            if (GetBoardShapeData(i, boardParent) != null)
-                indexes.Add(i);
-        }
-
-        return indexes;
-    }
-
-    public void TriggerShapeDestruction(int index, Transform boardParent)
-    {
-        // Getting the current slot
-        GameShape centerShape = boardParent.GetChild(index).GetComponent<GameSlot>().GetSlotShape();
-        if (centerShape == null)
-        {
-            Debug.LogError("Couldn't find shape when triggering destruction at slot " + index);
-            return;
-        }
-
-        // Declaring temp storage variable
-        List<int> targetIndexes = CheckForSurroundingShapes(index, boardParent);
-        GameSlot slot;
-        GameShape shape = null;
-        bool destoryCurrentSlot = false;
-        //shapesBeingDestroyed = 0;
-
-        if (targetIndexes != null)
-        {
-            foreach (int i in targetIndexes)
-            {
-                slot = boardParent.GetChild(i).GetComponent<GameSlot>();
-                shape = slot.GetSlotShape();
-
-                if (CheckForMatch(centerShape, shape))
-                {
-                    if (!shape.IsMarkedForDestruct())
-                    {
-                        shape.TriggerDestruction();
-                        shape.MarkForDestruction();
-                        shapesBeingDestroyed++;
-                    }
-
-                    destoryCurrentSlot = true;
-                }
-            }
-        }
-
-        if (destoryCurrentSlot)
-        {
-            if (!centerShape.IsMarkedForDestruct())
-            {
-                centerShape.TriggerDestruction();
-                centerShape.MarkForDestruction();
-                shapesBeingDestroyed++;
-            }
-        }
-
-        onShapeDestroy?.Invoke(shapesBeingDestroyed);
-    }
     #endregion
 
     #region State Check Functions
+    public void CheckGameState()
+    {
+        if (!CheckForVictory())
+            if (!DataTracker.gameData.defeatTutorialComplete)
+                CheckForDefeat();
+
+        onUpdateBoard?.Invoke();
+    }
+
     public bool CheckForDefeat()
     {
+        Debug.Log("Checking for Defeat");
+
         // Declaring tracker variables
         GameShape shape;
         List<ShapeData> neededShapes = new List<ShapeData>();
@@ -623,6 +258,8 @@ public class GameManager : MonoBehaviour
 
     public bool CheckForVictory()
     {
+        Debug.Log("Checking for Victory");
+
         // Setting the storage vars
         GameSlot slot1 = null, slot2 = null;
         GameShape shape1 = null, shape2 = null;
@@ -653,14 +290,12 @@ public class GameManager : MonoBehaviour
         }
 
         // All the slots evaluate as true, trigger Complete Level
-        Debug.Log("Level Completed");
         CompleteLevel();
         return true;
     }
 
     public void CompleteLevel()
     {
-        shapesBeingDestroyed = 0;
         DisplayVictoryScreen();
 
         if (DataTracker.gameData.completedLevels.ContainsKey(currentPackIndex))
@@ -682,10 +317,8 @@ public class GameManager : MonoBehaviour
     public void DisplayPauseMenu() { pauseMenuParent.SetActive(true); }
     public void HidePauseMenu() { pauseMenuParent.SetActive(false); }
 
-    public void DisplayVictoryScreen() { GameState.gamePaused = true; checkVictory = false; victoryMenuParent.SetActive(true); challengeManager.UpdateChallengeEntries(); }
+    public void DisplayVictoryScreen() { GameState.gamePaused = true; victoryMenuParent.SetActive(true); challengeManager.UpdateChallengeEntries(); }
     public void HideVictoryScreen() { victoryMenuParent.SetActive(false); GameState.gamePaused = false; }
-
-    public void DisplayDefeatScreen(string defeatText) { defeatScreenParent.SetActive(true); failureText.text = defeatText; GameState.gamePaused = true; }
     #endregion
 
     #region Scene Navigation Functions

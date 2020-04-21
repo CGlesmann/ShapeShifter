@@ -254,7 +254,7 @@ MonoBehaviour:
   indicatorParent: {fileID: 387205171}
   menuSwipeController: {fileID: 1012608723}
   panelParent: {fileID: 1012608722}
-  highlightColor: {r: 0.9037957, g: 1, b: 0, a: 1}
+  highlightColor: {r: 1, g: 0.6745098, b: 0.2509804, a: 1}
 --- !u!114 &387205173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,6 +757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelParent: {fileID: 1012608722}
+  baseMenuOffset: {x: 0, y: 0, z: 0}
   dragThreshold: 0.2
   transitionTime: 0.25
   panelSpacing: 3000

@@ -1050,7 +1050,7 @@ MonoBehaviour:
   indicatorParent: {fileID: 5655058877216377815}
   menuSwipeController: {fileID: 8638048575361772320}
   panelParent: {fileID: 5931827039437382824}
-  highlightColor: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
+  highlightColor: {r: 1, g: 0.6745098, b: 0.2509804, a: 1}
 --- !u!1 &5931827039437382827
 GameObject:
   m_ObjectHideFlags: 0
@@ -1139,6 +1139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelParent: {fileID: 5931827039437382824}
+  baseMenuOffset: {x: 0, y: 0, z: 0}
   dragThreshold: 0.2
   transitionTime: 0.25
   panelSpacing: 3000

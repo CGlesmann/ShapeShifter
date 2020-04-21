@@ -39,10 +39,10 @@ public class GameSlot : MonoBehaviour
     public void SetSlotIndex(int index) { slotIndex = index; }
     public void SetSlotLock(SlotLock l) { slotLock = l; }
     public void SetSlotShapeReference(Transform newShape) { shapeTransform = newShape; }
-    public void SetSlotShape(GameShape.ShapeType type, Color targetColor)
+    public void SetSlotShape(GameShape.ShapeType shapeType, GameShape.ColorType colorType)
     {
         if (slotShape != null)
-            slotShape.ConfigureShape(type, targetColor);
+            slotShape.ConfigureShape(shapeType, colorType);
     }
 
     public void ToggleSelect()
