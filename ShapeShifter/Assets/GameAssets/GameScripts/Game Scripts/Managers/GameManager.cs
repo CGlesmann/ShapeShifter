@@ -41,9 +41,6 @@ public class GameManager : MonoBehaviour
     public delegate void OnClockTick();
     public static event OnClockTick onClockTick;
 
-    public delegate void OnShapeSwap();
-    public static event OnShapeSwap onShapeSwap;
-
     public delegate void OnUpdateBoard();
     public static event OnUpdateBoard onUpdateBoard;
 
@@ -127,8 +124,6 @@ public class GameManager : MonoBehaviour
                 slot2 = targetSlot;
                 undoManager.ProcessGameBoard(gameBoardParent);
                 StartCoroutine(boardManager.MoveShapes(slot1, slot2));
-
-                onShapeSwap?.Invoke();
                 return true;
             }
         }

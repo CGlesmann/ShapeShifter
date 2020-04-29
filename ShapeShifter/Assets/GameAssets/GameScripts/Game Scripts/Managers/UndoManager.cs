@@ -117,6 +117,8 @@ public class UndoManager : MonoBehaviour
                 LockData lockData = data.locks[i];
                 if (lockData != null)
                 {
+                    Debug.Log($"Generating Slot Lock at Index {i} of type {lockData.lockType} with {lockData.lockTimer} move(s) left");
+
                     // Active
                     if (lockData.lockTimer > 0)
                     {
@@ -142,6 +144,8 @@ public class BoardData
 
     public BoardData(Transform gameBoardParent)
     {
+        Debug.Log("Processing Gameboard");
+
         // Creating a new list
         board = new List<ShapeData>();
         locks = new List<LockData>();
@@ -159,6 +163,9 @@ public class BoardData
             ShapeData newShape = shape != null ? new ShapeData(shape.GetShapeColor(), shape.GetShapeType()) : null;
             board.Add(newShape);
 
+            if (slotLock != null)
+                Debug.Log($"Found a lock of type {slotLock.GetLockType()} with {slotLock.GetLockCounter()} moves left");
+                
             LockData newLock = slotLock != null ? new LockData(slotLock.GetLockType(), slotLock.GetLockCounter()) : null;
             locks.Add(newLock);
         }

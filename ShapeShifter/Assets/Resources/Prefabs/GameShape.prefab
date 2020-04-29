@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6138016375346929672}
   - component: {fileID: 8231258902120797227}
   - component: {fileID: -7350516912293712723}
+  - component: {fileID: 6591824464240858555}
   m_Layer: 5
   m_Name: GameShape
   m_TagString: Untagged
@@ -88,8 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83f4ee1209614b4e94a455a1bf607db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 6591824464240858555}
   imageRenderer: {fileID: 6138016375346929678}
   shapeType: 0
+  colorType: 0
 --- !u!223 &8231258902120797227
 Canvas:
   m_ObjectHideFlags: 0
@@ -123,3 +126,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 561491a92c3e53841bae0556c9781f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &6591824464240858555
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6138016375346929674}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f3f351927580e7941b7f7cadaa5cfc53, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,11 @@ public class BoardManager : MonoBehaviour
 
     public delegate void OnShapeDestroy(int count);
     public static event OnShapeDestroy onShapeDestroy;
+
+    public delegate void OnShapeSwap();
+    public static event OnShapeSwap onShapeSwap;
+
+    private int locksAnimating = 0;
 
     public void Awake() { boardManager = this; }
 
@@ -101,10 +107,10 @@ public class BoardManager : MonoBehaviour
             yield return null;
         }
 
-        SwitchShapes(slot1, slot2);
+        StartCoroutine(SwitchShapes(slot1, slot2));
     }
 
-    public void SwitchShapes(GameSlot slot1, GameSlot slot2)
+    public IEnumerator SwitchShapes(GameSlot slot1, GameSlot slot2)
     {
         // Setting the parents
         Transform shape1 = slot1.GetSlotShapeTransform();
@@ -116,9 +122,21 @@ public class BoardManager : MonoBehaviour
         slot1.SetSlotShapeReference(shape2);
         slot2.SetSlotShapeReference(shape1);
 
+        onShapeSwap?.Invoke();
+        while (locksAnimating > 0)
+            yield return null;
+
         // Triggering Shape Destruction(s)
-        TriggerShapeDestruction(slot1.GetSlotIndex(), gameBoardParent);
-        TriggerShapeDestruction(slot2.GetSlotIndex(), gameBoardParent);
+        int destroyedShapes = 0;
+        destroyedShapes += TriggerShapeDestruction(slot1.GetSlotIndex(), gameBoardParent);
+        destroyedShapes += TriggerShapeDestruction(slot2.GetSlotIndex(), gameBoardParent);
+
+        while (shapesBeingDestroyed > 0)
+            yield return null;
+
+        onShapeDestroy?.Invoke(destroyedShapes);
+        while (locksAnimating > 0)
+            yield return null;
 
         // Reset each slot
         slot1.ResetSlotState();
@@ -129,6 +147,13 @@ public class BoardManager : MonoBehaviour
 
         gameManager.MarkSwitchingAsComplete();
     }
+
+    public Action MarkLockAsAnimating()
+    {
+        locksAnimating++;
+        return MarkLockAnimationFinished;
+    }
+    public void MarkLockAnimationFinished() { locksAnimating--; }
 
     public void SwitchSolutionShapes(GameSlot s1, int s1Index, GameSlot s2, int s2Index)
     {
@@ -254,14 +279,14 @@ public class BoardManager : MonoBehaviour
         return indexes;
     }
 
-    public void TriggerShapeDestruction(int index, Transform boardParent)
+    public int TriggerShapeDestruction(int index, Transform boardParent)
     {
         // Getting the current slot
         GameShape centerShape = boardParent.GetChild(index).GetComponent<GameSlot>().GetSlotShape();
         if (centerShape == null)
         {
             Debug.LogError("Couldn't find shape when triggering destruction at slot " + index);
-            return;
+            return -1;
         }
 
         // Declaring temp storage variable
@@ -270,7 +295,6 @@ public class BoardManager : MonoBehaviour
         GameShape shape = null;
         bool destoryCurrentSlot = false;
         int newShapesBeingDestroyed = 0;
-        //shapesBeingDestroyed = 0;
 
         if (targetIndexes != null)
         {
@@ -305,6 +329,7 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        onShapeDestroy?.Invoke(newShapesBeingDestroyed);
+        //onShapeDestroy?.Invoke(newShapesBeingDestroyed);
+        return newShapesBeingDestroyed;
     }
 }

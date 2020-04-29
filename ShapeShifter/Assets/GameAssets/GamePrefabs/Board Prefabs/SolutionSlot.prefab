@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 384, y: 384}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4451472272814926795
 CanvasRenderer:
@@ -61,13 +61,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.053111143, g: 0.38679248, b: 0.045612313, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.14847724, g: 0.3962264, b: 0.08410467, a: 1}
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7650805482676481073, guid: 35191d725332fa94f9c832b5b2db5b39,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: f8d63ef685f37314187ea42a09d1e668, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -92,8 +91,8 @@ MonoBehaviour:
   slotLock: {fileID: 0}
   shapeTransform: {fileID: 0}
   canSelect: 0
-  deselectedColor: {r: 0.053111143, g: 0.38679248, b: 0.045612313, a: 1}
-  selectedColor: {r: 0.053111143, g: 0.38679248, b: 0.045612313, a: 1}
+  deselectedColor: {r: 0.7921569, g: 0.5411765, b: 0.21960784, a: 1}
+  selectedColor: {r: 0.7921569, g: 0.5411765, b: 0.21960784, a: 1}
 --- !u!223 &5057015497495022007
 Canvas:
   m_ObjectHideFlags: 0

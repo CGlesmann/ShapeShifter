@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public static class GameboardTools
 {
     private static GameManager gameManager = null;
@@ -58,6 +62,35 @@ public static class GameboardTools
 
         Transform solutionBoardParent = gameManager.solutionBoardParent;
         ClearBoard(solutionBoardParent, deleteShapes, deleteLocks);
+    }
+
+    public static void SetAllGameSlotReferences(Transform boardParent)
+    {
+        GameSlot slot;
+        for(int i = 0; i < boardParent.childCount; i++)
+        {
+            slot = boardParent.GetChild(i).GetComponent<GameSlot>();
+            for(int j = 0; j < slot.transform.childCount; j++)
+            {
+                Transform currentSlotChild = slot.transform.GetChild(j);
+
+                GameShape gameShape = currentSlotChild.GetComponent<GameShape>();
+                if (gameShape != null)
+                {
+                    slot.SetSlotShapeReference(currentSlotChild);
+                    EditorUtility.SetDirty(slot);
+                    continue;
+                }
+
+                SlotLock slotLock = currentSlotChild.GetComponent<SlotLock>();
+                if (slotLock != null)
+                {
+                    slot.SetSlotLock(slotLock);
+                    EditorUtility.SetDirty(slot);
+                    continue;
+                }
+            }
+        }
     }
 
     #region Lock Manipulation

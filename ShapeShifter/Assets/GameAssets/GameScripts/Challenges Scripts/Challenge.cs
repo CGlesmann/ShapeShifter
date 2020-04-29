@@ -18,7 +18,7 @@ public class MoveChallenge : Challenge, IChallenge
     public int requiredMoves = 0;
     private int movesMade = 0;
 
-    public void SubscribeToCheck() { GameManager.onShapeSwap += UpdateTrackers; }
+    public void SubscribeToCheck() { BoardManager.onShapeSwap += UpdateTrackers; }
     public void UpdateTrackers() { movesMade++; }
     public bool CheckForCompletedChallenge() { return (movesMade <= requiredMoves); }
 }

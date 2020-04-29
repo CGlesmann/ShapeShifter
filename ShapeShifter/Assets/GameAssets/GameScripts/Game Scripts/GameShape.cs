@@ -18,6 +18,7 @@ public class GameShape : MonoBehaviour
     private GameManager manager = GameManager.manager;
 
     [Header("Component References")]
+    [SerializeField] private Animator anim = null;
     [SerializeField] private Image imageRenderer = null;
 
     [Header("Shape Variables")]
@@ -60,7 +61,7 @@ public class GameShape : MonoBehaviour
     public ColorType GetShapeColor() { return colorType; }
     public ShapeData GetShapeData() { return new ShapeData(colorType, shapeType); }
 
-    public void TriggerDestruction() { StartCoroutine(DisplayShapeDestruction());}
+    public void TriggerDestruction() { /*StartCoroutine(DisplayShapeDestruction())*/anim.SetTrigger("Destroy"); }
     private IEnumerator DisplayShapeDestruction()
     {
         float counter = 0;
@@ -78,7 +79,7 @@ public class GameShape : MonoBehaviour
     public void DestroyShape()
     {
         transform.parent.GetComponent<GameSlot>().SetSlotShapeReference(null);
-        DestroyImmediate(gameObject);
+        Destroy(gameObject);
 
         BoardManager.boardManager.MarkShapeAsDestroyed();
     }

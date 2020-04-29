@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 
 public class LevelBuilder : EditorWindow
 {
+    private GameManager gameManager = null;
     private BoardManager boardManager = null;
 
     private readonly string[] tabTitles = { "Gameboard Tools", "GameSlot Tools", "Level Generator" };
@@ -91,6 +92,16 @@ public class LevelBuilder : EditorWindow
         {
             GameboardTools.ClearGameboard(true, true);
             GameboardTools.ClearSolutionboard(true, true);
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+
+        if (GUILayout.Button("Reset All Slot References", GUILayout.MaxWidth(150f)))
+        {
+            if (gameManager == null)
+                gameManager = GameObject.FindObjectOfType<GameManager>();
+
+            GameboardTools.SetAllGameSlotReferences(gameManager.gameBoardParent);
+            GameboardTools.SetAllGameSlotReferences(gameManager.solutionBoardParent);
         }
 
         #region Gameboard Manipulation
@@ -107,6 +118,15 @@ public class LevelBuilder : EditorWindow
 
             sizing = EditorGUILayout.FloatField(sizing, GUILayout.MaxWidth(50f));
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Separator();
+            if (GUILayout.Button("Reset Slot References", GUILayout.MaxWidth(150f)))
+            {
+                if (gameManager == null)
+                    gameManager = GameObject.FindObjectOfType<GameManager>();
+
+                GameboardTools.SetAllGameSlotReferences(gameManager.gameBoardParent);
+            }
 
             EditorGUILayout.Separator();
             if (GUILayout.Button("Clear GameBoard", GUILayout.MaxWidth(150f)))
@@ -145,6 +165,15 @@ public class LevelBuilder : EditorWindow
 
             sizing = EditorGUILayout.FloatField(sizing, GUILayout.MaxWidth(50f));
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Separator();
+            if (GUILayout.Button("Reset Slot References", GUILayout.MaxWidth(150f)))
+            {
+                if (gameManager == null)
+                    gameManager = GameObject.FindObjectOfType<GameManager>();
+
+                GameboardTools.SetAllGameSlotReferences(gameManager.solutionBoardParent);
+            }
 
             EditorGUILayout.Separator();
             if (GUILayout.Button("Clear SolutionBoard", GUILayout.MaxWidth(150f)))
@@ -217,7 +246,7 @@ public class LevelBuilder : EditorWindow
             if (GUILayout.Button("Edit Lock", GUILayout.MaxWidth(150f)))
             {
                 GameSlotTools.EditSlotLock(slot.transform, desiredLockType, desiredLockTimer, desiredLockSize);
-                EditorUtility.SetDirty(slot.GetComponent<GameSlot>());
+                EditorUtility.SetDirty(slot.GetComponent<GameSlot>().GetSlotLock());
                 EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             }
         }
@@ -226,14 +255,17 @@ public class LevelBuilder : EditorWindow
             if (GUILayout.Button("Create Lock", GUILayout.MaxWidth(150f)))
             {
                 GameSlotTools.CreateSlotLock(slot.transform, desiredLockType, desiredLockTimer, desiredLockSize);
-                EditorUtility.SetDirty(slot.GetComponent<GameSlot>());
+                EditorUtility.SetDirty(slot.GetComponent<GameSlot>().GetSlotLock());
                 EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             }
         }
         
         SlotLock slotLock = slot.GetSlotLock();
         if (slotLock != null && GUILayout.Button("Destroy Lock", GUILayout.Width(150f)))
+        {
             DestroyImmediate(slotLock.gameObject);
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Separator();
@@ -249,7 +281,6 @@ public class LevelBuilder : EditorWindow
             if (GUILayout.Button("Edit Shape", GUILayout.MaxWidth(150f)))
             {
                 GameSlotTools.EditSlotShape(slot.transform, desiredShapeType, desiredShapeColor, desiredShapeSize);
-                EditorUtility.SetDirty(slot.GetComponent<GameSlot>());
                 EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             }
         }
@@ -259,12 +290,16 @@ public class LevelBuilder : EditorWindow
             {
                 GameSlotTools.CreateSlotShape(slot.transform, desiredShapeType, desiredShapeColor, desiredShapeSize);
                 EditorUtility.SetDirty(slot.GetComponent<GameSlot>());
+                EditorUtility.SetDirty(slot.GetComponent<GameSlot>().GetSlotShape());
                 EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             }
         }
 
         if (shapeData != null && GUILayout.Button("Destroy Shape", GUILayout.Width(150f)))
+        {
             DestroyImmediate(shapeData.gameObject);
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Separator();
@@ -369,6 +404,21 @@ public class LevelBuilder : EditorWindow
 
         if (GUILayout.Button("Clear Board", GUILayout.MaxWidth(150f)))
             GameboardTools.ClearGameboard(true, true);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Separator();
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Recreate Gameboard"))
+        {
+            GameManager manager = GameObject.Find("LevelManager").GetComponent<GameManager>();
+            LevelGenerator.RecreateBoard(manager.gameBoardParent);
+        }
+
+        if (GUILayout.Button("Recreate Solutionboard"))
+        {
+            GameManager manager = GameObject.Find("LevelManager").GetComponent<GameManager>();
+            LevelGenerator.RecreateBoard(manager.solutionBoardParent);
+        }
         EditorGUILayout.EndHorizontal();
     }
 }

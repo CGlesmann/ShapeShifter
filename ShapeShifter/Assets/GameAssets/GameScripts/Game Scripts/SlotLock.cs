@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,8 +17,11 @@ public class SlotLock : MonoBehaviour
     private bool minimized = false;
     private bool destroyed = false;
 
+    private Action onLockDestroy = null;
+
     [Header("Object References")]
     [SerializeField] private Animator anim = null;
+    [SerializeField] private LockCounterText textAnim = null;
     [SerializeField] private TextMeshProUGUI counterText = null;
     private GameSlot gameSlot = null;
 
@@ -73,17 +77,25 @@ public class SlotLock : MonoBehaviour
         if (lockType != lockData.lockType)
             SetLockStateMachine(lockType);
 
-        if (lockData.lockTimer == 0)
+        if (lockData.lockTimer <= 0)
             ActivateLock();
 
-        lockData = new LockData(lockType, lockTimer);
-        UpdateCounterText();
+        //lockData = new LockData(lockType, lockTimer);
+        if (lockData == null)
+            lockData = new LockData(lockType, lockTimer);
+        else
+        {
+            lockData.lockType = lockType;
+            lockData.lockTimer = lockTimer;
+        }
+
+        textAnim.SetTextValue(lockData.lockTimer);
     }
 
     public void ActivateLock()
     {
         LockGameSlot();
-        UpdateCounterText();
+        textAnim.SetTextValue(lockData.lockTimer);
         lockStateMachine?.ActivateLock();
     }
 
@@ -94,12 +106,27 @@ public class SlotLock : MonoBehaviour
         anim.SetTrigger("Destroy");
     }
 
+    public void DestroyLock()
+    {
+        onLockDestroy?.Invoke();
+        onLockDestroy = null;
+    }
+
     public void LockGameSlot() { gameSlot?.LockGameSlot(); }
     public void UpdateLock() { lockStateMachine.UpdateLock(); }
-    public void UpdateCounterText()
+
+    public void PlayTextUpdateAnimation()
     {
         int newValue = (int)Mathf.Clamp(lockData.lockTimer, 0, Mathf.Infinity);
-        counterText.text = newValue.ToString();
+
+        Action animationFinishAction = BoardManager.boardManager.MarkLockAsAnimating();
+        if (newValue > 0)
+            textAnim.PlayUpdateAnimation(newValue, animationFinishAction);
+        else
+        {
+            onLockDestroy += animationFinishAction;
+            textAnim.PlayUpdateAnimation(newValue, null);
+        }
     }
 }
 
@@ -128,14 +155,14 @@ public class SwitchLockState : ILockState
     SlotLock slotLock;
 
     public SwitchLockState(SlotLock lockReference) { slotLock = lockReference; }
-    public void ActivateLock() { GameManager.onShapeSwap += UpdateLock; }
-    public void DeactivateLock() { GameManager.onShapeSwap -= UpdateLock; }
+    public void ActivateLock() { Debug.Log($"Activating lock {slotLock.name}"); BoardManager.onShapeSwap += UpdateLock; }
+    public void DeactivateLock() { BoardManager.onShapeSwap -= UpdateLock; }
 
     public void UpdateLock()
     {
         slotLock.lockData.lockTimer--;
-        slotLock.UpdateCounterText();
 
+        slotLock.PlayTextUpdateAnimation();
         if (slotLock.lockData.lockTimer <= 0)
             slotLock.DeactivateLock();
     }
@@ -146,7 +173,7 @@ public class DestructLockState : ILockState
     SlotLock slotLock;
 
     public DestructLockState(SlotLock lockReference) { slotLock = lockReference; }
-    public void ActivateLock() { BoardManager.onShapeDestroy += MarkShapesDestroyed; }
+    public void ActivateLock() { Debug.Log($"Activating lock {slotLock.name}"); BoardManager.onShapeDestroy += MarkShapesDestroyed; }
     public void DeactivateLock() { BoardManager.onShapeDestroy -= MarkShapesDestroyed; }
 
     public void MarkShapesDestroyed(int count)
@@ -160,7 +187,7 @@ public class DestructLockState : ILockState
 
     public void UpdateLock()
     {
-        slotLock.UpdateCounterText();
+        slotLock.PlayTextUpdateAnimation();
         if (slotLock.lockData.lockTimer <= 0)
             slotLock.DeactivateLock();
     }

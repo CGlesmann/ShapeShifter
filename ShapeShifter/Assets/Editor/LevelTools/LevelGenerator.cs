@@ -45,6 +45,45 @@ public static class LevelGenerator
             availableSlots.RemoveAt(targetSlotIndex);
         }
     }
+
+    public static void RecreateBoard(Transform boardParent)
+    {
+        GameSlot slot;
+        Transform shape, slotLock;
+        ShapeData shapeData;
+        LockData lockData;
+
+        float shapeSize, lockSize;
+
+        for(int i = 0; i < boardParent.childCount; i++)
+        {
+            slot = boardParent.GetChild(i).GetComponent<GameSlot>();
+            if (slot != null)
+            {
+                shape = slot.GetSlotShapeTransform();
+                shapeData = slot.GetSlotShape()?.GetShapeData();
+
+                if (shapeData != null)
+                {
+                    shapeSize = shape.localScale.x;
+                    GameObject.DestroyImmediate(shape.gameObject);
+                    GameSlotTools.CreateSlotShape(slot.transform, shapeData.shapeType, shapeData.shapeColor, shapeSize);
+                }
+
+                slotLock = slot.GetSlotLock()?.transform;
+                lockData = slot.GetSlotLock()?.lockData;
+
+                if (lockData != null)
+                {
+                    lockSize = slotLock.localScale.x;
+                    GameObject.DestroyImmediate(slotLock.gameObject);
+                    GameSlotTools.CreateSlotLock(slot.transform, lockData.lockType, lockData.lockTimer, lockSize);
+                }
+            }
+
+            EditorUtility.SetDirty(slot);
+        }
+    }
 }
 
 public class GeneratorShapePrefs
