@@ -1,42 +1,59 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class ChallengePreview : MonoBehaviour
 {
-    private ChallengeList currentLevelChallengeList;
+    [Header("Object References")]
+    [SerializeField] private TextMeshProUGUI noChallengeText = null;
 
-    [Header("GUI References")]
-    [SerializeField] private List<ChallengeEntry> challengeEntries = null;
+    [Header("Challenge References")]
+    [SerializeField] private GameObject challengeParent = null;
+    [SerializeField] private List<ChallengeEntry> challengeEntries = new List<ChallengeEntry>();
 
-    public void SetLevelChallengePreview(string levelName, int levelIndex)
+    private int packIndex = -1;
+    private int levelIndex = -1;
+
+    public void SetLevelChallengePreview(ChallengeLog challengeLog, string levelName)
     {
-        ChallengeLog challengeLog = Resources.Load<ChallengeLog>("ChallengeLog/Challenge Log");
-        if (challengeLog != null)
+        int challengeCount = challengeLog?.GetChallengeCount() ?? 0;
+
+        if (challengeCount <= 0)
         {
-            currentLevelChallengeList = challengeLog.GetLevelChallengeList(levelIndex);
+            noChallengeText.gameObject.SetActive(true);
+            challengeParent.SetActive(false);
+        }
+        else
+        {
+            noChallengeText.gameObject.SetActive(false);
+            challengeParent.SetActive(true);
 
-            if (currentLevelChallengeList != null)
+            if (packIndex == -1 || levelIndex == -1)
             {
-                for (int i = 0; i < challengeEntries.Count; i++)
+                Vector2 indexes = LevelParser.GetLevelPackLevelIndexes(levelName);
+                packIndex = (int)indexes.x;
+                levelIndex = (int)indexes.y;
+            }
+
+            Debug.Log($"LevelName: {levelName}, PackIndex: {packIndex}, LevelIndex: {levelIndex}, ChallengeCount: {challengeCount}");
+            for (int i = 0; i < challengeEntries.Count; i++)
+            {
+                if (i <= challengeCount - 1)
                 {
-                    if (currentLevelChallengeList.challenges.Count - 1 < i)
-                        challengeEntries[i].DisableChallengeEntry();
-                    else
-                    {
-                        challengeEntries[i].gameObject.SetActive(true);
-
-                        Challenge challengeData = currentLevelChallengeList.challenges[i] as Challenge;
-                        challengeEntries[i].UpdateChallengeText(challengeData.challengeDescription);
-
-                        if (DataTracker.gameData.GetLevelChallengeResult(levelName, i))
-                            challengeEntries[i].MarkAsCompleted();
-                    }
+                    challengeEntries[i].gameObject.SetActive(true);
+                    challengeEntries[i].UpdateChallengeEntry(challengeLog.GetChallengeData(i), packIndex, levelIndex);
                 }
-            } else {
-                for (int i = 0; i < challengeEntries.Count; i++)
-                    challengeEntries[i].DisableChallengeEntry();
+                else
+                    challengeEntries[i].gameObject.SetActive(false);
             }
         }
+    }
+
+    public void ResetChallengePreview()
+    {
+        packIndex = -1;
+        levelIndex = -1;
     }
 }

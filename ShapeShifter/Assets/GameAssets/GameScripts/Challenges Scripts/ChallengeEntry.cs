@@ -1,34 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class ChallengeEntry : MonoBehaviour
 {
-    [Header("Challenge Settings")]
+    [Header("Object References")]
+    [SerializeField] private TextMeshProUGUI challengeText = null;
+    [SerializeField] private Image starIcon = null;
+
+    [Header("Sprite References")]
+    [SerializeField] private Sprite emptyStarIcon = null;
+    [SerializeField] private Sprite filledStarIcon = null;
+
+    [Header("Entry Settings")]
     [SerializeField] private int challengeIndex = 0;
 
-    [Header("GUI References")]
-    [SerializeField] private TextMeshProUGUI challengeText = null;
-    [SerializeField] private GameObject challengeCheck = null;
-
-    public bool ChallengeSaveCompleted()
+    public void UpdateChallengeEntry(Challenge challengeData, int packIndex, int levelIndex)
     {
-        if (DataTracker.gameData.levelChallenges.TryGetValue(SceneManager.GetActiveScene().name, out List<bool> challengeToggles))
-        {
-            if (challengeToggles == null || challengeToggles.Count - 1 < challengeIndex)
-                return false;
+        challengeText.text = $"- {challengeData.challengeDescription}";
+        bool challengeCompleted = DataTracker.gameData.GetChallengeResult(Challenge.GetChallengeKey(packIndex, levelIndex, challengeIndex));
 
-            return challengeToggles[challengeIndex];
-        }
+        if (challengeCompleted)
+            starIcon.sprite = filledStarIcon;
         else
-            return false;
+            starIcon.sprite = emptyStarIcon;
     }
-
-    public void EnableChallengeEntry() { gameObject.SetActive(true); }
-    public void DisableChallengeEntry() { gameObject.SetActive(false); }
-
-    public void UpdateChallengeText(string text) { challengeText.text = text; }
-    public void MarkAsCompleted() { challengeCheck.SetActive(true); }
 }

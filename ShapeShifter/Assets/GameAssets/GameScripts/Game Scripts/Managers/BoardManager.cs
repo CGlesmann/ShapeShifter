@@ -13,7 +13,7 @@ public class BoardManager : MonoBehaviour
     [Header("Board Settings")]
     [SerializeField] private int boardWidth = 0;
     [SerializeField] private int boardHeight = 0;
-    [SerializeField] private int shapesBeingDestroyed = 0;
+    private int shapesBeingDestroyed = 0;
     private int boardSize => boardWidth * boardHeight;
 
     [Header("Board References")]
@@ -24,10 +24,10 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private GameManager gameManager = null;
 
     public delegate void OnShapeDestroy(int count);
-    public static event OnShapeDestroy onShapeDestroy;
+    public event OnShapeDestroy onShapeDestroy;
 
     public delegate void OnShapeSwap();
-    public static event OnShapeSwap onShapeSwap;
+    public event OnShapeSwap onShapeSwap;
 
     private int locksAnimating = 0;
 

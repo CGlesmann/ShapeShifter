@@ -2,22 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Challenge Log", menuName = "Challenge Assets/Challenge Log", order = 1)]
+[CreateAssetMenu(fileName = "Challenge Log", menuName = "Global Assets/Challenge Log")]
 public class ChallengeLog : ScriptableObject
 {
-    public List<ChallengeList> challengeLog = new List<ChallengeList>();
+    [HideInInspector][SerializeReference] private List<Challenge> challengeLog = new List<Challenge>();
 
-    public ChallengeList GetLevelChallengeList(int index)
+    public void AddChallenge(Challenge challenge)
     {
-        if (index > challengeLog.Count - 1)
-            return null;
-        else
-            return challengeLog[index];
-    }
-}
+        if (challengeLog == null)
+            challengeLog = new List<Challenge>();
 
-[System.Serializable]
-public class ChallengeList
-{
-    [SerializeReference][HideInInspector] public List<IChallenge> challenges = new List<IChallenge>();
+        challengeLog.Add(challenge);
+    }
+
+    public void RemoveChallenge(int index)
+    {
+        if (index < 0 || index > challengeLog.Count - 1)
+            return;
+
+        challengeLog.RemoveAt(index);
+    }
+
+    public Challenge GetChallengeData(int challengeIndex)
+    {
+        if (challengeLog == null || challengeLog.Count - 1 < challengeIndex)
+            return null;
+
+        return challengeLog[challengeIndex];
+    }
+
+    public int GetChallengeCount()
+    {
+        if (challengeLog == null)
+            return 0;
+
+        return challengeLog.Count;
+    }
 }

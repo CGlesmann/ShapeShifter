@@ -28,6 +28,7 @@ public class GameShape : MonoBehaviour
     private Vector3 baseSize = Vector3.zero;
     private bool markedForDestruct = false;
 
+    private void Awake() { ConfigureShape(shapeType, colorType); }
     public void Start() { manager = GameManager.manager; baseSize = transform.localScale; }
     public override string ToString() { return "Shape: " + shapeType.ToString() + " Color: " + colorType.ToString(); }
     public override int GetHashCode() { return base.GetHashCode(); }
@@ -90,6 +91,36 @@ public class GameShape : MonoBehaviour
         DestroyImmediate(gameObject);
     }
 }
+
+# if UNITY_EDITOR
+[CustomEditor(typeof(GameShape))]
+public class ShapeInspector : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        GameShape shape = (GameShape)target;
+
+        if (GUILayout.Button("Update Shape Sprite/Color"))
+        {
+            shape.ConfigureShape(shape.GetShapeType(), shape.GetShapeColor());
+            EditorUtility.SetDirty(shape.GetComponent<Image>());
+        }
+    }
+
+    [MenuItem("Update Shape Sprite/Color", menuItem = "Level Tools/Update Shape S&C")]
+    public static void UpdateAllShapes()
+    {
+        GameShape[] shapes = GameObject.FindObjectsOfType<GameShape>();
+        foreach (GameShape shape in shapes)
+        {
+            shape.ConfigureShape(shape.GetShapeType(), shape.GetShapeColor());
+            EditorUtility.SetDirty(shape.GetComponent<Image>());
+        }
+    }
+}
+#endif
 
 public class ShapeData
 {

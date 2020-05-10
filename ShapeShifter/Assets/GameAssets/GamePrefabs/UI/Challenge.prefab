@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3433293743986093817
+--- !u!1 &632433537584806527
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,65 +8,64 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2417553292800522887}
-  - component: {fileID: 4127137719254729556}
-  - component: {fileID: 6413043148196010521}
+  - component: {fileID: 2222753960613643987}
+  - component: {fileID: 7734756222286137882}
+  - component: {fileID: 7308326299908942060}
   m_Layer: 5
-  m_Name: CheckBox
+  m_Name: StarIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &2417553292800522887
+--- !u!224 &2222753960613643987
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3433293743986093817}
+  m_GameObject: {fileID: 632433537584806527}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1447065254605073319}
+  m_Children: []
   m_Father: {fileID: 2085109044775486730}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -460, y: 0}
+  m_AnchoredPosition: {x: 457, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &4127137719254729556
+--- !u!222 &7734756222286137882
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3433293743986093817}
+  m_GameObject: {fileID: 632433537584806527}
   m_CullTransparentMesh: 0
---- !u!114 &6413043148196010521
+--- !u!114 &7308326299908942060
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3433293743986093817}
+  m_GameObject: {fileID: 632433537584806527}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3962264, g: 0.38314345, b: 0.38314345, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.99215686, g: 0.90588236, b: 0.29803923, a: 1}
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7650805482676481073, guid: 35191d725332fa94f9c832b5b2db5b39,
+  m_Sprite: {fileID: 1540975277200382298, guid: 4113733286e1e674585b8c4e561fd428,
     type: 3}
-  m_Type: 1
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -105,12 +104,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2085109044775486730}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 87, y: 0}
-  m_SizeDelta: {x: 880.4, y: 89.6}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 518.2, y: 0}
+  m_SizeDelta: {x: 1011.2, y: 160.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7882791811565576586
 CanvasRenderer:
@@ -134,11 +133,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Challenge 1
+  m_text: '- Challenge Text Here...'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -147,8 +146,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282494207
-  m_fontColor: {r: 1, g: 0.6745098, b: 0.25490198, a: 1}
+    rgba: 4293640283
+  m_fontColor: {r: 0.35686275, g: 0.7529412, b: 0.92156863, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -166,8 +165,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 48
-  m_fontSizeBase: 48
+  m_fontSize: 54
+  m_fontSizeBase: 54
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -207,10 +206,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 7882791811565576587}
-    characterCount: 11
+    characterCount: 24
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 2
+    spaceCount: 3
+    wordCount: 4
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -230,76 +229,6 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &8393967827965047164
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1447065254605073319}
-  - component: {fileID: 4396170674526105890}
-  - component: {fileID: 9162115070108239309}
-  m_Layer: 5
-  m_Name: CheckMark
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1447065254605073319
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8393967827965047164}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.31460145, y: 0.31460145, z: 0.31460145}
-  m_Children: []
-  m_Father: {fileID: 2417553292800522887}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.8, y: -2.7}
-  m_SizeDelta: {x: 260, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &4396170674526105890
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8393967827965047164}
-  m_CullTransparentMesh: 0
---- !u!114 &9162115070108239309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8393967827965047164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 999fd134067f9d44693e73147bb36f66, type: 3}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
 --- !u!1 &8508519255685690441
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,15 +257,15 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2417553292800522887}
   - {fileID: 7882791811565576584}
+  - {fileID: 2222753960613643987}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1107, y: 100}
+  m_AnchoredPosition: {x: 509.9, y: 0}
+  m_SizeDelta: {x: 1342.8, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7473873186613679592
 MonoBehaviour:
@@ -350,6 +279,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 458b5e94b4ec9e843b974fb8741de40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  challengeIndex: 0
   challengeText: {fileID: 7882791811565576587}
-  challengeCheck: {fileID: 8393967827965047164}
+  starIcon: {fileID: 7308326299908942060}
+  emptyStarIcon: {fileID: 1540975277200382298, guid: 4113733286e1e674585b8c4e561fd428,
+    type: 3}
+  filledStarIcon: {fileID: -7805471594299757131, guid: 4113733286e1e674585b8c4e561fd428,
+    type: 3}
+  challengeIndex: 0

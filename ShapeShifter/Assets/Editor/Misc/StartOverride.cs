@@ -30,18 +30,22 @@ public static class StartOverride
     }
 
     [InitializeOnLoadMethod]
-    public static void SubscribeReloadFunction() { Debug.Log("Subscribing ReloadInitialScene"); EditorApplication.playModeStateChanged += ReloadInitialScene;}
+    public static void SubscribeReloadFunction() { EditorApplication.playModeStateChanged += ReloadInitialScene;}
     public static void ReloadInitialScene(PlayModeStateChange mode)
     {
-        Debug.Log($"Entering {mode}");
         if (mode == PlayModeStateChange.EnteredEditMode)
         {
             StreamReader reader = new StreamReader(fullTextFilePath);
             string sceneToLoad = reader.ReadLine();
             reader.Close();
 
-            Debug.Log($"Attempting to load scene at {sceneToLoad}");
-            EditorSceneManager.OpenScene(sceneToLoad);
+            if (sceneToLoad != "null")
+            {
+                EditorSceneManager.OpenScene(sceneToLoad);
+                StreamWriter writer = new StreamWriter(fullTextFilePath);
+                writer.WriteLine("null");
+                writer.Close();
+            }
         }
     }
 }

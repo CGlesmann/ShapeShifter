@@ -12,11 +12,13 @@ public class LevelSelectManager : MonoBehaviour
     [SerializeField] protected string optionsScene = "";
     public int levelPackIndex = 0;
     private string targetLevel = "";
+    private bool navigateToLevel = false;
 
     [Header("Object References")]
     [SerializeField] private MenuSwipeController levelSelectPanelController = null;
     [SerializeField] private ChallengePreview challengePreview = null;
     [SerializeField] private Animator levelSelectAnimator = null;
+    [SerializeField] private Animator levelPreviewAnimator = null;
 
     [Header("Level GUI References")]
     [SerializeField] private GameObject levelPreviewPanel = null;
@@ -84,22 +86,18 @@ public class LevelSelectManager : MonoBehaviour
     public void DisplayLevelPreview(string levelName, int levelIndex)
     {
         // Storing the input
-        currentLevel = $"Level_{levelPackIndex +1 }-{levelIndex + 1}";
+        currentLevel = $"Level_{levelPackIndex + 1}-{levelIndex + 1}";
 
         // Displaying The Level Investigation Screen
         levelPreviewPanel.SetActive(true);
         levelNameText.text = $"Level {levelPackIndex + 1}-{levelIndex + 1}";
 
-        challengePreview.SetLevelChallengePreview(levelName, levelIndex);
+        challengePreview.SetLevelChallengePreview(ChallengeManager.GetCurrentChallengeLog(levelPackIndex + 1, levelIndex + 1), $"Level_{levelPackIndex + 1}-{levelIndex + 1}");
     }
 
-    public void HideLevelPreview()
-    {
-        currentLevel = "";
-        levelPreviewPanel.SetActive(false);
-    }
+    public void HideLevelPreview() { currentLevel = ""; levelPreviewAnimator.SetTrigger("Exit"); }
 
-    public void NavigateToLevel() { targetLevel = currentLevel; levelSelectAnimator.SetTrigger("LevelExit"); }
+    public void NavigateToLevel() { targetLevel = currentLevel; navigateToLevel = true; levelPreviewAnimator.SetTrigger("Exit"); }
     public void NavigateToInstructions() { targetLevel = instructionsScene; levelSelectAnimator.SetTrigger("Exit"); }
     public void NavigateToOptions()
     {
@@ -109,5 +107,6 @@ public class LevelSelectManager : MonoBehaviour
         levelSelectAnimator.SetTrigger("Exit");
     }
 
+    public void BeginSceneExitTransition() { if (navigateToLevel) levelSelectAnimator.SetTrigger("Exit"); }
     public void ExecuteExitTransitionFinish() { SceneManager.LoadScene(targetLevel); }
 }

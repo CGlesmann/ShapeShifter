@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   theme:
     foldout: 1
-    darkEnabled: 1
+    darkEnabled: 0
   sidebar:
     foldout: 1
-    enabled: 1
+    enabled: 0
     dockingSide: 0
     backColor: {r: 1, g: 1, b: 1, a: 1}
     verticalPadding: 8
@@ -30,5 +30,13 @@ MonoBehaviour:
       function: 1
       layoutName: 
       menuPath: Level Tools/Level Builder
+    - icon: {fileID: 2800000, guid: 90b40c3d2b65a8949939534d86064fa2, type: 3}
+      function: 1
+      layoutName: 
+      menuPath: Settings/Shape Settings
+    - icon: {fileID: 2800000, guid: af9c9ac3429659c4d865fa40c9a46899, type: 3}
+      function: 1
+      layoutName: 
+      menuPath: Global Tools/Reorder All Canvas Sorters
     playModeLayout: 
     saveLayoutOnChange: 1

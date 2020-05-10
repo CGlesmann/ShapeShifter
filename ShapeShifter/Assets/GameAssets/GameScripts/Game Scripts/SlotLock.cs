@@ -13,21 +13,28 @@ public class SlotLock : MonoBehaviour
     [Header("Lock Settings")]
     public LockData lockData = null;
 
-    private ILockState lockStateMachine;
-    private bool minimized = false;
-    private bool destroyed = false;
-
     private Action onLockDestroy = null;
+    private ILockState lockStateMachine;
+
+    private bool minimized = false;
+
+    [Header("Animation Settings")]
+    [SerializeField] private float resizeTime = 1f;
+    [SerializeField] private Transform counterBack = null;
+    [SerializeField] private Vector2 counterFullPosition = Vector2.zero;
+    [SerializeField] private Vector2 counterMinimizedPosition = Vector2.zero;
+    private float baseSize = 0f;
 
     [Header("Object References")]
     [SerializeField] private Animator anim = null;
     [SerializeField] private LockCounterText textAnim = null;
-    [SerializeField] private TextMeshProUGUI counterText = null;
     private GameSlot gameSlot = null;
 
     private void OnDisable() { DeactivateLock(); }
     private void Awake()
     {
+        baseSize = GetComponent<RectTransform>().rect.height * transform.localScale.y;
+
         gameSlot = transform.parent.GetComponent<GameSlot>();
         SetLockStateMachine(lockData.lockType);
         ActivateLock();
@@ -45,18 +52,50 @@ public class SlotLock : MonoBehaviour
             MinimizeLock();
     }
 
-    public void ResizeLock() { anim.SetTrigger("Resize"); }
+    public void ResizeLock()
+    {
+        anim.SetTrigger("Resize");
+        StartCoroutine(LerpToPosition(new Vector2(0, -baseSize / 2),
+                                      Vector2.zero,
+                                      counterMinimizedPosition,
+                                      counterFullPosition
+                                      ));
+    }
+
     public void MinimizeLock()
     {
         if (!minimized)
         {
             anim.SetTrigger("Minimize");
             minimized = true;
+
+            StartCoroutine(LerpToPosition(Vector2.zero, 
+                                          new Vector2(0, -baseSize / 2),
+                                          counterFullPosition,
+                                          counterMinimizedPosition
+                                          ));
+        }
+    }
+
+    private IEnumerator LerpToPosition(Vector2 lockStartPosition, Vector2 lockTargetPosition, Vector2 counterStartPosition, Vector2 counterTargetPosition)
+    {
+        float progress = 0f;
+
+        while (progress < 1f)
+        {
+            progress += Time.deltaTime * resizeTime;
+            transform.localPosition = Vector2.Lerp(lockStartPosition, lockTargetPosition, progress);
+            counterBack.localPosition = Vector2.Lerp(counterStartPosition, counterTargetPosition, progress);
+
+            yield return null;
         }
     }
 
     public LockType GetLockType() { return lockData?.lockType ?? LockType.Destruct; }
     public int GetLockCounter() { return lockData?.lockTimer ?? -1; }
+
+    public void LockGameSlot() { gameSlot?.LockGameSlot(); }
+    public void UpdateLock() { lockStateMachine.UpdateLock(); }
 
     public void SetLockStateMachine(ILockState newStateMachine) { lockStateMachine = newStateMachine; }
     public void SetLockStateMachine(LockType lockType)
@@ -80,7 +119,6 @@ public class SlotLock : MonoBehaviour
         if (lockData.lockTimer <= 0)
             ActivateLock();
 
-        //lockData = new LockData(lockType, lockTimer);
         if (lockData == null)
             lockData = new LockData(lockType, lockTimer);
         else
@@ -111,9 +149,6 @@ public class SlotLock : MonoBehaviour
         onLockDestroy?.Invoke();
         onLockDestroy = null;
     }
-
-    public void LockGameSlot() { gameSlot?.LockGameSlot(); }
-    public void UpdateLock() { lockStateMachine.UpdateLock(); }
 
     public void PlayTextUpdateAnimation()
     {
@@ -155,8 +190,8 @@ public class SwitchLockState : ILockState
     SlotLock slotLock;
 
     public SwitchLockState(SlotLock lockReference) { slotLock = lockReference; }
-    public void ActivateLock() { Debug.Log($"Activating lock {slotLock.name}"); BoardManager.onShapeSwap += UpdateLock; }
-    public void DeactivateLock() { BoardManager.onShapeSwap -= UpdateLock; }
+    public void ActivateLock() { BoardManager.boardManager.onShapeSwap += UpdateLock; }
+    public void DeactivateLock() { BoardManager.boardManager.onShapeSwap -= UpdateLock; }
 
     public void UpdateLock()
     {
@@ -173,8 +208,8 @@ public class DestructLockState : ILockState
     SlotLock slotLock;
 
     public DestructLockState(SlotLock lockReference) { slotLock = lockReference; }
-    public void ActivateLock() { Debug.Log($"Activating lock {slotLock.name}"); BoardManager.onShapeDestroy += MarkShapesDestroyed; }
-    public void DeactivateLock() { BoardManager.onShapeDestroy -= MarkShapesDestroyed; }
+    public void ActivateLock() { Debug.Log($"Activating lock {slotLock.name}"); BoardManager.boardManager.onShapeDestroy += MarkShapesDestroyed; }
+    public void DeactivateLock() { BoardManager.boardManager.onShapeDestroy -= MarkShapesDestroyed; }
 
     public void MarkShapesDestroyed(int count)
     {

@@ -70,42 +70,23 @@ public class GameData
     public int highestLevelUnlocked = 0;
     public int highestPackUnlocked = 0;
 
+    public int starCount = 0;
     public Dictionary<int, int> completedLevels = new Dictionary<int, int>();
-    public Dictionary<string, List<bool>> levelChallenges = new Dictionary<string, List<bool>>();
+    public Dictionary<int, bool> completedChallenges = new Dictionary<int, bool>();
 
-    public void MarkLevelChallengeComplete(string key, int targetIndex)
+    public void AddChallengeResult(int challengeKey, bool result)
     {
-        if (levelChallenges.TryGetValue(key, out List<bool> challengeToggleList))
-        {
-            if (challengeToggleList == null)
-            {
-                challengeToggleList = new List<bool>();
-                for (int i = 0; i < 3; i++)
-                    challengeToggleList.Add(false);
-            }
-
-            challengeToggleList[targetIndex] = true;
-        } else
-        {
-            challengeToggleList = new List<bool>();
-            for (int i = 0; i < 3; i++)
-                challengeToggleList.Add(false);
-
-            challengeToggleList[targetIndex] = true;
-            levelChallenges.Add(key, challengeToggleList);
-        }
+        if (completedChallenges.ContainsKey(challengeKey))
+            completedChallenges[challengeKey] = result;
+        else
+            completedChallenges.Add(challengeKey, result);
     }
 
-    public bool GetLevelChallengeResult(string key, int challengeIndex)
+    public bool GetChallengeResult(int challengeKey)
     {
-        if (levelChallenges.TryGetValue(key, out List<bool> challengeToggleList))
-        {
-            if (challengeToggleList == null || challengeIndex > challengeToggleList.Count - 1)
-                return false;
+        if (completedChallenges.TryGetValue(challengeKey, out bool result))
+            return result;
 
-            return challengeToggleList[challengeIndex];
-        }
-        else
-            return false;
+        return false;
     }
 }

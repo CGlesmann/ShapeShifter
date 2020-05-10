@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Object References")]
     public BoardManager boardManager = null;
-    public ChallengeManager challengeManager = null;
     public UndoManager undoManager = null;
     public Transform gameBoardParent = null;
     public Transform solutionBoardParent = null;
@@ -39,10 +38,16 @@ public class GameManager : MonoBehaviour
     public GameObject shapePrefab = null;
 
     public delegate void OnClockTick();
-    public static event OnClockTick onClockTick;
+    public event OnClockTick onClockTick;
 
     public delegate void OnUpdateBoard();
-    public static event OnUpdateBoard onUpdateBoard;
+    public event OnUpdateBoard onUpdateBoard;
+
+    public delegate void OnVictory();
+    public event OnVictory onVictory;
+
+    public delegate void OnModeSwitch();
+    public event OnModeSwitch onModeSwitch;
 
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
@@ -61,6 +66,7 @@ public class GameManager : MonoBehaviour
         currentLevelName = SceneManager.GetActiveScene().name.Split('_')[1];
 
         string[] levelNumberSplit = currentLevelName.Split('-');
+
         currentPackIndex = Int32.Parse(levelNumberSplit[0]);
         currentLevelIndex = Int32.Parse(levelNumberSplit[1]);
         gameTimerText.text = $"Level {currentLevelName} : 00:00";
@@ -103,6 +109,11 @@ public class GameManager : MonoBehaviour
     }
 
     private void OnDestroy() { manager = null; }
+    #endregion
+
+    #region Getter Functions
+    public int GetPackIndex() { return currentPackIndex; }
+    public int GetLevelIndex() { return currentLevelIndex; } 
     #endregion
 
     #region Setter Functions
@@ -148,6 +159,8 @@ public class GameManager : MonoBehaviour
                 destroyText.text = "Unknown Destroy Method";
                 break;
         }
+
+        onModeSwitch?.Invoke();
     }
 
     public void ToggleDestoryMethod(DestroyMethod method)
@@ -166,6 +179,8 @@ public class GameManager : MonoBehaviour
                 destroyText.text = "Unknown Destroy Method";
                 break;
         }
+
+        onModeSwitch?.Invoke();
     }
     #endregion
 
@@ -291,6 +306,7 @@ public class GameManager : MonoBehaviour
 
     public void CompleteLevel()
     {
+        onVictory?.Invoke();
         DisplayVictoryScreen();
 
         if (DataTracker.gameData.completedLevels.ContainsKey(currentPackIndex))
@@ -312,7 +328,7 @@ public class GameManager : MonoBehaviour
     public void DisplayPauseMenu() { pauseMenuParent.SetActive(true); }
     public void HidePauseMenu() { pauseMenuParent.SetActive(false); }
 
-    public void DisplayVictoryScreen() { GameState.gamePaused = true; victoryMenuParent.SetActive(true); challengeManager.UpdateChallengeEntries(); }
+    public void DisplayVictoryScreen() { GameState.gamePaused = true; victoryMenuParent.SetActive(true); /*challengeManager.UpdateChallengeEntries();*/ }
     public void HideVictoryScreen() { victoryMenuParent.SetActive(false); GameState.gamePaused = false; }
     #endregion
 

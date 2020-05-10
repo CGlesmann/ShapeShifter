@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f6a77f2bbe3b74e8fc11f09ba55ac8, type: 3}
+  m_Name: Level_19
+  m_EditorClassIdentifier: 
+  challengeLog:
+  - id: 0
+  - id: 1
+  - id: 2
+  references:
+    version: 1
+    00000000:
+      type: {class: TimeChallenge, ns: , asm: Assembly-CSharp}
+      data:
+        challengeDescription: Complete the level within 15 seconds
+        requiredTime: 15
+    00000001:
+      type: {class: MoveChallenge, ns: , asm: Assembly-CSharp}
+      data:
+        challengeDescription: Complete the level within 3 moves
+        requiredMoves: 3
+    00000002:
+      type: {class: ModeSwitchChallenge, ns: , asm: Assembly-CSharp}
+      data:
+        challengeDescription: Switch Destruction Mode 1 time or less
+        maximumModeSwitches: 1
