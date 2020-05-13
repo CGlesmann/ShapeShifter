@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     private bool switching = false;
 
     [Header("Object References")]
+    public UnlockManager unlockManager = null;
     public BoardManager boardManager = null;
     public UndoManager undoManager = null;
     public Transform gameBoardParent = null;
@@ -209,14 +210,14 @@ public class GameManager : MonoBehaviour
     #region State Check Functions
     public void CheckGameState()
     {
-        if (!CheckForVictory())
+        if (!CheckForVictory(gameBoardParent, solutionBoardParent))
             if (!DataTracker.gameData.defeatTutorialComplete)
-                CheckForDefeat();
+                CheckForDefeat(gameBoardParent, solutionBoardParent);
 
         onUpdateBoard?.Invoke();
     }
 
-    public bool CheckForDefeat()
+    public bool CheckForDefeat(Transform gameBoardParent, Transform solutionBoardParent)
     {
         Debug.Log("Checking for Defeat");
 
@@ -266,10 +267,8 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public bool CheckForVictory()
+    public bool CheckForVictory(Transform gameBoardParent, Transform solutionBoardParent)
     {
-        Debug.Log("Checking for Victory");
-
         // Setting the storage vars
         GameSlot slot1 = null, slot2 = null;
         GameShape shape1 = null, shape2 = null;
@@ -309,14 +308,7 @@ public class GameManager : MonoBehaviour
         onVictory?.Invoke();
         DisplayVictoryScreen();
 
-        if (DataTracker.gameData.completedLevels.ContainsKey(currentPackIndex))
-        {
-            if (currentLevelIndex > DataTracker.gameData.completedLevels[currentPackIndex])
-                DataTracker.gameData.completedLevels[currentPackIndex] = currentLevelIndex;
-        } else {
-            DataTracker.gameData.completedLevels.Add(currentPackIndex, currentLevelIndex);
-        }
-
+        DataTracker.gameData.MarkLevelComplete(currentPackIndex, currentLevelIndex);
         DataTracker.dataTracker.SaveData();
     }
     #endregion
@@ -328,8 +320,15 @@ public class GameManager : MonoBehaviour
     public void DisplayPauseMenu() { pauseMenuParent.SetActive(true); }
     public void HidePauseMenu() { pauseMenuParent.SetActive(false); }
 
-    public void DisplayVictoryScreen() { GameState.gamePaused = true; victoryMenuParent.SetActive(true); /*challengeManager.UpdateChallengeEntries();*/ }
     public void HideVictoryScreen() { victoryMenuParent.SetActive(false); GameState.gamePaused = false; }
+    public void DisplayVictoryScreen()
+    {
+        GameState.gamePaused = true;
+        victoryMenuParent.SetActive(true);
+
+        if (unlockManager.CheckForCompletedUnlocks(currentPackIndex, currentLevelIndex))
+            unlockManager.StartNotificationDisplay();
+    }
     #endregion
 
     #region Scene Navigation Functions

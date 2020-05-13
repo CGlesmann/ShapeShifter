@@ -144,8 +144,6 @@ public class BoardData
 
     public BoardData(Transform gameBoardParent)
     {
-        Debug.Log("Processing Gameboard");
-
         // Creating a new list
         board = new List<ShapeData>();
         locks = new List<LockData>();
@@ -162,9 +160,6 @@ public class BoardData
 
             ShapeData newShape = shape != null ? new ShapeData(shape.GetShapeColor(), shape.GetShapeType()) : null;
             board.Add(newShape);
-
-            if (slotLock != null)
-                Debug.Log($"Found a lock of type {slotLock.GetLockType()} with {slotLock.GetLockCounter()} moves left");
                 
             LockData newLock = slotLock != null ? new LockData(slotLock.GetLockType(), slotLock.GetLockCounter()) : null;
             locks.Add(newLock);

@@ -178,7 +178,6 @@ public class ChallengeLogCreator : EditorWindow
         if (challenge == null)
             Debug.LogError("Could not add that challenge type");
 
-        Debug.Log($"Adding A {challenge.GetType()} Challenge");
         currentChallengeLog.AddChallenge((Challenge)challenge);
     }
 

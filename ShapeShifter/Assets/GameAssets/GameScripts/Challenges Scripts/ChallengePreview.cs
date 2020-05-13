@@ -37,7 +37,6 @@ public class ChallengePreview : MonoBehaviour
                 levelIndex = (int)indexes.y;
             }
 
-            Debug.Log($"LevelName: {levelName}, PackIndex: {packIndex}, LevelIndex: {levelIndex}, ChallengeCount: {challengeCount}");
             for (int i = 0; i < challengeEntries.Count; i++)
             {
                 if (i <= challengeCount - 1)

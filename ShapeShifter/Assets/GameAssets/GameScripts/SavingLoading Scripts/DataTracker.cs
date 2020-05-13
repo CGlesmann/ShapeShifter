@@ -74,6 +74,35 @@ public class GameData
     public Dictionary<int, int> completedLevels = new Dictionary<int, int>();
     public Dictionary<int, bool> completedChallenges = new Dictionary<int, bool>();
 
+    public Dictionary<int, bool> displayedUnlocks = new Dictionary<int, bool>();
+
+    public void MarkUnlockAsDisplayed(int index)
+    {
+        if (!displayedUnlocks.ContainsKey(index))
+            displayedUnlocks.Add(index, true);
+    }
+
+    public bool GetUnlockDisplayed(int index)
+    {
+        if (displayedUnlocks.TryGetValue(index, out bool value))
+            return value;
+
+        return false;
+    }
+
+    public void MarkLevelComplete(int packIndex, int levelIndex)
+    {
+        if (completedLevels.ContainsKey(packIndex))
+        {
+            if (levelIndex > completedLevels[packIndex])
+            {
+                completedLevels[packIndex] = levelIndex;
+            }
+        }
+        else
+            completedLevels.Add(packIndex, levelIndex);
+    }
+
     public void AddChallengeResult(int challengeKey, bool result)
     {
         if (completedChallenges.ContainsKey(challengeKey))

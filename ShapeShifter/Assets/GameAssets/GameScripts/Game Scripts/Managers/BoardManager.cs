@@ -38,8 +38,10 @@ public class BoardManager : MonoBehaviour
     public void MarkShapeAsDestroyed()
     {
         shapesBeingDestroyed--;
+        /*
         if (shapesBeingDestroyed == 0)
             gameManager.CheckGameState();
+        */
     }
 
     public GameSlot GetGameSlot(int slotIndex, Transform boardParent) { return boardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }

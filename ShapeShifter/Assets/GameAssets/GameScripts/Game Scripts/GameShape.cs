@@ -62,20 +62,7 @@ public class GameShape : MonoBehaviour
     public ColorType GetShapeColor() { return colorType; }
     public ShapeData GetShapeData() { return new ShapeData(colorType, shapeType); }
 
-    public void TriggerDestruction() { /*StartCoroutine(DisplayShapeDestruction())*/anim.SetTrigger("Destroy"); }
-    private IEnumerator DisplayShapeDestruction()
-    {
-        float counter = 0;
-        while (counter < 1)
-        {
-            counter += Time.deltaTime * 2f;
-
-            transform.localScale = Vector3.Lerp(baseSize, Vector3.zero, counter);
-            yield return null;
-        }
-
-        DestroyShape();
-    }
+    public void TriggerDestruction() { anim.SetTrigger("Destroy"); }
 
     public void DestroyShape()
     {
