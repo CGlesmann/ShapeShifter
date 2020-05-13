@@ -6,10 +6,13 @@ using UnityEngine.UI;
 public class LevelButton : MonoBehaviour
 {
     [Header("Button Settings")]
-    [SerializeField] private LevelSelectManager manager = null;
     public bool requireLevelUnlock = true;
     [SerializeField] private int buttonIndex = 0;
+
+    [Header("Object References")]
+    [SerializeField] private LevelSelectManager manager = null;
     [SerializeField] private Animator anim = null;
+    [SerializeField] private GameObject completionIcon = null;
 
     private string levelName => string.Format("Level_{0}", buttonIndex + 1);
     private bool locked = false;
@@ -24,6 +27,18 @@ public class LevelButton : MonoBehaviour
     {
         locked = false;
         GetComponent<Button>().interactable = true;
+
+        ChallengeLog challengeLog = ChallengeManager.GetCurrentChallengeLog(manager.levelPackIndex + 1, buttonIndex + 1);
+        if (challengeLog != null)
+        {
+            for(int i = 0; i < challengeLog.GetChallengeCount(); i++)
+            {
+                if (!DataTracker.gameData.GetChallengeResult(Challenge.GetChallengeKey(manager.levelPackIndex + 1, buttonIndex + 1, i)))
+                    return;
+            }
+
+            completionIcon.SetActive(true);
+        }
     }
 
     private void LockLevelButton()
