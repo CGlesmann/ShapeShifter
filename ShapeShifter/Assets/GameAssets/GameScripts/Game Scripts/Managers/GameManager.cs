@@ -219,8 +219,6 @@ public class GameManager : MonoBehaviour
 
     public bool CheckForDefeat(Transform gameBoardParent, Transform solutionBoardParent)
     {
-        Debug.Log("Checking for Defeat");
-
         // Declaring tracker variables
         GameShape shape;
         List<ShapeData> neededShapes = new List<ShapeData>();
@@ -240,7 +238,6 @@ public class GameManager : MonoBehaviour
                     // If a shape isn't on the gameboard, critical slot is empty
                     if (shape == null)
                     {
-                        Debug.Log("Defeat based on case 1");
                         defeatInstructions.InvokeInstructions();
                         return true;
                     }
@@ -254,7 +251,6 @@ public class GameManager : MonoBehaviour
 
             if (i == gameBoardParent.childCount - 1 && neededShapes.Count > 0)
             {
-                Debug.Log("Defeat based on case 2");
                 foreach (ShapeData s in neededShapes)
                     Debug.Log(s);
 
@@ -287,13 +283,11 @@ public class GameManager : MonoBehaviour
             // Comparing the two shapes from each slot, return false if shapes aren't equal
             if ((shape1 == null && shape2 != null) || (shape1 != null && shape2 == null))
             {
-                Debug.Log("Victory failed at index " + i.ToString() + "\nResults were...\n" + "Slot1: " + slot1.GetSlotShape() + "\nSlot2: " + slot2.GetSlotShape());
                 return false;
             }
             else if (shape1 != null && shape2 != null)
                 if (!slot1.GetSlotShape().Equals(slot2.GetSlotShape()))
                 {
-                    Debug.Log("Victory failed at index " + i.ToString() + "\nResults were...\n" + "Slot1: " + slot1.GetSlotShape() + "\nSlot2: " + slot2.GetSlotShape());
                     return false;
                 }
         }
