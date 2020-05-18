@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8231258902120797227}
   - component: {fileID: -7350516912293712723}
   - component: {fileID: 6591824464240858555}
+  - component: {fileID: 7368481225132494719}
   m_Layer: 5
   m_Name: GameShape
   m_TagString: Untagged
@@ -89,8 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83f4ee1209614b4e94a455a1bf607db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shapeThemeElement: {fileID: 7368481225132494719}
   anim: {fileID: 6591824464240858555}
-  imageRenderer: {fileID: 6138016375346929678}
   shapeType: 0
   colorType: 0
 --- !u!223 &8231258902120797227
@@ -145,3 +146,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7368481225132494719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6138016375346929674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1876b49149d22674899a8fe9c46f53ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementImage: {fileID: 0}

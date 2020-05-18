@@ -12,13 +12,11 @@ public class LevelSelectManager : MonoBehaviour
     [SerializeField] protected string optionsScene = "";
     public int levelPackIndex = 0;
     private string targetLevel = "";
-    private bool navigateToLevel = false;
 
     [Header("Object References")]
     [SerializeField] private MenuSwipeController levelSelectPanelController = null;
     [SerializeField] private ChallengePreview challengePreview = null;
     [SerializeField] private Animator levelSelectAnimator = null;
-    [SerializeField] private Animator levelPreviewAnimator = null;
 
     [Header("Level GUI References")]
     [SerializeField] private GameObject levelPreviewPanel = null;
@@ -95,9 +93,7 @@ public class LevelSelectManager : MonoBehaviour
         challengePreview.SetLevelChallengePreview(ChallengeManager.GetCurrentChallengeLog(levelPackIndex + 1, levelIndex + 1), $"Level_{levelPackIndex + 1}-{levelIndex + 1}");
     }
 
-    public void HideLevelPreview() { currentLevel = ""; levelPreviewAnimator.SetTrigger("Exit"); }
-
-    public void NavigateToLevel() { targetLevel = currentLevel; navigateToLevel = true; levelPreviewAnimator.SetTrigger("Exit"); }
+    public void NavigateToLevel() { targetLevel = currentLevel; }
     public void NavigateToInstructions() { targetLevel = instructionsScene; levelSelectAnimator.SetTrigger("Exit"); }
     public void NavigateToOptions()
     {
@@ -107,6 +103,6 @@ public class LevelSelectManager : MonoBehaviour
         levelSelectAnimator.SetTrigger("Exit");
     }
 
-    public void BeginSceneExitTransition() { if (navigateToLevel) levelSelectAnimator.SetTrigger("Exit"); }
+    public void BeginSceneExitTransition() { levelSelectAnimator.SetTrigger("Exit"); }
     public void ExecuteExitTransitionFinish() { SceneManager.LoadScene(targetLevel); }
 }

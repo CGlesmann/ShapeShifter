@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4493773453788751300}
   - component: {fileID: 3787632254787994290}
   - component: {fileID: 6435306834557051182}
+  - component: {fileID: 2071270101970444269}
   m_Layer: 5
   m_Name: PackIndicator
   m_TagString: Untagged
@@ -73,3 +74,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 1
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2071270101970444269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1484497545095310226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30ca37ec7c08cb64f88c4c86ca9e6351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalKey: 6
+  highlightKey: 7
+  targetImage: {fileID: 6435306834557051182}

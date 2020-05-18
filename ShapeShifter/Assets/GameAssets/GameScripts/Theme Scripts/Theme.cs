@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class Theme : ScriptableObject
 {
-    public enum GeneralUIThemeKey { Button, StaticPanel, GameboardSlot, SolutionboardSlot }
-    public enum TextUIThemeKey { ButtonText, LabelText, HighlightedText }
+    public enum GeneralUIThemeKey { Button, HighlightButton, StaticPanel, ExitButton, ExitIcon, SettingsIcon, IndicatorNormal, IndicatorHighlight, EmptyStarIcon, CompletionStarIcon, PauseIcon, UndoIcon, LockIcon }
+    public enum GameUIThemeKey { GameboardSlot, SelectedGameBoardSlot, SolutionboardSlot, LockIcon, LockSlot, SwitchLockIcon, DestructLockIcon }
+    public enum TextUIThemeKey { ButtonText, StaticPanelText, HighlightedText }
     public enum ColorMode { Default, Protanopia, Deuteranopia, Tritanopia }
 
     [HideInInspector] public ColorDictionary background = new ColorDictionary();
 
     [HideInInspector] public GeneralUIThemeDictionary generalUIThemeDictionary = new GeneralUIThemeDictionary();
     [HideInInspector] public GameUIThemeDictionary gameUIThemeDictionary = new GameUIThemeDictionary();
+    [HideInInspector] public GameShapeThemeDictionary gameShapeThemeDictionary = new GameShapeThemeDictionary();
     [HideInInspector] public TextElementDictionary textElementDictionary = new TextElementDictionary();
 }
 
@@ -85,6 +87,74 @@ public class GeneralUIThemeDictionary
 
 [System.Serializable]
 public class GameUIThemeDictionary
+{
+    [SerializeField] private List<Theme.GameUIThemeKey> keys;
+    [SerializeField] private List<ThemeElementData> values;
+
+    public void Add(Theme.GameUIThemeKey key, ThemeElementData value)
+    {
+        if (keys == null || values == null)
+        {
+            keys = new List<Theme.GameUIThemeKey>();
+            values = new List<ThemeElementData>();
+
+            keys.Add(key);
+            values.Add(value);
+
+            return;
+        }
+
+        if (!Contains(key, out int index))
+        {
+            keys.Add(key);
+            values.Add(value);
+        }
+
+        return;
+    }
+
+    public void SetValue(int index, ThemeElementData newData)
+    {
+        if (values.Count - 1 > index || index < 0)
+            return;
+
+        ThemeElementData currentData = values[index];
+        currentData.SetColorDictionary(newData.GetDictionary());
+        currentData.SetSprite(newData.GetElementSprite());
+    }
+
+    public ThemeElementData GetElementData(Theme.GameUIThemeKey key)
+    {
+        if (Contains(key, out int index))
+            return values[index];
+
+        return null;
+    }
+
+    public ThemeElementData GetElementData(int index) { return values[index]; }
+
+    public bool Contains(Theme.GameUIThemeKey targetKey, out int index)
+    {
+        if (keys == null || values == null)
+        {
+            index = -1;
+            return false;
+        }
+
+        for (int i = 0; i < keys.Count; i++)
+            if (keys[i] == targetKey)
+            {
+                index = i;
+                return true;
+            }
+
+        index = -1;
+        return false;
+    }
+}
+
+[System.Serializable]
+public class GameShapeThemeDictionary
 {
     [SerializeField] private List<GameShape.ColorType> colorKeys;
     [SerializeField] private List<ColorDictionary> values;

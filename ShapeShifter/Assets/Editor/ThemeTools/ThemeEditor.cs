@@ -16,6 +16,7 @@ public class ThemeEditor : EditorWindow
     private bool viewingBackgroundSection = false;
     private bool viewingGeneralUISection = false;
     private bool viewingGameUISection = false;
+    private bool viewingGameShapeSection = false;
     private bool viewingGameTextSection = false;
 
     [MenuItem("Theme Editor", menuItem = "Global Tools/Theme Editor")]
@@ -105,27 +106,27 @@ public class ThemeEditor : EditorWindow
                 else
                     data = currentTheme.generalUIThemeDictionary.GetElementData(index);
 
-                DrawThemeData(currentKey, data);
+                DrawThemeData($"{currentKey}", data);
                 EditorGUILayout.Separator();
             }
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
         #endregion
 
-        #region Game UI Section
-        if (viewingGameUISection = EditorGUILayout.BeginFoldoutHeaderGroup(viewingGameUISection, "Game UI Section"))
+        #region GameShape Section
+        if (viewingGameShapeSection = EditorGUILayout.BeginFoldoutHeaderGroup(viewingGameShapeSection, "Game Shape Section"))
         {
             int shapeTypeCount = Enum.GetNames(typeof(GameShape.ShapeType)).Length;
             GameShape.ShapeType shapeType;
             for (int i = 0; i < shapeTypeCount; i++)
             {
                 shapeType = (GameShape.ShapeType)i;
-                if (!currentTheme.gameUIThemeDictionary.Contains(shapeType, out int index))
-                    currentTheme.gameUIThemeDictionary.Add(shapeType, null);
+                if (!currentTheme.gameShapeThemeDictionary.Contains(shapeType, out int index))
+                    currentTheme.gameShapeThemeDictionary.Add(shapeType, null);
 
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField($"{shapeType} Sprite", GUILayout.MaxWidth(150f));
-                currentTheme.gameUIThemeDictionary.SetValue(i, (Sprite)EditorGUILayout.ObjectField(currentTheme.gameUIThemeDictionary.GetElementData(shapeType), typeof(Sprite), false, GUILayout.MaxWidth(150f)));
+                currentTheme.gameShapeThemeDictionary.SetValue(i, (Sprite)EditorGUILayout.ObjectField(currentTheme.gameShapeThemeDictionary.GetElementData(shapeType), typeof(Sprite), false, GUILayout.MaxWidth(150f)));
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.Separator();
@@ -135,11 +136,35 @@ public class ThemeEditor : EditorWindow
             for (int i = 0; i < shapeTypeCount; i++)
             {
                 colorType = (GameShape.ColorType)i;
-                if (!currentTheme.gameUIThemeDictionary.Contains(colorType, out int index))
-                    currentTheme.gameUIThemeDictionary.Add(colorType, new ColorDictionary());
+                if (!currentTheme.gameShapeThemeDictionary.Contains(colorType, out int index))
+                    currentTheme.gameShapeThemeDictionary.Add(colorType, new ColorDictionary());
 
                 EditorGUILayout.LabelField($"{colorType} Color", EditorStyles.boldLabel, GUILayout.MaxWidth(150f));
-                DrawColorDictionary(currentTheme.gameUIThemeDictionary.GetElementData(colorType));
+                DrawColorDictionary(currentTheme.gameShapeThemeDictionary.GetElementData(colorType));
+            }
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        #endregion
+
+        #region Game UI Section
+        if (viewingGameUISection = EditorGUILayout.BeginFoldoutHeaderGroup(viewingGameUISection, "Game UI Section"))
+        {
+            int gameUIKeyCount = Enum.GetNames(typeof(Theme.GameUIThemeKey)).Length;
+            Theme.GameUIThemeKey currentKey;
+            ThemeElementData data;
+            for (int i = 0; i < gameUIKeyCount; i++)
+            {
+                currentKey = (Theme.GameUIThemeKey)i;
+                if (!currentTheme.gameUIThemeDictionary.Contains(currentKey, out int index))
+                {
+                    data = new ThemeElementData();
+                    currentTheme.gameUIThemeDictionary.Add(currentKey, data);
+                }
+                else
+                    data = currentTheme.gameUIThemeDictionary.GetElementData(index);
+
+                DrawThemeData($"{currentKey}", data);
+                EditorGUILayout.Separator();
             }
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
@@ -218,9 +243,9 @@ public class ThemeEditor : EditorWindow
         }
     }
 
-    private void DrawThemeData(Theme.GeneralUIThemeKey key, ThemeElementData data)
+    private void DrawThemeData(string dataTitle, ThemeElementData data)
     {
-        EditorGUILayout.LabelField($"{key} Data", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField($"{dataTitle} Data", EditorStyles.boldLabel);
         data.SetSprite((Sprite)EditorGUILayout.ObjectField(data.GetElementSprite(), typeof(Sprite), false, GUILayout.MaxWidth(200f)));
 
         ColorDictionary dictionary = data.GetDictionary();

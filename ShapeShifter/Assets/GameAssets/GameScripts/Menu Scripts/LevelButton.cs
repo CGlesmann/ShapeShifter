@@ -13,9 +13,15 @@ public class LevelButton : MonoBehaviour
     [SerializeField] private LevelSelectManager manager = null;
     [SerializeField] private Animator anim = null;
     [SerializeField] private GameObject completionIcon = null;
+    [SerializeField] private DynamicGeneralThemeElement themeElement = null;
 
     private string levelName => string.Format("Level_{0}", buttonIndex + 1);
     private bool locked = false;
+
+    private void OnEnable()
+    {
+        SetLockDisplay();
+    }
 
     public void SelectLevel()
     {
@@ -47,8 +53,8 @@ public class LevelButton : MonoBehaviour
         GetComponent<Button>().interactable = false;
     }
 
-    public void DisplayUnlockAnimation() { UnlockLevelButton(); anim.SetTrigger("Unlock"); }
-    public void SetLockDisplay() { LockLevelButton(); anim.SetBool("Unlocked", false); }
-    public void SetUnlockDisplay() { UnlockLevelButton(); anim.SetBool("Unlocked", true); }
+    public void DisplayUnlockAnimation() { themeElement.SetElementToHighlighted(); UnlockLevelButton(); anim.SetTrigger("Unlock"); }
+    public void SetLockDisplay() { themeElement.SetElementToHighlighted(); LockLevelButton(); anim.SetBool("Unlocked", false); }
+    public void SetUnlockDisplay() { themeElement.SetElementToNormal(); UnlockLevelButton(); anim.SetBool("Unlocked", true); }
     public int GetIndex() { return buttonIndex; }
 }

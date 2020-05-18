@@ -15,11 +15,11 @@ public class GameShape : MonoBehaviour
     [System.Serializable] public enum ColorType { Red, Blue, Green, Yellow}
 
     [Header("Object References")]
+    [SerializeField] private ShapeThemeElement shapeThemeElement = null;
     private GameManager manager = GameManager.manager;
 
     [Header("Component References")]
     [SerializeField] private Animator anim = null;
-    [SerializeField] private Image imageRenderer = null;
 
     [Header("Shape Variables")]
     [SerializeField] private ShapeType shapeType = ShapeType.Square;
@@ -28,7 +28,6 @@ public class GameShape : MonoBehaviour
     private Vector3 baseSize = Vector3.zero;
     private bool markedForDestruct = false;
 
-    private void Awake() { ConfigureShape(shapeType, colorType); }
     public void Start() { manager = GameManager.manager; baseSize = transform.localScale; }
     public override string ToString() { return "Shape: " + shapeType.ToString() + " Color: " + colorType.ToString(); }
     public override int GetHashCode() { return base.GetHashCode(); }
@@ -46,13 +45,13 @@ public class GameShape : MonoBehaviour
     public void SetShapeType(ShapeType type)
     {
         shapeType = type;
-        imageRenderer.sprite = ShapeSettings.GetShapeSprite(type);
+        shapeThemeElement.LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
     }
 
     public void SetShapeColor(ColorType type)
     {
         colorType = type;
-        imageRenderer.color = ShapeSettings.GetShapeColor(type);
+        shapeThemeElement.LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
     }
 
     public void MarkForDestruction() { markedForDestruct = true; }

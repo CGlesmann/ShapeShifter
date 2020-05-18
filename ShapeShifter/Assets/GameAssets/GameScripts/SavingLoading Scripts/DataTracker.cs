@@ -16,7 +16,9 @@ public class DataTracker : MonoBehaviour
         if (dataTracker == null)
         {
             dataTracker = this;
+
             gameData = new GameData();
+            LoadData();
 
             DontDestroyOnLoad(gameObject);
         }
@@ -37,11 +39,14 @@ public class DataTracker : MonoBehaviour
     {
         if (File.Exists(filePath))
         {
+            Debug.Log($"{filePath}");
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(filePath, FileMode.Open);
 
             gameData = (GameData)bf.Deserialize(file);
             file.Close();
+
+            Debug.Log("Loaded GameData");
         }
     }
 
@@ -75,6 +80,15 @@ public class GameData
     public Dictionary<int, bool> completedChallenges = new Dictionary<int, bool>();
 
     public Dictionary<int, bool> displayedUnlocks = new Dictionary<int, bool>();
+
+    private string themeKey = "Default";
+    private Theme.ColorMode colorMode = Theme.ColorMode.Default;
+
+    public Theme GetTheme() { return ThemeManager.LoadTheme(themeKey); }
+    public Theme.ColorMode GetSavedColorMode() { return colorMode; }
+
+    public void SetThemeKey(string themeName) { themeKey = themeName; ThemeManager.InvokeUpdateMethod(); }
+    public void SetColorMode(Theme.ColorMode colorMode) { this.colorMode = colorMode; ThemeManager.InvokeUpdateMethod(); }
 
     public void MarkUnlockAsDisplayed(int index)
     {

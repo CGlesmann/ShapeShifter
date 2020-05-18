@@ -8,6 +8,7 @@ public class GameSlot : MonoBehaviour
     [Header("Object References")]
     [SerializeField] private SlotLock slotLock = null;
     [SerializeField] private Transform shapeTransform = null;
+    [SerializeField] private DynamicGameThemeElement themeElement = null;
     private GameManager manager = GameManager.manager;
 
     private GameShape slotShape => shapeTransform != null ? shapeTransform.GetComponent<GameShape>() : null;
@@ -15,8 +16,6 @@ public class GameSlot : MonoBehaviour
 
     [Header("Control Variables")]
     [SerializeField] private bool canSelect = true;
-    [SerializeField] private Color deselectedColor = Color.white;
-    [SerializeField] private Color selectedColor = Color.white;
     private bool canInteract = true;
     private bool selected = false;
     private int slotIndex = -1;
@@ -51,21 +50,21 @@ public class GameSlot : MonoBehaviour
         {
             if (selected)
             {
-                slotRenderer.color = deselectedColor;
                 selected = false;
                 manager.DeselectSlot();
+                themeElement.SetElementToNormal();
             }
             else if (slotShape != null)
             {
                 selected = manager.SelectSlot(this);
                 if (selected)
-                    slotRenderer.color = selectedColor;
+                    themeElement.SetElementToHighlighted();
             }
         }
     }
 
     public void DestroyShape() { if (canInteract) GameObject.Destroy(slotShape.gameObject); }
-    public void ResetSlotState() { selected = false; slotRenderer.color = deselectedColor; }
+    public void ResetSlotState() { selected = false; themeElement.SetElementToNormal(); }
 
     public void DisableSlotSelection() { canSelect = false; }
     public void EnableSlotSelection() { canSelect = true; }

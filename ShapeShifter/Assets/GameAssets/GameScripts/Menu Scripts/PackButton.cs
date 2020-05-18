@@ -8,12 +8,16 @@ public class PackButton : MonoBehaviour
     [SerializeField] private bool requireCompletionToUnlock = true;
     [SerializeField] private int packIndex = 0;
     [SerializeField] private int minRequiredLevel = 0;
+
+    [Header("Object References")]
+    [SerializeField] private DynamicGeneralThemeElement themeElement = null;
     private Animator anim;
 
     private void OnEnable() { anim = GetComponent<Animator>(); }
 
-    public void SetUnlockState() { anim.SetBool("Unlocked", true); }
-    public void TriggerUnlock() { anim.SetTrigger("Unlock"); }
+    public void SetLockState() { themeElement.SetElementToHighlighted(); }
+    public void SetUnlockState() { themeElement.SetElementToNormal(); anim.SetBool("Unlocked", true); }
+    public void TriggerUnlock() { themeElement.SetElementToHighlighted(); anim.SetTrigger("Unlock"); }
     public bool CheckForUnlock()
     {
         if (DataTracker.gameData.completedLevels.TryGetValue(packIndex, out int highestLevelCompleted))
@@ -26,9 +30,13 @@ public class PackButton : MonoBehaviour
                     SetUnlockState();
                 else
                     return true;
-            }
-        } else if (!requireCompletionToUnlock)
+            } else
+                SetLockState();
+        }
+        else if (!requireCompletionToUnlock)
             SetUnlockState();
+        else
+            SetLockState();
 
         return false;
     }

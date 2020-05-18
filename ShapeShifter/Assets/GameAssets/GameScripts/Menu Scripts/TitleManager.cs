@@ -17,11 +17,7 @@ public class TitleManager : MonoBehaviour
     private event OnExitFinish onExitFinish = null;
     private string targetSceneName = "";
 
-    private void Start()
-    {
-        Application.targetFrameRate = 60;
-        DataTracker.dataTracker.LoadData();
-    }
+    private void Start() { Application.targetFrameRate = 60; }
 
     public void BeginPlay()
     {

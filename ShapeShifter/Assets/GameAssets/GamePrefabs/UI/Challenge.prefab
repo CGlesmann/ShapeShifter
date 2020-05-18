@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2222753960613643987}
   - component: {fileID: 7734756222286137882}
   - component: {fileID: 7308326299908942060}
+  - component: {fileID: 5210620619074242882}
   m_Layer: 5
   m_Name: StarIcon
   m_TagString: Untagged
@@ -74,6 +75,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5210620619074242882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632433537584806527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7d3467906d86a040932d65e1c0a89df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalKey: 8
+  highlightedKey: 9
 --- !u!1 &7882791811565576585
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,6 +100,7 @@ GameObject:
   - component: {fileID: 7882791811565576584}
   - component: {fileID: 7882791811565576586}
   - component: {fileID: 7882791811565576587}
+  - component: {fileID: 1857075342514075179}
   m_Layer: 5
   m_Name: Challenges_Text
   m_TagString: Untagged
@@ -229,6 +245,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1857075342514075179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7882791811565576585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementKey: 1
 --- !u!1 &8508519255685690441
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 844692325654160016}
   - component: {fileID: 6334305924533615534}
   - component: {fileID: 5976591229818430387}
+  - component: {fileID: 341301295615846738}
   m_Layer: 5
   m_Name: GameSlot
   m_TagString: Untagged
@@ -185,9 +186,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotLock: {fileID: 0}
   shapeTransform: {fileID: 0}
+  themeElement: {fileID: 341301295615846738}
   canSelect: 1
-  deselectedColor: {r: 0.35686275, g: 0.7529412, b: 0.92156863, a: 1}
-  selectedColor: {r: 0.8980392, g: 0.58431375, b: 0, a: 1}
 --- !u!114 &5976591229818430387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,3 +200,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 561491a92c3e53841bae0556c9781f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &341301295615846738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3129396535979578368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 633dc8b6cfdaf334cac3979fbdbd5c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalKey: 0
+  highlightedKey: 1
