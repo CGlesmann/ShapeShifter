@@ -87,8 +87,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d3467906d86a040932d65e1c0a89df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalKey: 8
-  highlightedKey: 9
+  primaryKey: 8
+  secondaryKey: 9
 --- !u!1 &7882791811565576585
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,6 +308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 458b5e94b4ec9e843b974fb8741de40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  starThemeElement: {fileID: 5210620619074242882}
   challengeText: {fileID: 7882791811565576587}
   starIcon: {fileID: 7308326299908942060}
   emptyStarIcon: {fileID: 1540975277200382298, guid: 4113733286e1e674585b8c4e561fd428,

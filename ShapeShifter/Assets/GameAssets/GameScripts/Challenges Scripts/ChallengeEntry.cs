@@ -8,12 +8,8 @@ using TMPro;
 public class ChallengeEntry : MonoBehaviour
 {
     [Header("Object References")]
+    [SerializeField] private DynamicGeneralThemeElement starThemeElement = null;
     [SerializeField] private TextMeshProUGUI challengeText = null;
-    [SerializeField] private Image starIcon = null;
-
-    [Header("Sprite References")]
-    [SerializeField] private Sprite emptyStarIcon = null;
-    [SerializeField] private Sprite filledStarIcon = null;
 
     [Header("Entry Settings")]
     [SerializeField] private int challengeIndex = 0;
@@ -24,8 +20,8 @@ public class ChallengeEntry : MonoBehaviour
         bool challengeCompleted = DataTracker.gameData.GetChallengeResult(Challenge.GetChallengeKey(packIndex, levelIndex, challengeIndex));
 
         if (challengeCompleted)
-            starIcon.sprite = filledStarIcon;
+            starThemeElement.SetElementToHighlighted();
         else
-            starIcon.sprite = emptyStarIcon;
+            starThemeElement.SetElementToNormal();
     }
 }

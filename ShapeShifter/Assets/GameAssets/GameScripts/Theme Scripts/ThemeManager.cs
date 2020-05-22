@@ -36,4 +36,10 @@ public static class ThemeManager
 
         return theme;
     }
+
+    public static Theme LoadDefaultTheme()
+    {
+        Theme defaultTheme = Resources.Load<Theme>(defaultThemePath);
+        return defaultTheme;
+    }
 }

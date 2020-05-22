@@ -41,7 +41,7 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        float percentage = (eventData.pressPosition.x - eventData.position.x) / panelSpacing;
+        float percentage = (eventData.pressPosition.x - eventData.position.x) / Screen.width;
         if (Mathf.Abs(percentage) >= dragThreshold)
         {
             Vector3 newLocation = panelStartPosition;

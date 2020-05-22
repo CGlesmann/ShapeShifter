@@ -20,7 +20,8 @@ public class LevelButton : MonoBehaviour
 
     private void OnEnable()
     {
-        SetLockDisplay();
+        if (requireLevelUnlock)
+            SetLockDisplay();
     }
 
     public void SelectLevel()

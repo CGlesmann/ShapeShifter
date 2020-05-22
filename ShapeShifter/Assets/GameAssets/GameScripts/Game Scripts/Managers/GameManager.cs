@@ -251,9 +251,6 @@ public class GameManager : MonoBehaviour
 
             if (i == gameBoardParent.childCount - 1 && neededShapes.Count > 0)
             {
-                foreach (ShapeData s in neededShapes)
-                    Debug.Log(s);
-
                 defeatInstructions.InvokeInstructions();
                 return true;
             }
