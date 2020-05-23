@@ -17,11 +17,22 @@ public class ChallengeEntry : MonoBehaviour
     public void UpdateChallengeEntry(Challenge challengeData, int packIndex, int levelIndex)
     {
         challengeText.text = $"- {challengeData.challengeDescription}";
-        bool challengeCompleted = DataTracker.gameData.GetChallengeResult(Challenge.GetChallengeKey(packIndex, levelIndex, challengeIndex));
 
-        if (challengeCompleted)
-            starThemeElement.SetElementToHighlighted();
-        else
-            starThemeElement.SetElementToNormal();
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, bool> challengeDictionary = saveDataAccessor.GetDataValue<Dictionary<int, bool>>($"CompletedChallenges");
+        if (challengeDictionary != null)
+        {
+            if (challengeDictionary.TryGetValue(Challenge.GetChallengeKey(packIndex, levelIndex, challengeIndex), out bool challengeCompleted))
+            {
+                if (challengeCompleted)
+                {
+                    starThemeElement.SetElementToHighlighted();
+                    return;
+                }
+            }
+        }
+
+        starThemeElement.SetElementToNormal();
+        return;
     }
 }

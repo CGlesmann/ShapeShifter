@@ -12,30 +12,44 @@ public class UnlockManager : MonoBehaviour
 
     public bool CheckForCompletedUnlocks(int packIndex, int levelIndex)
     {
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, bool> unlockDictionary = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.UNLOCK_SAVE_KEY);
+
         notificationsToCreate = new Queue<Unlock>();
         int counter = 0;
 
         for(int i = 0; i < unlockSettings.unlocks.Count; i++)
         {
             IUnlock unlockInterface = unlockSettings.unlocks[i] as IUnlock;
-            if (unlockInterface.CheckForCompletion(packIndex, levelIndex) && !DataTracker.gameData.GetUnlockDisplayed(i))
+            if (unlockInterface.CheckForCompletion(packIndex, levelIndex))
             {
-                AddNotificationToQueue(unlockSettings.unlocks[i]);
-                DataTracker.gameData.MarkUnlockAsDisplayed(i);
-                DataTracker.dataTracker.SaveData();
-                counter++;
+                if (unlockDictionary == null)
+                {
+                    unlockDictionary = new Dictionary<int, bool>();
+                    unlockDictionary.Add(i, true);
+
+                    saveDataAccessor.SetData(SaveKeys.UNLOCK_SAVE_KEY, unlockDictionary);
+                    DataTracker.dataTracker.SaveData();
+
+                    AddNotificationToQueue(unlockSettings.unlocks[i]);
+                    counter++;
+                }
+                else if (!unlockDictionary.ContainsKey(i))
+                {
+                    unlockDictionary[i] = true;
+                    saveDataAccessor.SetData(SaveKeys.UNLOCK_SAVE_KEY, unlockDictionary);
+                    DataTracker.dataTracker.SaveData();
+
+                    AddNotificationToQueue(unlockSettings.unlocks[i]);
+                    counter++;
+                }
             }
         }
 
         return counter > 0;
     }
 
-    public void AddNotificationToQueue(Unlock unlock)
-    {
-        Debug.Log("Adding Notification");
-        notificationsToCreate.Enqueue(unlock);
-    }
-
+    public void AddNotificationToQueue(Unlock unlock) { notificationsToCreate.Enqueue(unlock); }
     public void StartNotificationDisplay()
     {
         if (notificationsToCreate != null && notificationsToCreate.Count > 0)
@@ -61,7 +75,6 @@ public class UnlockManager : MonoBehaviour
 
     private void CreateNotification(Unlock unlockData)
     {
-        Debug.Log("Creating a notification");
         GameObject newNotification = Instantiate(unlockData.unlockPrefab);
         UnlockNotification unlockNotification = newNotification.GetComponent<UnlockNotification>();
 

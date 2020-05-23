@@ -13,6 +13,7 @@ public class SaveDataViewer : EditorWindow
 
     private void OnGUI()
     {
+        /*
         if (DataTracker.gameData == null)
         {
             EditorGUILayout.LabelField("No Game Data is Available", EditorStyles.boldLabel, GUILayout.Width(300));
@@ -28,5 +29,6 @@ public class SaveDataViewer : EditorWindow
 
         EditorGUILayout.LabelField(string.Format("highestDisplayedUnlock: {0}", DataTracker.gameData.highestLevelUnlocked));
         EditorGUILayout.Separator();
+        */
     }
 }

@@ -24,6 +24,8 @@ public class PackSelectManager : MonoBehaviour
         PackButton packButton = null;
         bool overrideLocationSet = false;
 
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+
         for (int i = 0; i < packButtonParent.childCount; i++)
         {
             packButton = packButtonParent.GetChild(i).GetComponent<PackButton>();
@@ -34,7 +36,7 @@ public class PackSelectManager : MonoBehaviour
                 menuSwipeController.TransitionToPanel(i);
                 yield return new WaitForSeconds(menuSwipeController.GetRemainingTransitionTime() + 0.25f);
                 packButton.TriggerUnlock();
-                DataTracker.gameData.highestPackUnlocked = i;
+                saveDataAccessor.SetData(SaveKeys.HIGHEST_DISPLAYED_PACK_UNLOCK, i);
                 yield return new WaitForSeconds(1f);
             }
         }

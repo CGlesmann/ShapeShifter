@@ -211,8 +211,11 @@ public class GameManager : MonoBehaviour
     public void CheckGameState()
     {
         if (!CheckForVictory(gameBoardParent, solutionBoardParent))
-            if (!DataTracker.gameData.defeatTutorialComplete)
+        {
+            SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+            if (!saveDataAccessor.GetDataValue<bool>(SaveKeys.DEFEAT_TUTORIAL_COMPLETE))
                 CheckForDefeat(gameBoardParent, solutionBoardParent);
+        }
 
         onUpdateBoard?.Invoke();
     }
@@ -299,8 +302,34 @@ public class GameManager : MonoBehaviour
         onVictory?.Invoke();
         DisplayVictoryScreen();
 
-        DataTracker.gameData.MarkLevelComplete(currentPackIndex, currentLevelIndex);
-        DataTracker.dataTracker.SaveData();
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
+
+        if (completedLevels == null)
+        {
+            completedLevels = new Dictionary<int, int>();
+            completedLevels.Add(currentPackIndex, currentLevelIndex);
+
+            saveDataAccessor.SetData(SaveKeys.COMPLETED_LEVELS_SAVE_KEY, completedLevels);
+            DataTracker.dataTracker.SaveData();
+        }
+        else if (!completedLevels.ContainsKey(currentPackIndex))
+        {
+            completedLevels.Add(currentPackIndex, currentLevelIndex);
+
+            saveDataAccessor.SetData(SaveKeys.COMPLETED_LEVELS_SAVE_KEY, completedLevels);
+            DataTracker.dataTracker.SaveData();
+        }
+        else
+        {
+            int highestCompletedLevel = completedLevels[currentPackIndex];
+            if (currentLevelIndex > highestCompletedLevel)
+            {
+                completedLevels[currentPackIndex] = currentLevelIndex;
+                saveDataAccessor.SetData(SaveKeys.COMPLETED_LEVELS_SAVE_KEY, completedLevels);
+                DataTracker.dataTracker.SaveData();
+            }
+        }
     }
     #endregion
 

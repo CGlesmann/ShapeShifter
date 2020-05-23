@@ -45,7 +45,6 @@ public class ModeSwitchChallenge : Challenge, IChallenge
 public class Challenge
 {
     public string challengeDescription = "";
-
     public static int GetChallengeKey(int packIndex, int levelIndex, int challengeIndex) { return (packIndex * 10000) + (levelIndex * 10) + challengeIndex; }
 }
 

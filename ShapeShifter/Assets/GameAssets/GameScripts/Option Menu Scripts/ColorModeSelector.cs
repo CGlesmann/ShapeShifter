@@ -9,6 +9,7 @@ public class ColorModeSelector : MonoBehaviour
     [Header("Object References")]
     [SerializeField] private TextMeshProUGUI selectedColorModeTitleText = null;
 
+    SaveDataAccessor saveDataAccessor;
     int amountOfAvailableModes;
 
     Theme.ColorMode currentlySelectedMode;
@@ -16,8 +17,10 @@ public class ColorModeSelector : MonoBehaviour
 
     private void OnEnable()
     {
+        saveDataAccessor = new SaveDataAccessor();
+
         amountOfAvailableModes = Enum.GetNames(typeof(Theme.ColorMode)).Length;
-        currentlySelectedMode = DataTracker.gameData.GetSavedColorMode();
+        currentlySelectedMode = saveDataAccessor.GetDataValue<Theme.ColorMode>(SaveKeys.SELECTED_COLOR_MODE);
         currentlySelectedModeIndex = (int)currentlySelectedMode;
         selectedColorModeTitleText.text = $"{currentlySelectedMode}";
     }
@@ -28,10 +31,7 @@ public class ColorModeSelector : MonoBehaviour
         if (currentlySelectedModeIndex > amountOfAvailableModes - 1)
             currentlySelectedModeIndex = 0;
 
-        currentlySelectedMode = (Theme.ColorMode)currentlySelectedModeIndex;
-        selectedColorModeTitleText.text = $"{currentlySelectedMode}";
-        DataTracker.gameData.SetColorMode(currentlySelectedMode);
-        DataTracker.dataTracker.SaveData();
+        SetColorMode();
     }
 
     public void SelectPreviousMode()
@@ -40,9 +40,17 @@ public class ColorModeSelector : MonoBehaviour
         if (currentlySelectedModeIndex < 0)
             currentlySelectedModeIndex = amountOfAvailableModes - 1;
 
+        SetColorMode();
+    }
+
+    private void SetColorMode()
+    {
         currentlySelectedMode = (Theme.ColorMode)currentlySelectedModeIndex;
         selectedColorModeTitleText.text = $"{currentlySelectedMode}";
-        DataTracker.gameData.SetColorMode(currentlySelectedMode);
+
+        saveDataAccessor.SetData(SaveKeys.SELECTED_COLOR_MODE, currentlySelectedMode);
         DataTracker.dataTracker.SaveData();
+
+        ThemeManager.InvokeUpdateMethod();
     }
 }

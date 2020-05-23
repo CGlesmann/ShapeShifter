@@ -35,17 +35,27 @@ public class LevelButton : MonoBehaviour
         locked = false;
         GetComponent<Button>().interactable = true;
 
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
         ChallengeLog challengeLog = ChallengeManager.GetCurrentChallengeLog(manager.levelPackIndex + 1, buttonIndex + 1);
-        if (challengeLog != null)
+
+        Dictionary<int, bool> completedChallenges = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
+        if (challengeLog != null && completedChallenges != null)
         {
             for(int i = 0; i < challengeLog.GetChallengeCount(); i++)
             {
-                if (!DataTracker.gameData.GetChallengeResult(Challenge.GetChallengeKey(manager.levelPackIndex + 1, buttonIndex + 1, i)))
-                    return;
+                int challengeKey = Challenge.GetChallengeKey(manager.levelPackIndex + 1, buttonIndex + 1, i);
+                if (completedChallenges.TryGetValue(challengeKey, out bool challengeResult))
+                    if (!challengeResult)
+                    {
+                        completionIcon.SetActive(false);
+                        return;
+                    }
             }
 
             completionIcon.SetActive(true);
         }
+        else
+            completionIcon.SetActive(false);
     }
 
     private void LockLevelButton()

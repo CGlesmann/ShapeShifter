@@ -8,6 +8,8 @@ public class InstructionManager : Instructions
     [Header("Object References")]
     [SerializeField] private MenuSwipeController menuSwipeController = null;
 
+    private SaveDataAccessor saveDataAccessor;
+
     [Header("Control Variable")]
     [SerializeField] private bool initialTutorial = false;
     [SerializeField] private bool destroyTutorial = false;
@@ -18,19 +20,20 @@ public class InstructionManager : Instructions
     /// </summary>
     public override void Awake()
     {
+        saveDataAccessor = new SaveDataAccessor();
         base.Awake();
 
         // Enabling the tutorial (if needed)
-        if (initialTutorial && !DataTracker.gameData.initialTutorialComplete)
+        if (initialTutorial && !saveDataAccessor.GetDataValue<bool>(SaveKeys.INITIAL_TUTORIAL_COMPLETE))
         {
             InvokeInstructions();
             NavigateToBasicInstructions();
         }
-        else if (destroyTutorial && !DataTracker.gameData.destroyTutorialComplete)
+        else if (destroyTutorial && !saveDataAccessor.GetDataValue<bool>(SaveKeys.DESTRUCT_TUTORIAL_COMPLETE))
         {
             InvokeInstructions();
             NavigateToDestructInstructions();
-        } else if (lockTutorial && !DataTracker.gameData.lockTutorialComplete)
+        } else if (lockTutorial && !saveDataAccessor.GetDataValue<bool>(SaveKeys.LOCK_TUTORIAL_COMPLETE))
         {
             InvokeInstructions();
             NavigateToLockInstructions();
@@ -45,19 +48,19 @@ public class InstructionManager : Instructions
         // Marking the tutorial as complete
         if (initialTutorial)
         {
-            DataTracker.gameData.initialTutorialComplete = true;
+            saveDataAccessor.SetData(SaveKeys.INITIAL_TUTORIAL_COMPLETE, true);
             DataTracker.dataTracker.SaveData();
         }
 
         if (destroyTutorial)
         {
-            DataTracker.gameData.destroyTutorialComplete = true;
+            saveDataAccessor.SetData(SaveKeys.DESTRUCT_TUTORIAL_COMPLETE, true);
             DataTracker.dataTracker.SaveData();
         }
 
         if (lockTutorial)
         {
-            DataTracker.gameData.lockTutorialComplete = true;
+            saveDataAccessor.SetData(SaveKeys.LOCK_TUTORIAL_COMPLETE, true);
             DataTracker.dataTracker.SaveData();
         }
 

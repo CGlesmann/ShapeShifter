@@ -20,10 +20,12 @@ public class PackButton : MonoBehaviour
     public void TriggerUnlock() { themeElement.SetElementToHighlighted(); anim.SetTrigger("Unlock"); }
     public bool CheckForUnlock()
     {
-        if (DataTracker.gameData.completedLevels.TryGetValue(packIndex, out int highestLevelCompleted))
-        {
-            int highestPackUnlocked = DataTracker.gameData.highestPackUnlocked;
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
 
+        if (completedLevels != null && completedLevels.TryGetValue(packIndex, out int highestLevelCompleted))
+        {
+            int highestPackUnlocked = saveDataAccessor.GetDataValue<int>(SaveKeys.HIGHEST_DISPLAYED_PACK_UNLOCK);
             if (highestLevelCompleted >= minRequiredLevel)
             {
                 if (highestPackUnlocked >= packIndex)

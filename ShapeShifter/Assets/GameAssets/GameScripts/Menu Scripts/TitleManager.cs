@@ -21,7 +21,8 @@ public class TitleManager : MonoBehaviour
 
     public void BeginPlay()
     {
-        targetSceneName = DataTracker.gameData.initialTutorialComplete ? playMenu : tutorialLevel;
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        targetSceneName = saveDataAccessor.GetDataValue<bool>(SaveKeys.INITIAL_TUTORIAL_COMPLETE) ? playMenu : tutorialLevel;
         onExitFinish += SceneManager.LoadScene;
 
         sceneAnimator.SetTrigger("Exit");

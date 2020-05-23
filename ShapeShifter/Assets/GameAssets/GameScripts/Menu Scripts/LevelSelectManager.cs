@@ -29,6 +29,10 @@ public class LevelSelectManager : MonoBehaviour
     {
         if (levelSelectParentList != null && levelSelectParentList.Length > 0)
         {
+            SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+            Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
+            int highestLevelUnlocked = saveDataAccessor.GetDataValue<int>(SaveKeys.HIGHEST_DISPLAYED_LEVEL_UNLOCK);
+
             LevelButton currentButton = null;
             int unlockedCounter = 0, totalCounter = 0, packCounter = 0;
 
@@ -39,13 +43,13 @@ public class LevelSelectManager : MonoBehaviour
                     currentButton = levelGroupParent.GetChild(i).GetComponent<LevelButton>();
                     totalCounter++;
 
-                    if (DataTracker.gameData.completedLevels.TryGetValue(levelPackIndex + 1, out int highestCompletedLevel))
+                    if (completedLevels != null && completedLevels.TryGetValue(levelPackIndex + 1, out int highestCompletedLevel))
                     {
                         highestCompletedLevel++;
                         if (totalCounter <= highestCompletedLevel)
                         {
                             unlockedCounter++;
-                            if (totalCounter <= DataTracker.gameData.highestLevelUnlocked)
+                            if (totalCounter <= highestLevelUnlocked)
                                 currentButton.SetUnlockDisplay();
                             else
                             {
@@ -72,9 +76,9 @@ public class LevelSelectManager : MonoBehaviour
                 packCounter++;
             }
 
-            if (unlockedCounter > DataTracker.gameData.highestLevelUnlocked)
+            if (unlockedCounter > highestLevelUnlocked)
             {
-                DataTracker.gameData.highestLevelUnlocked = unlockedCounter;
+                saveDataAccessor.SetData(SaveKeys.HIGHEST_DISPLAYED_LEVEL_UNLOCK, unlockedCounter);
                 DataTracker.dataTracker.SaveData();
             }
         }

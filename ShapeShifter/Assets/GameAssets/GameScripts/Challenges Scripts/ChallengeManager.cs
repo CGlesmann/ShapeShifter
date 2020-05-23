@@ -29,10 +29,14 @@ public class ChallengeManager : MonoBehaviour
                 return;
         }
 
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, bool> challengeDictionary = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
         int challengeCount = currentChallengeLog.GetChallengeCount();
+
         for (int i = 0; i < challengeCount; i++)
         {
-            if (!DataTracker.gameData.GetChallengeResult(Challenge.GetChallengeKey(packIndex, levelIndex, i)))
+            int challengeKey = Challenge.GetChallengeKey(packIndex, levelIndex, i);
+            if (challengeDictionary == null || !challengeDictionary.ContainsKey(challengeKey) || challengeDictionary[challengeKey] == false)
             {
                 IChallenge challenge = currentChallengeLog.GetChallengeData(i) as IChallenge;
                 challenge.SetUpChallenge();
@@ -51,6 +55,8 @@ public class ChallengeManager : MonoBehaviour
         ChallengeLog challengeLog = GetCurrentChallengeLog(packIndex, levelIndex);
         if (challengeLog != null)
         {
+            SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+            Dictionary<int, bool> challengeDictionary = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
             int challengeCount = challengeLog.GetChallengeCount();
             for(int i = 0; i < challengeCount; i++)
             {
@@ -58,8 +64,26 @@ public class ChallengeManager : MonoBehaviour
                 if (challenge != null)
                 {
                     int challengeKey = Challenge.GetChallengeKey(packIndex, levelIndex, i);
-                    if (challenge.CheckForCompletedChallenge() && !DataTracker.gameData.GetChallengeResult(challengeKey))
-                        DataTracker.gameData.AddChallengeResult(challengeKey, true);
+                    if (challenge.CheckForCompletedChallenge())
+                    {
+                        if (challengeDictionary == null)
+                        {
+                            challengeDictionary = new Dictionary<int, bool>();
+                            challengeDictionary.Add(challengeKey, true);
+
+                            saveDataAccessor.SetData(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY, challengeDictionary);
+                            DataTracker.dataTracker.SaveData();
+                        }
+                        else if (challengeDictionary.ContainsKey(challengeKey))
+                        {
+                            challengeDictionary.Add(challengeKey, true);
+
+                            saveDataAccessor.SetData(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY, challengeDictionary);
+                            DataTracker.dataTracker.SaveData();
+                        }
+                        else
+                            challengeDictionary[challengeKey] = true;
+                    }
                 }
             }
         }
