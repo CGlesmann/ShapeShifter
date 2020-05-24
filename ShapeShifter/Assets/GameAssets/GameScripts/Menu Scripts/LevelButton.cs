@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,10 +19,36 @@ public class LevelButton : MonoBehaviour
     private string levelName => string.Format("Level_{0}", buttonIndex + 1);
     private bool locked = false;
 
-    private void OnEnable()
+    public Action SetLevelButtonState(int highestLevelUnlock, int highestDisplay, out bool displayUnlock)
     {
-        if (requireLevelUnlock)
-            SetLockDisplay();
+        if (buttonIndex <= highestLevelUnlock)
+        {
+            if (buttonIndex > highestDisplay)
+            {
+                if (requireLevelUnlock)
+                {
+                    displayUnlock = true;
+                    SetLockDisplay();
+                    return DisplayUnlockAnimation;
+                }
+                else
+                {
+                    displayUnlock = false;
+                    SetUnlockDisplay();
+                    return null;
+                }
+            }
+            else
+            {
+                displayUnlock = false;
+                SetUnlockDisplay();
+                return null;
+            }
+        }
+
+        displayUnlock = false;
+        SetLockDisplay();
+        return null;
     }
 
     public void SelectLevel()
