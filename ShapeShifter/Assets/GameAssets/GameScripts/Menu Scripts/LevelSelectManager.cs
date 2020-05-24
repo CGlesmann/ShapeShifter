@@ -45,8 +45,7 @@ public class LevelSelectManager : MonoBehaviour
 
                     if (completedLevels != null && completedLevels.TryGetValue(levelPackIndex + 1, out int highestCompletedLevel))
                     {
-                        highestCompletedLevel++;
-                        if (totalCounter <= highestCompletedLevel)
+                        if (totalCounter <= highestCompletedLevel + 1)
                         {
                             unlockedCounter++;
                             if (totalCounter <= highestLevelUnlocked)
@@ -92,6 +91,7 @@ public class LevelSelectManager : MonoBehaviour
 
         // Displaying The Level Investigation Screen
         levelPreviewPanel.SetActive(true);
+        levelPreviewPanel.GetComponent<LevelPreview>().SetLevelPreview(levelPackIndex, levelIndex);
         levelNameText.text = $"Level {levelPackIndex + 1}-{levelIndex + 1}";
 
         challengePreview.SetLevelChallengePreview(ChallengeManager.GetCurrentChallengeLog(levelPackIndex + 1, levelIndex + 1), $"Level_{levelPackIndex + 1}-{levelIndex + 1}");

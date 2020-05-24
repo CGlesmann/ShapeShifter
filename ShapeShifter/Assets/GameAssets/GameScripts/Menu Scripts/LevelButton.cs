@@ -45,11 +45,18 @@ public class LevelButton : MonoBehaviour
             {
                 int challengeKey = Challenge.GetChallengeKey(manager.levelPackIndex + 1, buttonIndex + 1, i);
                 if (completedChallenges.TryGetValue(challengeKey, out bool challengeResult))
+                {
                     if (!challengeResult)
                     {
                         completionIcon.SetActive(false);
                         return;
                     }
+                }
+                else
+                {
+                    completionIcon.SetActive(false);
+                    return;
+                }
             }
 
             completionIcon.SetActive(true);

@@ -303,6 +303,8 @@ public class GameManager : MonoBehaviour
         DisplayVictoryScreen();
 
         SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+
+        #region Save Completed Level Index
         Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
 
         if (completedLevels == null)
@@ -330,6 +332,33 @@ public class GameManager : MonoBehaviour
                 DataTracker.dataTracker.SaveData();
             }
         }
+        #endregion
+
+        #region Save Level Time
+        Debug.Log($"Setting Best Time for Level {currentPackIndex}-{currentLevelIndex}");
+
+        Dictionary<int, float> bestLevelTimes = saveDataAccessor.GetDataValue<Dictionary<int, float>>(SaveKeys.BEST_LEVEL_TIMES);
+        int levelKey = GetLevelKey(currentPackIndex, currentLevelIndex);
+        if (bestLevelTimes == null)
+        {
+            bestLevelTimes = new Dictionary<int, float>();
+            bestLevelTimes.Add(levelKey, levelTimer);
+
+            saveDataAccessor.SetData(SaveKeys.BEST_LEVEL_TIMES, bestLevelTimes);
+            DataTracker.dataTracker.SaveData();
+        } else if (!bestLevelTimes.ContainsKey(levelKey))
+        {
+            bestLevelTimes.Add(levelKey, levelTimer);
+
+            saveDataAccessor.SetData(SaveKeys.BEST_LEVEL_TIMES, bestLevelTimes);
+            DataTracker.dataTracker.SaveData();
+        } else if (bestLevelTimes[levelKey] > levelTimer)
+        {
+            bestLevelTimes[levelKey] = levelTimer;
+            saveDataAccessor.SetData(SaveKeys.BEST_LEVEL_TIMES, bestLevelTimes);
+            DataTracker.dataTracker.SaveData();
+        }
+        #endregion
     }
     #endregion
 
@@ -355,5 +384,12 @@ public class GameManager : MonoBehaviour
     public void RestartCurrentLevel() { GameState.gamePaused = false; SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
     public void ExitToMainMenu() { GameState.gamePaused = false; SceneManager.LoadScene(mainMenuScene); }
     public void NavigateToNextLevel() { AdManager.CheckForAutomaticAd(GameTime.GetMinuteCount(levelTimer), nextLevelScene); /*HideVictoryScreen();*/ GameState.gamePaused = false; }
+    #endregion
+
+    #region Helper Functions
+    public static int GetLevelKey(int packIndex, int levelIndex)
+    {
+        return (packIndex * 10000) + levelIndex + 1;
+    }
     #endregion
 }

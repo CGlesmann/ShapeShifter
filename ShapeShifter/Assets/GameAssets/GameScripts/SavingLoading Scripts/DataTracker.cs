@@ -9,6 +9,7 @@ public static class SaveKeys
     public const string UNLOCK_SAVE_KEY = "UnlockDictionary";
     public const string COMPLETED_LEVELS_SAVE_KEY = "CompletedLevels";
     public const string COMPLETED_CHALLENGES_SAVE_KEY = "CompletedChallenges";
+    public const string BEST_LEVEL_TIMES = "BestLevelTimes";
 
     public const string HIGHEST_DISPLAYED_PACK_UNLOCK = "HighestPackDisplay";
     public const string HIGHEST_DISPLAYED_LEVEL_UNLOCK = "HighestLevelDisplay";

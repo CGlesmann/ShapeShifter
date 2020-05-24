@@ -74,7 +74,7 @@ public class ChallengeManager : MonoBehaviour
                             saveDataAccessor.SetData(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY, challengeDictionary);
                             DataTracker.dataTracker.SaveData();
                         }
-                        else if (challengeDictionary.ContainsKey(challengeKey))
+                        else if (!challengeDictionary.ContainsKey(challengeKey))
                         {
                             challengeDictionary.Add(challengeKey, true);
 

@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 3436726473808391070}
   - component: {fileID: 2672023500718084178}
   - component: {fileID: 2736923840560502209}
+  - component: {fileID: 812937280335087627}
   m_Layer: 0
   m_Name: NotificationText
   m_TagString: Untagged
@@ -291,6 +292,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &812937280335087627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3174925039635309014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementKey: 0
 --- !u!1 &3999740432166893297
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,6 +316,7 @@ GameObject:
   - component: {fileID: 6619710869864014433}
   - component: {fileID: 1929146671707307450}
   - component: {fileID: 8226749153587771018}
+  - component: {fileID: 5700229476412065156}
   m_Layer: 0
   m_Name: LockImage
   m_TagString: Untagged
@@ -365,6 +380,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5700229476412065156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3999740432166893297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementKey: 12
 --- !u!1 &5143457991684017325
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,6 +532,7 @@ GameObject:
   - component: {fileID: 8187930986853046833}
   - component: {fileID: 723765032882762520}
   - component: {fileID: 1042501864024714625}
+  - component: {fileID: 4837366161419271039}
   m_Layer: 0
   m_Name: InputText
   m_TagString: Untagged
@@ -565,7 +594,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 1828716543
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -648,6 +677,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4837366161419271039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8036429566005141822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementKey: 2
 --- !u!1 &8440857392955230069
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,6 +701,7 @@ GameObject:
   - component: {fileID: 18068873441645804}
   - component: {fileID: 336302449676787332}
   - component: {fileID: 6006008757919908823}
+  - component: {fileID: 1971720216714094604}
   m_Layer: 0
   m_Name: UnlockBack
   m_TagString: Untagged
@@ -723,3 +766,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1971720216714094604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8440857392955230069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementKey: 0
