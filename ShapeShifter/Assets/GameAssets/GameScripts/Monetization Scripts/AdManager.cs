@@ -10,22 +10,26 @@ public static class AdManager
 
     public static void CheckForAutomaticAd(int minutesPassed, string nextScene)
     {
-        if (minutesPassed >= 4)
+        if (!Debug.isDebugBuild)
         {
-            ShowAutomaticAd(nextScene);
-            ResetCounters();
-        }
-        else
-        {
-            roundCounter -= 1;
-            if (roundCounter <= 0)
+            if (minutesPassed >= 4)
             {
                 ShowAutomaticAd(nextScene);
                 ResetCounters();
             }
             else
-                SceneManager.LoadScene(nextScene);
-        }
+            {
+                roundCounter -= 1;
+                if (roundCounter <= 0)
+                {
+                    ShowAutomaticAd(nextScene);
+                    ResetCounters();
+                }
+                else
+                    SceneManager.LoadScene(nextScene);
+            }
+        } else
+            SceneManager.LoadScene(nextScene);
     }
 
     private static void ShowAutomaticAd(string nextScene)

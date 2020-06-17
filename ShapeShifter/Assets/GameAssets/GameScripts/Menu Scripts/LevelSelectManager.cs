@@ -25,67 +25,6 @@ public class LevelSelectManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelNameText = null;
     private string currentLevel = "";
 
-    /*
-    public void Awake()  { StartCoroutine(SetLevelButtonStates());}
-    private IEnumerator SetLevelButtonStates()
-    {
-        if (levelSelectParentList != null && levelSelectParentList.Length > 0)
-        {
-            SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
-            Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
-            int highestLevelUnlocked = saveDataAccessor.GetDataValue<int>(SaveKeys.HIGHEST_DISPLAYED_LEVEL_UNLOCK);
-
-            LevelButton currentButton = null;
-            int unlockedCounter = 0, totalCounter = 0, packCounter = 0;
-
-            foreach (Transform levelGroupParent in levelSelectParentList)
-            {
-                for (int i = 0; i < levelGroupParent.childCount; i++)
-                {
-                    currentButton = levelGroupParent.GetChild(i).GetComponent<LevelButton>();
-                    totalCounter++;
-
-                    if (completedLevels != null && completedLevels.TryGetValue(levelPackIndex + 1, out int highestCompletedLevel))
-                    {
-                        if (totalCounter <= highestCompletedLevel + 1)
-                        {
-                            unlockedCounter++;
-                            if (totalCounter <= highestLevelUnlocked)
-                                currentButton.SetUnlockDisplay();
-                            else
-                            {
-                                if (packCounter > levelSelectPanelController.currentPanelIndex)
-                                {
-                                    yield return new WaitForSeconds(1f);
-                                    levelSelectPanelController.BeginRightTransition();
-                                    yield return new WaitForSeconds(0.5f);
-                                }
-
-                                currentButton.DisplayUnlockAnimation();
-                                yield return new WaitForSeconds(0.1f);
-                            }
-                        }
-                        else
-                            currentButton.SetLockDisplay();
-                    }
-                    else if (currentButton.requireLevelUnlock)
-                        currentButton.SetLockDisplay();
-                    else
-                        currentButton.SetUnlockDisplay();
-                }
-
-                packCounter++;
-            }
-
-            if (unlockedCounter > highestLevelUnlocked)
-            {
-                saveDataAccessor.SetData(SaveKeys.HIGHEST_DISPLAYED_LEVEL_UNLOCK, unlockedCounter);
-                DataTracker.dataTracker.SaveData();
-            }
-        }
-    }
-    */
-
     private void Awake()
     {
         SaveDataAccessor saveDataAccessor = new SaveDataAccessor();

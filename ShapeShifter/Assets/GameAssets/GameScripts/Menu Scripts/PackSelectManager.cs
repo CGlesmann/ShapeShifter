@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,32 +19,64 @@ public class PackSelectManager : MonoBehaviour
 
     private string targetLevel = "";
 
-    private void Start() { StartCoroutine(SetPackButtonStates()); }
-    private IEnumerator SetPackButtonStates()
+    private void Awake()
     {
-        PackButton packButton = null;
-        bool overrideLocationSet = false;
+        menuSwipeController.SetCurrentPanel(lastSelectPackIndex);
 
         SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
 
-        for (int i = 0; i < packButtonParent.childCount; i++)
+        int highestDisplayedPackUnlock = saveDataAccessor.GetDataValue<int>(SaveKeys.HIGHEST_DISPLAYED_PACK_UNLOCK);
+        int highestCompletedPackLevel;
+        int lastUnlock = 0;
+
+        PackButton currentPackButton;
+        Queue<Action> buttonActions = new Queue<Action>();
+
+        for(int i = 0; i < packButtonParent.childCount; i++)
         {
-            packButton = packButtonParent.GetChild(i).GetComponent<PackButton>();
-            if (packButton.CheckForUnlock())
-            {
-                overrideLocationSet = true;
+            if (completedLevels == null)
+                highestCompletedPackLevel = 0;
+            else if (completedLevels.TryGetValue(i + 0, out int highestLeve))
+                highestCompletedPackLevel = highestLeve;
+            else
+                highestCompletedPackLevel = 0;
 
-                menuSwipeController.TransitionToPanel(i);
-                yield return new WaitForSeconds(menuSwipeController.GetRemainingTransitionTime() + 0.25f);
-                packButton.TriggerUnlock();
-                saveDataAccessor.SetData(SaveKeys.HIGHEST_DISPLAYED_PACK_UNLOCK, i);
-                yield return new WaitForSeconds(1f);
+            currentPackButton = packButtonParent.GetChild(i).GetComponent<PackButton>();
+
+            Action buttonAction = currentPackButton.CheckForUnlock(highestCompletedPackLevel, highestDisplayedPackUnlock, out bool displayUnlock);
+            if (buttonAction != null && displayUnlock)
+            {
+                buttonActions.Enqueue(menuSwipeController.BeginRightTransition);
+                buttonActions.Enqueue(buttonAction);
+
+                lastUnlock = i;
             }
         }
 
-        if (!overrideLocationSet)    
-            menuSwipeController.SetCurrentPanel(lastSelectPackIndex);
-        DataTracker.dataTracker.SaveData();
+        if (lastUnlock > highestDisplayedPackUnlock)
+        {
+            saveDataAccessor.SetData(SaveKeys.HIGHEST_DISPLAYED_PACK_UNLOCK, lastUnlock);
+            DataTracker.dataTracker.SaveData();
+        }
+
+        StartCoroutine(SetButtonStates(buttonActions));
+    }
+
+    private IEnumerator SetButtonStates(Queue<Action> buttonActions)
+    {
+        int actionCount = buttonActions?.Count ?? 0;
+        if (actionCount == 0)
+            yield break;
+
+        yield return new WaitForSeconds(0.75f);
+        for(int i = 0; i < actionCount; i++)
+        {
+            Action currentAction = buttonActions.Dequeue();
+            currentAction.Invoke();
+
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     public void NavigateToLevelSelect(string packScreen)

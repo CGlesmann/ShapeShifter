@@ -46,8 +46,7 @@ public static class GameSlotTools
         newShape.transform.localScale = new Vector3(shapeSize, shapeSize);
 
         GameShape shapeRef = newShape.GetComponent<GameShape>();
-        shapeRef.SetShapeColor(shapeColor);
-        shapeRef.SetShapeType(shapeType);
+        shapeRef.ConfigureShape(shapeType, shapeColor);
 
         GameSlot slotRef = slot.GetComponent<GameSlot>();
         slotRef.SetSlotShapeReference(newShape.transform);

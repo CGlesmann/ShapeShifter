@@ -1,45 +1,91 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PackButton : MonoBehaviour
 {
     [Header("Pack Settings")]
-    [SerializeField] private bool requireCompletionToUnlock = true;
-    [SerializeField] private int packIndex = 0;
+    [SerializeField] private bool requireUnlock = true;
     [SerializeField] private int minRequiredLevel = 0;
 
     [Header("Object References")]
     [SerializeField] private DynamicGeneralThemeElement themeElement = null;
-    private Animator anim;
-
-    private void OnEnable() { anim = GetComponent<Animator>(); }
+    [SerializeField] private TextMeshProUGUI completionText = null;
+    [SerializeField] private Animator anim = null;
 
     public void SetLockState() { themeElement.SetElementToHighlighted(); }
-    public void SetUnlockState() { themeElement.SetElementToNormal(); anim.SetBool("Unlocked", true); }
-    public void TriggerUnlock() { themeElement.SetElementToHighlighted(); anim.SetTrigger("Unlock"); }
-    public bool CheckForUnlock()
+    public void SetUnlockState() { SetCompletionPercentage(); themeElement.SetElementToNormal(); anim.SetBool("Unlocked", true); }
+    public void TriggerUnlock() { SetCompletionPercentage(); themeElement.SetElementToHighlighted(); anim.SetTrigger("Unlock"); }
+
+    public Action CheckForUnlock(int highestCompletedPackLevel, int hightestDisplayedPackUnlock, out bool displayUnlock)
     {
-        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
-        Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
-
-        if (completedLevels != null && completedLevels.TryGetValue(packIndex, out int highestLevelCompleted))
+        if (highestCompletedPackLevel >= minRequiredLevel)
         {
-            int highestPackUnlocked = saveDataAccessor.GetDataValue<int>(SaveKeys.HIGHEST_DISPLAYED_PACK_UNLOCK);
-            if (highestLevelCompleted >= minRequiredLevel)
+            if (transform.GetSiblingIndex() > hightestDisplayedPackUnlock)
             {
-                if (highestPackUnlocked >= packIndex)
-                    SetUnlockState();
+                if (requireUnlock)
+                {
+                    displayUnlock = true;
+                    SetLockState();
+                    return TriggerUnlock;
+                }
                 else
-                    return true;
-            } else
-                SetLockState();
+                {
+                    displayUnlock = false;
+                    SetUnlockState();
+                    return null;
+                }
+            }
+            else
+            {
+                displayUnlock = false;
+                SetUnlockState();
+                return null;
+            }
         }
-        else if (!requireCompletionToUnlock)
-            SetUnlockState();
-        else
-            SetLockState();
 
-        return false;
+        displayUnlock = false;
+        SetLockState();
+        return null;
+    }
+
+    public void SetCompletionPercentage()
+    {
+        int packIndex = transform.GetSiblingIndex();
+        ChallengeLog[] packLogs = Resources.LoadAll<ChallengeLog>($"ChallengeLogs/Level_Pack_{packIndex + 1}/");
+
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, bool> completedChallenges = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
+
+        float amountOfChallenges = 0;
+        float completedChallengeCount = 0;
+
+        if (packLogs != null && packLogs.Length > 0 && completedChallenges != null && completedChallenges.Count > 0)
+        {
+            ChallengeLog currentLog;
+            int currentChallengeCount;
+
+            for (int levelIndex = 0; levelIndex < packLogs.Length; levelIndex++)
+            {
+                currentLog = packLogs[levelIndex];
+
+                currentChallengeCount = currentLog.GetChallengeCount();
+                amountOfChallenges += currentChallengeCount;
+
+                for (int challengeIndex = 0; challengeIndex < currentChallengeCount; challengeIndex++)
+                {
+                    int challengeKey = Challenge.GetChallengeKey(packIndex + 1, levelIndex + 1, challengeIndex);
+                    if (completedChallenges.TryGetValue(challengeKey, out bool result))
+                        if (result == true)
+                            completedChallengeCount++;
+                }
+            }
+
+            completionText.text = $"{((completedChallengeCount / amountOfChallenges) * 100).ToString("F0")}%";
+        }
+        else
+            completionText.text = "--%";
     }
 }

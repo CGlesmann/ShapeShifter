@@ -4538,6 +4538,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1979467737640667578, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1983190359267952430, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -5186,6 +5191,11 @@ PrefabInstance:
     - target: {fileID: 3227607241258695119, guid: 085cfc577a2bb8e49af68a84a9e42caa,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284341173735961598, guid: 085cfc577a2bb8e49af68a84a9e42caa,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3299206181770270492, guid: 085cfc577a2bb8e49af68a84a9e42caa,
@@ -7720,6 +7730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f2cde4a36f6d3c42a72b66b8be1b5f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
 --- !u!1001 &1704475437
 PrefabInstance:
   m_ObjectHideFlags: 0

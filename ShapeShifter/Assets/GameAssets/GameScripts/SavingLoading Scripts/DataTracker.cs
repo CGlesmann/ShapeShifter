@@ -18,6 +18,7 @@ public static class SaveKeys
     public const string DESTRUCT_TUTORIAL_COMPLETE = "DestructTutorialComplete";
     public const string LOCK_TUTORIAL_COMPLETE = "LockTutorialComplete";
     public const string DEFEAT_TUTORIAL_COMPLETE = "DefeatTutorialComplete";
+    public const string TRANSFORMER_TUTORIAL_COMPLETE = "TransformerTutorialComplete";
 
     public const string SELECTED_COLOR_MODE = "SelectedColorMode";
     public const string SELECTED_THEME_KEY = "SelectedThemeKey";

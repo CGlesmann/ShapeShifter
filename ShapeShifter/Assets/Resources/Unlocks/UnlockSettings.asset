@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unlocks:
   - id: 0
+  - id: 1
   references:
     version: 1
     00000000:
@@ -23,4 +24,12 @@ MonoBehaviour:
         unlockPrefab: {fileID: 2705220626622284447, guid: e88165474cb2c8a46927f1ce6b112e1f,
           type: 3}
         packIndex: 1
-        requiredLevel: 24
+        requiredLevel: 4
+    00000001:
+      type: {class: PackUnlock, ns: , asm: Assembly-CSharp}
+      data:
+        unlockDescription: '"Transforming Shapes" pack is now unlocked!'
+        unlockPrefab: {fileID: 2705220626622284447, guid: e88165474cb2c8a46927f1ce6b112e1f,
+          type: 3}
+        packIndex: 2
+        requiredLevel: 4

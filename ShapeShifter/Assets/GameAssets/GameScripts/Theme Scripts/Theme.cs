@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Theme : ScriptableObject
 {
     public enum GeneralUIThemeKey { Button, HighlightButton, StaticPanel, ExitButton, ExitIcon, SettingsIcon, IndicatorNormal, IndicatorHighlight, EmptyStarIcon, CompletionStarIcon, PauseIcon, UndoIcon, LockIcon }
-    public enum GameUIThemeKey { GameboardSlot, SelectedGameBoardSlot, SolutionboardSlot, LockIcon, LockSlot, SwitchLockIcon, DestructLockIcon }
-    public enum TextUIThemeKey { ButtonText, StaticPanelText, HighlightedText }
+    public enum GameUIThemeKey { GameboardSlot, SelectedGameBoardSlot, SolutionboardSlot, LockIcon, LockSlot, SwitchLockIcon, DestructLockIcon, Transformer, TransformerFill, TransformerIcon, SolutionTransformer }
+    public enum TextUIThemeKey { ButtonText, StaticPanelText, HighlightedText, TransformerText }
     public enum ColorMode { Default, Protanopia, Deuteranopia, Tritanopia }
 
     [HideInInspector] public ColorDictionary background = new ColorDictionary();
@@ -352,13 +353,16 @@ public class TextElementDictionary
 public class ThemeElementData
 {
     [SerializeField] private Sprite elementSprite = null;
+    [SerializeField] private Image.Type imageType = Image.Type.Sliced; 
     [SerializeField] private ColorDictionary elementColors = new ColorDictionary();
 
     public void SetSprite(Sprite newSprite) { elementSprite = newSprite; }
     public void SetColorDictionary(ColorDictionary newDictionary) { elementColors = new ColorDictionary(newDictionary); }
+    public void SetSpriteType(Image.Type type) { imageType = type; }
 
     public Color GetColorByMode(Theme.ColorMode colorMode) { return elementColors.GetValue(colorMode); }
     public Sprite GetElementSprite() { return elementSprite; }
+    public Image.Type GetSpriteType() { return imageType; }
 
     public ColorDictionary GetDictionary() { return elementColors; }
 }
@@ -443,4 +447,11 @@ public class ColorDictionary
         index = -1;
         return false;
     }
+}
+
+public abstract class ThemeElementLoader : MonoBehaviour
+{
+    [SerializeField] protected bool updateDynamically = true;
+
+    public abstract void LoadElement(Theme theme, Theme.ColorMode colorMode);
 }

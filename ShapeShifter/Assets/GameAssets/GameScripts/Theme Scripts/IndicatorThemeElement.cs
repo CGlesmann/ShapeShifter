@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class IndicatorThemeElement : MonoBehaviour
+public class IndicatorThemeElement : ThemeElementLoader
 {
     [Header("Element Keys")]
     [SerializeField] private Theme.GeneralUIThemeKey normalKey = Theme.GeneralUIThemeKey.Button;
@@ -14,8 +14,8 @@ public class IndicatorThemeElement : MonoBehaviour
     private int elementIndex = 0;
     private bool highlighted = false;
 
-    private void OnDisable() { ThemeManager.onThemeSettingsUpdate -= UpdateElement; }
-    private void OnEnable() { ThemeManager.onThemeSettingsUpdate += UpdateElement; }
+    private void OnDisable() { if (updateDynamically) ThemeManager.onThemeSettingsUpdate -= LoadElement; }
+    private void OnEnable() { if (updateDynamically) ThemeManager.onThemeSettingsUpdate += LoadElement; }
 
     public void SetIndicator(MenuSwipeController controller, int index, bool highlighted)
     {
@@ -25,16 +25,16 @@ public class IndicatorThemeElement : MonoBehaviour
         controller.onPanelSwitch += CheckForHighlight;
 
         this.highlighted = highlighted;
-        UpdateElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
+        LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
     }
 
     public void CheckForHighlight(int currentPanel)
     {
         highlighted = (currentPanel == elementIndex);
-        UpdateElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
+        LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
     }
 
-    private void UpdateElement(Theme theme, Theme.ColorMode colorMode)
+    public override void LoadElement(Theme theme, Theme.ColorMode colorMode)
     {
         if (theme != null)
         {

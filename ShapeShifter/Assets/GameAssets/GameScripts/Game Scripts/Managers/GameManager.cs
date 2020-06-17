@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
     private bool switching = false;
 
     [Header("Object References")]
-    public UnlockManager unlockManager = null;
     public BoardManager boardManager = null;
     public UndoManager undoManager = null;
     public Transform gameBoardParent = null;
@@ -84,7 +83,7 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < solutionBoardParent.childCount; i++)
         {
             // Attempting to get the shape at the given index
-            shape = solutionBoardParent.GetChild(i).gameObject.GetComponent<GameSlot>().GetSlotShape();
+            shape = solutionBoardParent.GetChild(i).gameObject.GetComponent<GameSlot>()?.GetSlotShape();
 
             // Adding shape data if a shape exists
             if (shape != null)
@@ -335,8 +334,6 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region Save Level Time
-        Debug.Log($"Setting Best Time for Level {currentPackIndex}-{currentLevelIndex}");
-
         Dictionary<int, float> bestLevelTimes = saveDataAccessor.GetDataValue<Dictionary<int, float>>(SaveKeys.BEST_LEVEL_TIMES);
         int levelKey = GetLevelKey(currentPackIndex, currentLevelIndex);
         if (bestLevelTimes == null)
@@ -374,9 +371,6 @@ public class GameManager : MonoBehaviour
     {
         GameState.gamePaused = true;
         victoryMenuParent.SetActive(true);
-
-        if (unlockManager.CheckForCompletedUnlocks(currentPackIndex, currentLevelIndex))
-            unlockManager.StartNotificationDisplay();
     }
     #endregion
 

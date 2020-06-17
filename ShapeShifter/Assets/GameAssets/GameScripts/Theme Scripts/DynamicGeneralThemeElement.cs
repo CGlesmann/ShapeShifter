@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DynamicGeneralThemeElement : MonoBehaviour
+public class DynamicGeneralThemeElement : ThemeElementLoader
 {
     [Header("Element Keys")]
     [SerializeField] private Theme.GeneralUIThemeKey primaryKey = Theme.GeneralUIThemeKey.Button;
@@ -18,7 +18,7 @@ public class DynamicGeneralThemeElement : MonoBehaviour
     private Image elementImage = null;
     private bool toggled = false;
 
-    private void OnDisable() { ThemeManager.onThemeSettingsUpdate -= LoadElement; }
+    private void OnDisable() { if (updateDynamically) ThemeManager.onThemeSettingsUpdate -= LoadElement; }
     private void Awake()
     {
         elementImage = GetComponent<Image>();
@@ -31,7 +31,8 @@ public class DynamicGeneralThemeElement : MonoBehaviour
         StoreThemeElements(currentTheme, currentColorMode);
         LoadElement(primaryKeyData, currentColorMode);
 
-        ThemeManager.onThemeSettingsUpdate += LoadElement;
+        if (updateDynamically)
+            ThemeManager.onThemeSettingsUpdate += LoadElement;
     }
 
     private void StoreThemeElements(Theme theme, Theme.ColorMode colorMode)
@@ -63,18 +64,18 @@ public class DynamicGeneralThemeElement : MonoBehaviour
         if (data != null)
         {
             elementImage.sprite = data.GetElementSprite();
-            elementImage.type = Image.Type.Sliced;
+            elementImage.type = data.GetSpriteType();
             elementImage.color = data.GetColorByMode(colorMode);
         }
     }
 
-    private void LoadElement(Theme theme, Theme.ColorMode colorMode)
+    public override void LoadElement(Theme theme, Theme.ColorMode colorMode)
     {
         ThemeElementData data = theme.generalUIThemeDictionary.GetElementData(toggled ? secondaryKey : primaryKey);
         if (data != null)
         {
             elementImage.sprite = data.GetElementSprite();
-            elementImage.type = Image.Type.Sliced;
+            elementImage.type = data.GetSpriteType();
             elementImage.color = data.GetColorByMode(colorMode);
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 
 public class ThemeEditor : EditorWindow
@@ -246,7 +247,11 @@ public class ThemeEditor : EditorWindow
     private void DrawThemeData(string dataTitle, ThemeElementData data)
     {
         EditorGUILayout.LabelField($"{dataTitle} Data", EditorStyles.boldLabel);
+
+        EditorGUILayout.BeginHorizontal();
         data.SetSprite((Sprite)EditorGUILayout.ObjectField(data.GetElementSprite(), typeof(Sprite), false, GUILayout.MaxWidth(200f)));
+        data.SetSpriteType((Image.Type)EditorGUILayout.EnumPopup(data.GetSpriteType()));
+        EditorGUILayout.EndHorizontal();
 
         ColorDictionary dictionary = data.GetDictionary();
         DrawColorDictionary(dictionary);

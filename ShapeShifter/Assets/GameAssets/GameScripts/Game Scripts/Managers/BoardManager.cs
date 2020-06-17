@@ -35,14 +35,7 @@ public class BoardManager : MonoBehaviour
 
     public int GetBoardSize() { return boardWidth * boardHeight; }
     public int GetShapesBeingDestroyed() { return shapesBeingDestroyed; }
-    public void MarkShapeAsDestroyed()
-    {
-        shapesBeingDestroyed--;
-        /*
-        if (shapesBeingDestroyed == 0)
-            gameManager.CheckGameState();
-        */
-    }
+    public void MarkShapeAsDestroyed() { shapesBeingDestroyed--; }
 
     public GameSlot GetGameSlot(int slotIndex, Transform boardParent) { return boardParent.GetChild(slotIndex).GetComponent<GameSlot>(); }
     public ShapeData GetBoardShapeData(int slotIndex, Transform boardParent)
@@ -72,7 +65,8 @@ public class BoardManager : MonoBehaviour
             for (int i = 0; i < solutionBoardParent.childCount; i++)
             {
                 slot = solutionBoardParent.GetChild(i).GetComponent<GameSlot>();
-                slot.SetSlotIndex(i);
+                if (slot != null)
+                    slot.SetSlotIndex(i);
             }
         }
 
@@ -82,7 +76,8 @@ public class BoardManager : MonoBehaviour
             for (int i = 0; i < gameBoardParent.childCount; i++)
             {
                 slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-                slot.SetSlotIndex(i);
+                if (slot != null)
+                    slot.SetSlotIndex(i);
             }
         }
     }

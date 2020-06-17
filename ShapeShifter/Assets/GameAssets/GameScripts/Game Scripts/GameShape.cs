@@ -41,7 +41,14 @@ public class GameShape : MonoBehaviour
             return false;
     }
 
-    public void ConfigureShape(ShapeType type, ColorType newColor) { SetShapeType(type); SetShapeColor(newColor); }
+    public void ConfigureShape(ShapeType type, ColorType newColor)
+    {
+        shapeType = type;
+        colorType = newColor;
+
+        shapeThemeElement.LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
+    }
+
     public void SetShapeType(ShapeType type)
     {
         shapeType = type;

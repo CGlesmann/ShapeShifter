@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DynamicGameThemeElement : MonoBehaviour
+public class DynamicGameThemeElement : ThemeElementLoader
 {
     [Header("Element Keys")]
     [SerializeField] private Theme.GameUIThemeKey normalKey = Theme.GameUIThemeKey.GameboardSlot;
@@ -12,13 +12,14 @@ public class DynamicGameThemeElement : MonoBehaviour
     private Image elementImage = null;
     private bool highlighted = false;
 
-    private void OnDisable() { ThemeManager.onThemeSettingsUpdate -= LoadElement; }
+    private void OnDisable() { if (updateDynamically) ThemeManager.onThemeSettingsUpdate -= LoadElement; }
     private void Awake()
     {
         elementImage = GetComponent<Image>();
 
         LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
-        ThemeManager.onThemeSettingsUpdate += LoadElement;
+        if (updateDynamically)
+            ThemeManager.onThemeSettingsUpdate += LoadElement;
     }
 
     public void ToggleActiveKey()
@@ -39,13 +40,13 @@ public class DynamicGameThemeElement : MonoBehaviour
         LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
     }
 
-    private void LoadElement(Theme theme, Theme.ColorMode colorMode)
+    public override void LoadElement(Theme theme, Theme.ColorMode colorMode)
     {
         ThemeElementData data = theme.gameUIThemeDictionary.GetElementData(highlighted ? highlightedKey : normalKey);
         if (data != null)
         {
             elementImage.sprite = data.GetElementSprite();
-            elementImage.type = Image.Type.Sliced;
+            elementImage.type = data.GetSpriteType();
             elementImage.color = data.GetColorByMode(colorMode);
         }
     }

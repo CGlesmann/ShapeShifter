@@ -17,7 +17,7 @@ public class LevelButton : MonoBehaviour
     [SerializeField] private DynamicGeneralThemeElement themeElement = null;
 
     private string levelName => string.Format("Level_{0}", buttonIndex + 1);
-    private bool locked = false;
+    [SerializeField] private bool locked = false;
 
     public Action SetLevelButtonState(int highestLevelUnlock, int highestDisplay, out bool displayUnlock)
     {

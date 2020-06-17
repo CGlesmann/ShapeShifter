@@ -14,6 +14,7 @@ public class InstructionManager : Instructions
     [SerializeField] private bool initialTutorial = false;
     [SerializeField] private bool destroyTutorial = false;
     [SerializeField] private bool lockTutorial = false;
+    [SerializeField] private bool transformerTutorial = false;
 
     /// <summary>
     /// Get the arrow of how to panels
@@ -64,10 +65,17 @@ public class InstructionManager : Instructions
             DataTracker.dataTracker.SaveData();
         }
 
+        if (transformerTutorial)
+        {
+            saveDataAccessor.SetData(SaveKeys.TRANSFORMER_TUTORIAL_COMPLETE, true);
+            DataTracker.dataTracker.SaveData();
+        }
+
         GameState.gamePaused = false;
     }
 
     public void NavigateToBasicInstructions() { menuSwipeController.TransitionToPanel(0); }
     public void NavigateToDestructInstructions() { menuSwipeController.TransitionToPanel(3); }
     public void NavigateToLockInstructions() { menuSwipeController.TransitionToPanel(5); }
+    public void NavigateToTransformerInstructions() { menuSwipeController.TransitionToPanel(7); }
 }

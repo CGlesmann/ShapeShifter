@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class UndoManager : MonoBehaviour
 {
+    public static UndoManager undoManager;
+
     [Header("Undo Stack Reference")]
     [SerializeField] Stack<BoardData> undoStack = null;
 
@@ -18,13 +20,14 @@ public class UndoManager : MonoBehaviour
 
     private void Awake()
     {
-        undoImageColor = undoImage.color;
+        undoManager = this;
         DisableUndoButton();
     }
 
     private void DisableUndoButton()
     {
         undoButton.interactable = false;
+        undoImageColor = undoImage.color;
         undoImage.color = disabledUndoImageColor;
     }
 
@@ -34,12 +37,13 @@ public class UndoManager : MonoBehaviour
         undoImage.color = undoImageColor;
     }
 
-    public void ProcessGameBoard(Transform gameBoardParent)
+    public void ProcessGameBoard(Transform gameBoardParent) { PushBoardData(new BoardData(gameBoardParent)); }
+    public void PushBoardData(BoardData boardData)
     {
         if (undoStack == null)
             undoStack = new Stack<BoardData>();
 
-        undoStack.Push(new BoardData(gameBoardParent));
+        undoStack.Push(boardData);
         EnableUndoButton();
     }
 
@@ -69,14 +73,16 @@ public class UndoManager : MonoBehaviour
         GameSlot slot;
         GameShape shape;
         SlotLock slotLock;
+        ShapeTransformer shapeTransformer;
 
         // Loop through the board and set the board state to the data
         for (int i = 0; i < gameBoardParent.childCount; i++)
         {
             // Getting the Game Slot/Shape Reference
             slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-            shape = slot.GetSlotShape();
-            slotLock = slot.GetSlotLock();
+            shape = slot?.GetSlotShape();
+            slotLock = slot?.GetSlotLock();
+            shapeTransformer = gameBoardParent.GetChild(i).GetComponent<ShapeTransformer>();
 
             #region Generating Slot Shape
             if (shape != null)
@@ -133,6 +139,11 @@ public class UndoManager : MonoBehaviour
                 }
             }
             #endregion
+
+            #region Generate Shape Transformers
+            if (shapeTransformer != null)
+                shapeTransformer.SetTransformerData(data.transformers[i]);
+            #endregion
         }
     }
 }
@@ -141,28 +152,47 @@ public class BoardData
 {
     public List<ShapeData> board;
     public List<LockData> locks;
+    public List<TransformerData> transformers;
 
     public BoardData(Transform gameBoardParent)
     {
         // Creating a new list
         board = new List<ShapeData>();
         locks = new List<LockData>();
+        transformers = new List<TransformerData>();
 
         // Looping through the game board, get all the shapes and store them in the board list
         GameSlot slot;
         GameShape shape;
         SlotLock slotLock;
+        ShapeTransformer transformer;
+
         for (int i = 0; i < gameBoardParent.childCount; i++)
         {
             slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-            shape = slot.GetSlotShape();
-            slotLock = slot.GetSlotLock();
+            if (slot != null)
+            {
+                transformers.Add(null);
+                shape = slot.GetSlotShape();
+                slotLock = slot.GetSlotLock();
 
-            ShapeData newShape = shape != null ? new ShapeData(shape.GetShapeColor(), shape.GetShapeType()) : null;
-            board.Add(newShape);
-                
-            LockData newLock = slotLock != null ? new LockData(slotLock.GetLockType(), slotLock.GetLockCounter()) : null;
-            locks.Add(newLock);
+                ShapeData newShape = shape != null ? new ShapeData(shape.GetShapeColor(), shape.GetShapeType()) : null;
+                board.Add(newShape);
+
+                LockData newLock = slotLock != null ? new LockData(slotLock.GetLockType(), slotLock.GetLockCounter()) : null;
+                locks.Add(newLock);
+            } else
+            {
+                board.Add(null);
+                locks.Add(null);
+
+                transformer = gameBoardParent.GetChild(i).GetComponent<ShapeTransformer>();
+                TransformerData transformerData = transformer?.GetTransformerData();
+                if (transformerData != null)
+                    transformers.Add(new TransformerData(transformerData));
+                else
+                    transformers.Add(null);
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ public class Instructions : MonoBehaviour
     [Header("Object References")]
     [SerializeField] protected GameObject instructionsParent = null;
     [SerializeField] protected Transform screenParent = null;
+    [SerializeField] protected Animator anim = null;
     protected HTPScreen[] screenControllers = null;
 
     public virtual void Awake()
@@ -27,6 +28,7 @@ public class Instructions : MonoBehaviour
     }
 
     public void InvokeInstructions() { instructionsParent.SetActive(true); GameState.gamePaused = true; }
-    public virtual void DisableInstructions() { instructionsParent.SetActive(false); GameState.gamePaused = false; }
+    public void InvokeExitTransition() { anim.SetTrigger("Exit"); GameState.gamePaused = false; }
+    public virtual void DisableInstructions() { instructionsParent.SetActive(false); }
 }
 

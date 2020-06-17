@@ -8,6 +8,7 @@ public class VictoryDisplay : MonoBehaviour
 {
     [Header("Object References")]
     [SerializeField] private GameManager gameManager = null;
+    [SerializeField] private UnlockManager unlockManager = null;
     [SerializeField] private ChallengePreview challengePreview = null;
 
     [Header("Component References")]
@@ -19,6 +20,12 @@ public class VictoryDisplay : MonoBehaviour
     private void OnEnable()
     {
         UpdateChallengePreview();
+    }
+
+    public void DisplayNotifications()
+    {
+        if (unlockManager.CheckForCompletedUnlocks(gameManager.GetPackIndex(), gameManager.GetLevelIndex()))
+            unlockManager.StartNotificationDisplay();
     }
 
     public void UpdateChallengePreview()

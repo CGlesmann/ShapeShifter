@@ -17,6 +17,7 @@ public class SlotLock : MonoBehaviour
     private ILockState lockStateMachine;
 
     private bool minimized = false;
+    private bool animating = false;
 
     [Header("Animation Settings")]
     [SerializeField] private float resizeTime = 1f;
@@ -46,15 +47,20 @@ public class SlotLock : MonoBehaviour
 
     public void ToggleLockSize()
     {
-        if (minimized)
-            ResizeLock();
-        else
-            MinimizeLock();
+        if (!animating)
+        {
+            if (minimized)
+                ResizeLock();
+            else
+                MinimizeLock();
+        }
     }
 
     public void ResizeLock()
     {
         anim.SetTrigger("Resize");
+        animating = true;
+
         StartCoroutine(LerpToPosition(new Vector2(0, -baseSize / 2),
                                       Vector2.zero,
                                       counterMinimizedPosition,
@@ -68,6 +74,7 @@ public class SlotLock : MonoBehaviour
         {
             anim.SetTrigger("Minimize");
             minimized = true;
+            animating = true;
 
             StartCoroutine(LerpToPosition(Vector2.zero, 
                                           new Vector2(0, -baseSize / 2),
@@ -89,6 +96,8 @@ public class SlotLock : MonoBehaviour
 
             yield return null;
         }
+
+        animating = false;
     }
 
     public LockType GetLockType() { return lockData?.lockType ?? LockType.Destruct; }
@@ -133,7 +142,7 @@ public class SlotLock : MonoBehaviour
     public void ActivateLock()
     {
         LockGameSlot();
-        textAnim.SetTextValue(lockData.lockTimer);
+        textAnim?.SetTextValue(lockData.lockTimer);
         lockStateMachine?.ActivateLock();
     }
 
