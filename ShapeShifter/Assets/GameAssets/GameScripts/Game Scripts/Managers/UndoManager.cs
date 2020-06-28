@@ -14,9 +14,7 @@ public class UndoManager : MonoBehaviour
 
     [Header("GUI References")]
     [SerializeField] private Button undoButton = null;
-    [SerializeField] private Image undoImage = null;
-    private Color undoImageColor;
-    private Color disabledUndoImageColor => new Color(undoImageColor.r, undoImageColor.g, undoImageColor.b, undoImageColor.a * 0.4f);
+    [SerializeField] private DynamicGeneralThemeElement undoThemeElement = null;
 
     private void Awake()
     {
@@ -27,14 +25,13 @@ public class UndoManager : MonoBehaviour
     private void DisableUndoButton()
     {
         undoButton.interactable = false;
-        undoImageColor = undoImage.color;
-        undoImage.color = disabledUndoImageColor;
+        undoThemeElement.SetElementToHighlighted();
     }
 
     private void EnableUndoButton()
     {
         undoButton.interactable = true;
-        undoImage.color = undoImageColor;
+        undoThemeElement.SetElementToNormal();
     }
 
     public void ProcessGameBoard(Transform gameBoardParent) { PushBoardData(new BoardData(gameBoardParent)); }

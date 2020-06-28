@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 7.9}
-  m_SizeDelta: {x: 117, y: 144}
+  m_SizeDelta: {x: 120, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4548087523306629013
 CanvasRenderer:
@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.6392157, g: 0.08627451, b: 0.12941177, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -87,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 12
 --- !u!1 &6579192724548860189
 GameObject:
@@ -149,6 +151,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.99215686, g: 0.90588236, b: 0.29803923, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -175,6 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 9
 --- !u!1 &7937078196237919754
 GameObject:
@@ -243,6 +247,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.35686275, g: 0.7529412, b: 0.92156863, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -311,6 +316,17 @@ MonoBehaviour:
           m_StringArgument: Level_1
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8120450958752523757}
+        m_MethodName: PlayPressSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &8537581196149122035
 Animator:
   serializedVersion: 3
@@ -342,12 +358,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db736824ace7d341935a480525b8c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pressSoundEffect: {fileID: 8300000, guid: f02011b7459cbd049b083cbbf6bd5701, type: 3}
   requireLevelUnlock: 1
   buttonIndex: 0
   manager: {fileID: 0}
   anim: {fileID: 8537581196149122035}
   completionIcon: {fileID: 6579192724548860189}
   themeElement: {fileID: 2390648476517016138}
+  locked: 0
 --- !u!114 &2390648476517016138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,6 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d3467906d86a040932d65e1c0a89df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   primaryKey: 0
   secondaryKey: 2
 --- !u!1 &7937078196340112693
@@ -423,6 +442,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -530,4 +550,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 0

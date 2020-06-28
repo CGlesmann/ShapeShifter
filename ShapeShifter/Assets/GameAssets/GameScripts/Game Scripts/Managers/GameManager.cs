@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
     public float levelTimer = 0f;
 
+    private BoardData processedBoardData = null;
     private GameSlot slot1 = null, slot2 = null;
     private bool switching = false;
 
@@ -114,10 +115,18 @@ public class GameManager : MonoBehaviour
     #region Getter Functions
     public int GetPackIndex() { return currentPackIndex; }
     public int GetLevelIndex() { return currentLevelIndex; } 
+    public GameSlot GetSelectedSlot() { return slot1; }
     #endregion
 
     #region Setter Functions
-    public void DeselectSlot() { if (!switching) slot1 = null; }
+    public void DeselectSlot() 
+    {
+        if (!switching && slot1 != null)
+        {
+            boardManager.DeselectGameSlots();
+            slot1 = null;
+        }
+    }
     public bool SelectSlot(GameSlot targetSlot)
     {
         // Check for two shapes switching around
@@ -127,13 +136,19 @@ public class GameManager : MonoBehaviour
             if (slot1 == null)
             {
                 slot1 = targetSlot;
+                boardManager.SelectGameSlots();
+
                 return true;
             }
             else if (slot2 == null)
             {
                 // Two Slots Selected, switch the shapes
                 slot2 = targetSlot;
-                undoManager.ProcessGameBoard(gameBoardParent);
+
+                boardManager.DeselectGameSlots();
+
+                processedBoardData = new BoardData(gameBoardParent);
+                //undoManager.ProcessGameBoard(gameBoardParent);
                 StartCoroutine(boardManager.MoveShapes(slot1, slot2));
                 return true;
             }
@@ -187,6 +202,9 @@ public class GameManager : MonoBehaviour
     #region In Game Functions
     public void MarkSwitchingAsComplete()
     {
+        undoManager.PushBoardData(processedBoardData);
+        processedBoardData = null;
+
         switching = false;
         slot1 = null;
         slot2 = null;

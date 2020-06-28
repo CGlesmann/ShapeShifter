@@ -38,7 +38,6 @@ public static class GameSlotTools
 
     public static void CreateSlotShape(Transform slot, GameShape.ShapeType shapeType, GameShape.ColorType shapeColor, float shapeSize)
     {
-        Debug.Log("Creating a shape");
         GameObject shapePrefab = Resources.Load<GameObject>("Prefabs/GameShape");
 
         GameObject newShape = PrefabUtility.InstantiatePrefab(shapePrefab, slot) as GameObject;

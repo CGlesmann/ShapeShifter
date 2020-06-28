@@ -15,6 +15,7 @@ MonoBehaviour:
   challengeLog:
   - id: 0
   - id: 1
+  - id: 2
   references:
     version: 1
     00000000:
@@ -27,3 +28,8 @@ MonoBehaviour:
       data:
         challengeDescription: Complete the level within 2 moves
         requiredMoves: 2
+    00000002:
+      type: {class: ModeSwitchChallenge, ns: , asm: Assembly-CSharp}
+      data:
+        challengeDescription: Switch Destruction Mode 1 time or less
+        maximumModeSwitches: 1

@@ -29,6 +29,6 @@ public class Instructions : MonoBehaviour
 
     public void InvokeInstructions() { instructionsParent.SetActive(true); GameState.gamePaused = true; }
     public void InvokeExitTransition() { anim.SetTrigger("Exit"); GameState.gamePaused = false; }
-    public virtual void DisableInstructions() { instructionsParent.SetActive(false); }
+    public virtual void DisableInstructions() { instructionsParent.SetActive(false); GameState.gamePaused = false; }
 }
 

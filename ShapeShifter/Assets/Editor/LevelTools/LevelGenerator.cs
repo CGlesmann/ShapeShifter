@@ -38,7 +38,6 @@ public static class LevelGenerator
             targetSlotIndex = Random.Range(0, availableSlots.Count - 1);
             targetGameSlot = boardParent.GetChild(availableSlots[targetSlotIndex]).GetComponent<GameSlot>();
 
-            Debug.Log($"Generating {shapeData} at slot {targetSlotIndex}");
             GameSlotTools.CreateSlotShape(targetGameSlot.transform, shapeData.shapeType, shapeData.shapeColor, genPrefs.targetShapeScale);
             EditorUtility.SetDirty(targetGameSlot);
 

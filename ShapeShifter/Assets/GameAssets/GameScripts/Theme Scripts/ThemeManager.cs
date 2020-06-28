@@ -14,10 +14,7 @@ public static class ThemeManager
     public static Theme GetCurrentTheme()
     {
         if (!Application.isPlaying)
-        {
-            Debug.Log("Application Not Playing, Loading Default Theme");
             return Resources.Load<Theme>(defaultThemePath);
-        }
 
         string currentThemeKey = saveDataAccessor.GetDataValue<string>(SaveKeys.SELECTED_THEME_KEY);
         if (currentThemeKey == null || currentThemeKey == "")
@@ -29,10 +26,7 @@ public static class ThemeManager
     public static Theme.ColorMode GetCurrentColorMode()
     {
         if (!Application.isPlaying)
-        {
-            Debug.Log("Application Not Playing, Loading Default Color Mode");
             return Theme.ColorMode.Default;
-        }
 
         return saveDataAccessor.GetDataValue<Theme.ColorMode>(SaveKeys.SELECTED_COLOR_MODE);
     }

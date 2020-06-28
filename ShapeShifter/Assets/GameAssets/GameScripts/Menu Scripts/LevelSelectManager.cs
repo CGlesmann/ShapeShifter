@@ -61,9 +61,11 @@ public class LevelSelectManager : MonoBehaviour
                 {
                     lastPanelToUnlockALevel = currentPackTracker;
                     buttonActions.Enqueue(levelSelectPanelController.BeginRightTransition);
+                    buttonActions.Enqueue(levelSelectPanelController.DisableInput);
                 }
             }
 
+            buttonActions.Enqueue(levelSelectPanelController.EnableInput);
             currentPackTracker++;
         }
 

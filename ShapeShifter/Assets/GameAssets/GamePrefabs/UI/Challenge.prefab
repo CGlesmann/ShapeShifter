@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.99215686, g: 0.90588236, b: 0.29803923, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -87,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d3467906d86a040932d65e1c0a89df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   primaryKey: 8
   secondaryKey: 9
 --- !u!1 &7882791811565576585
@@ -124,8 +126,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 518.2, y: 0}
-  m_SizeDelta: {x: 1011.2, y: 160.7}
+  m_AnchoredPosition: {x: 495.6, y: 0}
+  m_SizeDelta: {x: 966.0621, y: 160.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7882791811565576586
 CanvasRenderer:
@@ -150,6 +152,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -257,6 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 1
 --- !u!1 &8508519255685690441
 GameObject:
@@ -310,9 +314,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   starThemeElement: {fileID: 5210620619074242882}
   challengeText: {fileID: 7882791811565576587}
-  starIcon: {fileID: 7308326299908942060}
-  emptyStarIcon: {fileID: 1540975277200382298, guid: 4113733286e1e674585b8c4e561fd428,
-    type: 3}
-  filledStarIcon: {fileID: -7805471594299757131, guid: 4113733286e1e674585b8c4e561fd428,
-    type: 3}
   challengeIndex: 0

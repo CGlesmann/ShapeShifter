@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThemeCard : MonoBehaviour
+public class ThemeCard : GameButton
 {
     [Header("Object References")]
     [SerializeField] private Animator cardAnim = null;
+    [SerializeField] private GameObject selectedIcon = null;
     [SerializeReference] private List<ThemeElementLoader> themeElements = new List<ThemeElementLoader>();
 
     [Header("Card Settings")]
@@ -15,8 +17,14 @@ public class ThemeCard : MonoBehaviour
     {
         foreach (ThemeElementLoader loader in themeElements)
             loader.LoadElement(themeToPreview, ThemeManager.GetCurrentColorMode());
+
+        selectedIcon.SetActive(ThemeManager.GetCurrentTheme() == themeToPreview);
+        ThemeManager.onThemeSettingsUpdate += ToggleSelectedIcon;
     }
 
+    private void OnDisable() { ThemeManager.onThemeSettingsUpdate -= ToggleSelectedIcon; }
+
+    private void ToggleSelectedIcon(Theme theme, Theme.ColorMode colorMode) { selectedIcon.SetActive(theme == themeToPreview); }
     public void PlayPressAnimation() { cardAnim.SetTrigger("Pressed"); }
     public void SetTheme() 
     {

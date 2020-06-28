@@ -11,13 +11,12 @@ public class ThemeHeader : MonoBehaviour
 
     private Theme[] availableThemes;
 
-    private void Start()
-    {
-        availableThemes = Resources.LoadAll<Theme>("Themes/");
+    private void Awake() { menuSwipeController.onPanelSwitch += UpdateHeaderText; }
+    public void UpdateHeaderText(int index) 
+    { 
+        if (availableThemes == null)
+            availableThemes = Resources.LoadAll<Theme>("Themes/");
 
-        UpdateHeaderText(0);
-        menuSwipeController.onPanelSwitch += UpdateHeaderText;
+        headerText.text = $"{availableThemes[index].name}";
     }
-
-    public void UpdateHeaderText(int index) { headerText.text = $"{availableThemes[index].name}";}
 }

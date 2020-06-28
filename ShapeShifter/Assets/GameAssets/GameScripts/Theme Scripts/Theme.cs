@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Theme : ScriptableObject
 {
-    public enum GeneralUIThemeKey { Button, HighlightButton, StaticPanel, ExitButton, ExitIcon, SettingsIcon, IndicatorNormal, IndicatorHighlight, EmptyStarIcon, CompletionStarIcon, PauseIcon, UndoIcon, LockIcon }
+    public enum GeneralUIThemeKey { Button, HighlightButton, StaticPanel, ExitButton, ExitIcon, SettingsIcon, IndicatorNormal, IndicatorHighlight, EmptyStarIcon, CompletionStarIcon, PauseIcon, UndoIcon, LockIcon, DisabledUndoIcon, SelectedThemeIconBack, SelectedThemeIcon, MusicIcon, SFXIcon }
     public enum GameUIThemeKey { GameboardSlot, SelectedGameBoardSlot, SolutionboardSlot, LockIcon, LockSlot, SwitchLockIcon, DestructLockIcon, Transformer, TransformerFill, TransformerIcon, SolutionTransformer }
     public enum TextUIThemeKey { ButtonText, StaticPanelText, HighlightedText, TransformerText }
     public enum ColorMode { Default, Protanopia, Deuteranopia, Tritanopia }

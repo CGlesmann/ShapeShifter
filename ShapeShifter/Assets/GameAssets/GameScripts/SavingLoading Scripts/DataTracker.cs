@@ -59,7 +59,6 @@ public class DataTracker : MonoBehaviour
     {
         if (File.Exists(filePath))
         {
-            Debug.Log($"{filePath}");
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(filePath, FileMode.Open);
 
@@ -81,78 +80,6 @@ public class DataTracker : MonoBehaviour
         }
     }
 }
-
-/*
-[System.Serializable]
-public class GameData
-{
-    public bool initialTutorialComplete = false;
-    public bool destroyTutorialComplete = false;
-    public bool defeatTutorialComplete = false;
-    public bool lockTutorialComplete = false;
-
-    public int highestLevelUnlocked = 0;
-    public int highestPackUnlocked = 0;
-
-    public int starCount = 0;
-    public Dictionary<int, int> completedLevels = new Dictionary<int, int>();
-    public Dictionary<int, bool> completedChallenges = new Dictionary<int, bool>();
-
-    public Dictionary<int, bool> displayedUnlocks = new Dictionary<int, bool>();
-
-    private string themeKey = "Default";
-    private Theme.ColorMode colorMode = Theme.ColorMode.Default;
-
-    public Theme GetTheme() { return ThemeManager.LoadTheme(themeKey); }
-    public Theme.ColorMode GetSavedColorMode() { return colorMode; }
-
-    public void SetThemeKey(string themeName) { themeKey = themeName; ThemeManager.InvokeUpdateMethod(); }
-    public void SetColorMode(Theme.ColorMode colorMode) { this.colorMode = colorMode; ThemeManager.InvokeUpdateMethod(); }
-
-    public void MarkUnlockAsDisplayed(int index)
-    {
-        if (!displayedUnlocks.ContainsKey(index))
-            displayedUnlocks.Add(index, true);
-    }
-
-    public bool GetUnlockDisplayed(int index)
-    {
-        if (displayedUnlocks.TryGetValue(index, out bool value))
-            return value;
-
-        return false;
-    }
-
-    public void MarkLevelComplete(int packIndex, int levelIndex)
-    {
-        if (completedLevels.ContainsKey(packIndex))
-        {
-            if (levelIndex > completedLevels[packIndex])
-            {
-                completedLevels[packIndex] = levelIndex;
-            }
-        }
-        else
-            completedLevels.Add(packIndex, levelIndex);
-    }
-
-    public void AddChallengeResult(int challengeKey, bool result)
-    {
-        if (completedChallenges.ContainsKey(challengeKey))
-            completedChallenges[challengeKey] = result;
-        else
-            completedChallenges.Add(challengeKey, result);
-    }
-
-    public bool GetChallengeResult(int challengeKey)
-    {
-        if (completedChallenges.TryGetValue(challengeKey, out bool result))
-            return result;
-
-        return false;
-    }
-}
-*/
 
 [System.Serializable]
 public class GameData

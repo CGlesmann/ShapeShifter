@@ -21,15 +21,15 @@ MonoBehaviour:
     00000000:
       type: {class: TimeChallenge, ns: , asm: Assembly-CSharp}
       data:
-        challengeDescription: Complete the level within 15 seconds
-        requiredTime: 15
+        challengeDescription: Complete the level within 25 seconds
+        requiredTime: 25
     00000001:
       type: {class: MoveChallenge, ns: , asm: Assembly-CSharp}
       data:
-        challengeDescription: Complete the level within 3 moves
-        requiredMoves: 3
+        challengeDescription: Complete the level within 5 moves
+        requiredMoves: 5
     00000002:
       type: {class: ModeSwitchChallenge, ns: , asm: Assembly-CSharp}
       data:
-        challengeDescription: Switch Destruction Mode 2 times or less
-        maximumModeSwitches: 2
+        challengeDescription: Switch Destruction Mode 3 times or less
+        maximumModeSwitches: 3

@@ -85,6 +85,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -111,6 +112,7 @@ GameObject:
   - component: {fileID: 299857142582919765}
   - component: {fileID: 3891563683945390469}
   - component: {fileID: 6902576655723831675}
+  - component: {fileID: 6757573602693390566}
   m_Layer: 5
   m_Name: Options_Button
   m_TagString: Untagged
@@ -161,6 +163,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.35686275, g: 0.7529412, b: 0.92156863, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -218,6 +221,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 6757573602693390566}
+        m_MethodName: PlayPressSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 8319631696525466781}
         m_MethodName: NavigateToOptions
         m_Mode: 1
@@ -241,7 +255,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 0
+--- !u!114 &6757573602693390566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714915879743763741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2086ded088f435f41ab07c87dbce9017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressSoundEffect: {fileID: 8300000, guid: f02011b7459cbd049b083cbbf6bd5701, type: 3}
 --- !u!1 &890960839781547065
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +331,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -410,6 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 1
 --- !u!1 &1013453958089583923
 GameObject:
@@ -475,6 +505,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.14901961, b: 0.25882354, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -518,6 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 2
 --- !u!1 &1308453895886084786
 GameObject:
@@ -586,6 +618,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.9019608}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -694,6 +727,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.14901961, b: 0.25882354, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -719,6 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 5
 --- !u!1 &1556011464189796345
 GameObject:
@@ -781,6 +816,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -888,6 +924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 1
 --- !u!1 &2155212968472262361
 GameObject:
@@ -950,6 +987,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1057,6 +1095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 1
 --- !u!1 &3325280406430955068
 GameObject:
@@ -1120,6 +1159,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.14901961, b: 0.25882354, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1145,6 +1185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 2
 --- !u!1 &3841832529530051651
 GameObject:
@@ -1208,6 +1249,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.14901961, b: 0.25882354, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1233,6 +1275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 2
 --- !u!1 &4645682947527879914
 GameObject:
@@ -1295,6 +1338,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.35686275, g: 0.7529412, b: 0.92156863, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1320,6 +1364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 4
 --- !u!1 &4797081554406083826
 GameObject:
@@ -1334,6 +1379,7 @@ GameObject:
   - component: {fileID: 4043351343489005022}
   - component: {fileID: 6070444287922503901}
   - component: {fileID: 5205838410118979023}
+  - component: {fileID: 4221158508224069497}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -1384,6 +1430,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.6392157, g: 0.08627451, b: 0.12941177, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1463,6 +1510,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4221158508224069497}
+        m_MethodName: PlayPressSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5205838410118979023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1475,7 +1533,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 3
+--- !u!114 &4221158508224069497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4797081554406083826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2086ded088f435f41ab07c87dbce9017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressSoundEffect: {fileID: 8300000, guid: f02011b7459cbd049b083cbbf6bd5701, type: 3}
 --- !u!1 &5168862171980788680
 GameObject:
   m_ObjectHideFlags: 0
@@ -1489,6 +1561,7 @@ GameObject:
   - component: {fileID: 8817667410836431484}
   - component: {fileID: 8003347640393088941}
   - component: {fileID: 113996691046970923}
+  - component: {fileID: 2613193539414566521}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -1539,6 +1612,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.35686275, g: 0.7529412, b: 0.92156863, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1618,6 +1692,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2613193539414566521}
+        m_MethodName: PlayPressSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &113996691046970923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1630,7 +1715,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 0
+--- !u!114 &2613193539414566521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5168862171980788680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2086ded088f435f41ab07c87dbce9017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressSoundEffect: {fileID: 8300000, guid: f02011b7459cbd049b083cbbf6bd5701, type: 3}
 --- !u!1 &5252526046253037126
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,6 +1934,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1879,6 +1979,7 @@ GameObject:
   - component: {fileID: 5931827039500978620}
   - component: {fileID: 5931827039500978623}
   - component: {fileID: 4856963522669159733}
+  - component: {fileID: 4120272876907207062}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -1929,6 +2030,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.6392157, g: 0.08627451, b: 0.12941177, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1986,6 +2088,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 4120272876907207062}
+        m_MethodName: PlayPressSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 8319631696525466781}
         m_MethodName: NavigateToMainMenu
         m_Mode: 1
@@ -2009,7 +2122,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 3
+--- !u!114 &4120272876907207062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5931827039500978617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2086ded088f435f41ab07c87dbce9017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressSoundEffect: {fileID: 8300000, guid: f02011b7459cbd049b083cbbf6bd5701, type: 3}
 --- !u!1 &5931827039521706138
 GameObject:
   m_ObjectHideFlags: 0
@@ -2071,6 +2198,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2178,6 +2306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 1
 --- !u!1 &5931827039817785125
 GameObject:
@@ -2389,6 +2518,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.14901961, b: 0.25882354, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2414,6 +2544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 2
 --- !u!1 &6250797451827056700
 GameObject:
@@ -2477,6 +2608,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2584,6 +2716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 2
 --- !u!114 &4954019351668742064
 MonoBehaviour:
@@ -2661,6 +2794,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0.14901961, b: 0.25882354, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2686,6 +2820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e523f06697a866c4faa724ec83a363de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 2
 --- !u!1 &7835663334514467578
 GameObject:
@@ -2748,6 +2883,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2855,6 +2991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 1
 --- !u!1 &8099923356822637395
 GameObject:
@@ -2917,6 +3054,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3024,6 +3162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1b6733accabf046a5221068ab69db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 0
 --- !u!1001 &281463459876722828
 PrefabInstance:

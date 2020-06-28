@@ -21,6 +21,7 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
     public int currentPanelIndex = 0;
     private int activePanelCount = 0;
     private float remainingTransitionTime = 0;
+    private bool inputAllowed = true;
 
     private void Awake()
     {
@@ -33,16 +34,22 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
         activePanelCount = activePanelCounter;
     }
 
+    public void DisableInput() { inputAllowed = false; }
+    public void EnableInput() { inputAllowed = true; }
+
     public void OnDrag(PointerEventData eventData)
     {
-        float pointerXDifference = eventData.pressPosition.x - eventData.position.x;
-        panelParent.localPosition = panelStartPosition - new Vector3(pointerXDifference, 0f, 0f);
+        if (inputAllowed)
+        {
+            float pointerXDifference = eventData.pressPosition.x - eventData.position.x;
+            panelParent.localPosition = panelStartPosition - new Vector3(pointerXDifference, 0f, 0f);
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         float percentage = (eventData.pressPosition.x - eventData.position.x) / Screen.width;
-        if (Mathf.Abs(percentage) >= dragThreshold)
+        if (inputAllowed && Mathf.Abs(percentage) >= dragThreshold)
         {
             Vector3 newLocation = panelStartPosition;
             if (percentage > 0)
@@ -80,40 +87,49 @@ public class MenuSwipeController : MonoBehaviour, IDragHandler, IEndDragHandler
 
     public void BeginRightTransition()
     {
-        if (currentPanelIndex < activePanelCount - 1)
+        if (inputAllowed)
         {
-            currentPanelIndex++;
-            currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, panelParent.localPosition + new Vector3(-panelSpacing, 0f, 0f), transitionTime));
+            if (currentPanelIndex < activePanelCount - 1)
+            {
+                currentPanelIndex++;
+                currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, panelParent.localPosition + new Vector3(-panelSpacing, 0f, 0f), transitionTime));
+            }
         }
     }
 
     public void TransitionToPanel(int targetIndex)
     {
-        int index = Mathf.Clamp(targetIndex, 0, activePanelCount - 1);
-        int indexDiff = targetIndex - currentPanelIndex;
-        Vector3 targetPosition = new Vector3(index * -panelSpacing, panelParent.localPosition.y, panelParent.localPosition.z);
-
-        currentPanelIndex = targetIndex;
-
-        if (currentCoroutine != null)
+        if (inputAllowed)
         {
-            StopCoroutine(currentCoroutine);
-            currentCoroutine = null;
-        }
+            int index = Mathf.Clamp(targetIndex, 0, activePanelCount - 1);
+            int indexDiff = targetIndex - currentPanelIndex;
+            Vector3 targetPosition = new Vector3(index * -panelSpacing, panelParent.localPosition.y, panelParent.localPosition.z);
 
-        currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, targetPosition, transitionTime * Mathf.Abs(indexDiff)));
+            currentPanelIndex = targetIndex;
+
+            if (currentCoroutine != null)
+            {
+                StopCoroutine(currentCoroutine);
+                currentCoroutine = null;
+            }
+
+            currentCoroutine = StartCoroutine(SmoothMove(panelParent.localPosition, targetPosition, transitionTime * Mathf.Abs(indexDiff)));
+        }
     }
 
     public void SetCurrentPanel(int targetIndex)
     {
-        int index = Mathf.Clamp(targetIndex, 0, activePanelCount - 1);
-        int indexDiff = targetIndex - currentPanelIndex;
+        if (inputAllowed)
+        {
+            int index = Mathf.Clamp(targetIndex, 0, activePanelCount - 1);
+            int indexDiff = targetIndex - currentPanelIndex;
 
-        panelParent.localPosition = new Vector3(panelParent.localPosition.x + (-indexDiff * panelSpacing), panelParent.localPosition.y, panelParent.localPosition.z);
-        panelStartPosition = panelParent.localPosition;
-        currentPanelIndex = targetIndex;
+            panelParent.localPosition = new Vector3(panelParent.localPosition.x + (-indexDiff * panelSpacing), panelParent.localPosition.y, panelParent.localPosition.z);
+            panelStartPosition = panelParent.localPosition;
+            currentPanelIndex = targetIndex;
 
-        onPanelSwitch?.Invoke(currentPanelIndex);
+            onPanelSwitch?.Invoke(currentPanelIndex);
+        }
     }
 
     public float GetRemainingTransitionTime() { return remainingTransitionTime; }

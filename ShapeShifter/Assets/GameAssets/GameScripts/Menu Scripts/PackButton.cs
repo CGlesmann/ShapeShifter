@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class PackButton : MonoBehaviour
+public class PackButton : GameButton
 {
     [Header("Pack Settings")]
     [SerializeField] private bool requireUnlock = true;

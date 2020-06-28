@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelButton : MonoBehaviour
+public class LevelButton : GameButton
 {
     [Header("Button Settings")]
     public bool requireLevelUnlock = true;

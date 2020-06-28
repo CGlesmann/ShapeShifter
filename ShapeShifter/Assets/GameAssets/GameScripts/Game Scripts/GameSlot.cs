@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class GameSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IEndDragHandler
+public class GameSlot : GameButton, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IEndDragHandler
 {
     [Header("Object References")]
     [SerializeField] private SlotLock slotLock = null;
@@ -15,16 +15,29 @@ public class GameSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private GameShape slotShape => shapeTransform != null ? shapeTransform.GetComponent<GameShape>() : null;
     private Image slotRenderer => GetComponent<Image>();
 
+    [Header("Component References")]
+    [SerializeField] private Animator anim = null;
+
     [Header("Control Variables")]
     [SerializeField] private bool canSelect = true;
+    [SerializeField] private bool pulsing = false;
 
     private bool canInteract = true;
-    private bool selected = false;
+    [SerializeField] private bool selected = false;
+    private bool beganDrag = false;
     private bool highlightedDrag = false;
     private int slotIndex = -1;
 
     #region Slot State Management Methods
-    public void Start() { manager = GameManager.manager; }
+    public void Start() 
+    { 
+        manager = GameManager.manager;
+        if (canSelect)
+        {
+            BoardManager.boardManager.onSelectGameSlots += EnablePulse;
+            BoardManager.boardManager.onDeselectGameSlots += DisablePulse;
+        }
+    }
 
     public bool CheckCanInteract() { return canInteract; }
     public int GetSlotIndex() { return slotIndex; }
@@ -54,19 +67,22 @@ public class GameSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     #region Slot Input Methods
     public void ToggleSelect()
     {
-        if (canInteract && canSelect)
+        if (!DragInputManager.dragInputManager.IsDragging())
         {
-            if (selected)
+            if (canInteract && canSelect)
             {
-                selected = false;
-                manager.DeselectSlot();
-                themeElement.SetElementToNormal();
-            }
-            else if (slotShape != null)
-            {
-                selected = manager.SelectSlot(this);
                 if (selected)
-                    themeElement.SetElementToHighlighted();
+                {
+                    selected = false;
+                    manager.DeselectSlot();
+                    themeElement.SetElementToNormal();
+                }
+                else if (slotShape != null)
+                {
+                    selected = manager.SelectSlot(this);
+                    if (selected)
+                        themeElement.SetElementToHighlighted();
+                }
             }
         }
     }
@@ -79,44 +95,92 @@ public class GameSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log($"BeginDrag {gameObject.name}");
-
         GameShape gameShape = GetSlotShape();
         ShapeData shapeData = gameShape?.GetShapeData();
         if (canInteract && canSelect && shapeData != null)
         {
-            DragInputManager.dragInputManager.SetNewShapeToDrag(shapeData, this, gameShape?.GetComponent<Transform>().localScale ?? Vector3.one);
+            if (!selected)
+            {
+                GameSlot selectedSlot = GameManager.manager.GetSelectedSlot();
+                if (selectedSlot != null && selectedSlot != this)
+                    GameManager.manager.DeselectSlot();
+
+                GameManager.manager.SelectSlot(this);
+                themeElement.SetElementToHighlighted();
+            }
+
             Color baseColor = gameShape.GetComponent<Image>().color;
             gameShape.GetComponent<Image>().color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a / 2f);
+
+            DragInputManager.dragInputManager.BeginDrag(shapeData, this, gameShape?.GetComponent<Transform>().localScale ?? Vector3.one);
+            beganDrag = true;
         }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log($"EndDrag {gameObject.name}");
+        if (beganDrag)
+        {
+            Color baseColor = GetSlotShape().GetComponent<Image>().color;
+            GetSlotShape().GetComponent<Image>().color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * 2f);
 
-        Color baseColor = GetSlotShape().GetComponent<Image>().color;
-        GetSlotShape().GetComponent<Image>().color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * 2f);
+            themeElement.SetElementToNormal();
 
-        DragInputManager.dragInputManager.FinishDrag();
+            DragInputManager.dragInputManager.FinishDrag();
+
+            selected = false;
+            beganDrag = false;
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log($"PointerEnter {gameObject.name}");
-
-        ShapeData shapeData = GetSlotShape()?.GetShapeData();
-        if (shapeData != null && DragInputManager.dragInputManager.SetSecondarySlot(this))
-            highlightedDrag = true;
+        if (DragInputManager.dragInputManager.IsDragging())
+        {
+            ShapeData shapeData = GetSlotShape()?.GetShapeData();
+            if (shapeData != null && canInteract && canSelect && DragInputManager.dragInputManager.SetSecondarySlot(this))
+            {
+                highlightedDrag = true;
+                themeElement.SetElementToHighlighted();
+            }
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log($"PointerExit {gameObject.name}");
-        if (highlightedDrag)
+        if (DragInputManager.dragInputManager.IsDragging() && highlightedDrag)
         {
             DragInputManager.dragInputManager.ResetSecondarySlot();
             highlightedDrag = false;
+
+            themeElement.SetElementToTertiary();
+        }
+    }
+    #endregion
+
+    #region Animation Methods
+    public void DisablePulse()
+    {
+        if (pulsing)
+        {
+            themeElement.SetElementToNormal();
+            anim.SetTrigger("Stop");
+
+            pulsing = false;
+        }
+    }
+
+    public void EnablePulse()
+    {
+        if (!pulsing)
+        {
+            if (GetSlotShape() != null && GameManager.manager.GetSelectedSlot() != this)
+            {
+                pulsing = true;
+
+                themeElement.SetElementToTertiary();
+                anim.SetTrigger("Start");
+            }
         }
     }
     #endregion

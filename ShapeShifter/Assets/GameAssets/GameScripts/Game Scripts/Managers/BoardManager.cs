@@ -29,9 +29,16 @@ public class BoardManager : MonoBehaviour
     public delegate void OnShapeSwap();
     public event OnShapeSwap onShapeSwap;
 
+    public delegate void OnToggleGameSlots();
+    public event OnToggleGameSlots onSelectGameSlots;
+    public event OnToggleGameSlots onDeselectGameSlots;
+
     private int locksAnimating = 0;
 
     public void Awake() { boardManager = this; }
+
+    public void SelectGameSlots() { onSelectGameSlots?.Invoke(); }
+    public void DeselectGameSlots() { onDeselectGameSlots?.Invoke(); }
 
     public int GetBoardSize() { return boardWidth * boardHeight; }
     public int GetShapesBeingDestroyed() { return shapesBeingDestroyed; }
