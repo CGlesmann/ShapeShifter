@@ -10,10 +10,9 @@ public class GameSlot : GameButton, IPointerEnterHandler, IPointerExitHandler, I
     [SerializeField] private SlotLock slotLock = null;
     [SerializeField] private Transform shapeTransform = null;
     [SerializeField] private DynamicGameThemeElement themeElement = null;
+    
     private GameManager manager = GameManager.manager;
-
     private GameShape slotShape => shapeTransform != null ? shapeTransform.GetComponent<GameShape>() : null;
-    private Image slotRenderer => GetComponent<Image>();
 
     [Header("Component References")]
     [SerializeField] private Animator anim = null;
@@ -23,7 +22,7 @@ public class GameSlot : GameButton, IPointerEnterHandler, IPointerExitHandler, I
     [SerializeField] private bool pulsing = false;
 
     private bool canInteract = true;
-    [SerializeField] private bool selected = false;
+    private bool selected = false;
     private bool beganDrag = false;
     private bool highlightedDrag = false;
     private int slotIndex = -1;
@@ -41,8 +40,12 @@ public class GameSlot : GameButton, IPointerEnterHandler, IPointerExitHandler, I
 
     public bool CheckCanInteract() { return canInteract; }
     public int GetSlotIndex() { return slotIndex; }
+    public void SetSlotIndex(int index) { slotIndex = index; }
 
     public SlotLock GetSlotLock() { return slotLock; }
+    public void SetSlotLock(SlotLock l) { slotLock = l; }
+    public void SetSlotShapeReference(Transform newShape) { shapeTransform = newShape; }
+
     public Transform GetSlotShapeTransform() { return shapeTransform; }
     public GameShape GetSlotShape()
     {
@@ -51,10 +54,7 @@ public class GameSlot : GameButton, IPointerEnterHandler, IPointerExitHandler, I
         else
             return null;
     }
-
-    public void SetSlotIndex(int index) { slotIndex = index; }
-    public void SetSlotLock(SlotLock l) { slotLock = l; }
-    public void SetSlotShapeReference(Transform newShape) { shapeTransform = newShape; }
+    
     public void SetSlotShape(GameShape.ShapeType shapeType, GameShape.ColorType colorType)
     {
         if (slotShape != null)
@@ -159,6 +159,12 @@ public class GameSlot : GameButton, IPointerEnterHandler, IPointerExitHandler, I
     #endregion
 
     #region Animation Methods
+    public void DisplayEnterAnimation() { anim.SetTrigger("Enter"); }
+
+    public void DisplayExitAnimation() { anim.SetTrigger("Exit"); }
+
+    public void DestroySlot() { gameObject.SetActive(false); GameObject.DestroyImmediate(gameObject); }
+
     public void DisablePulse()
     {
         if (pulsing)

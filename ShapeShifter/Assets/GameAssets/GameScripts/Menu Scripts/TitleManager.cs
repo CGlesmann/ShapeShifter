@@ -22,10 +22,19 @@ public class TitleManager : MonoBehaviour
     public void BeginPlay()
     {
         SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
-        targetSceneName = saveDataAccessor.GetDataValue<bool>(SaveKeys.INITIAL_TUTORIAL_COMPLETE) ? playMenu : tutorialLevel;
-        onExitFinish += SceneManager.LoadScene;
+        if (!saveDataAccessor.GetDataValue<bool>(SaveKeys.INITIAL_TUTORIAL_COMPLETE))
+            NavigateToTutorial();
+        else
+            targetSceneName = playMenu;
 
+        onExitFinish += SceneManager.LoadScene;
         sceneAnimator.SetTrigger("Exit");
+    }
+
+    public void NavigateToTutorial()
+    {
+        if (LevelLoader.SetLevelToLoad("Level_1-1"))
+            targetSceneName = tutorialLevel;
     }
 
     public void NaviagteToOptions()

@@ -10,7 +10,7 @@ public class UndoManager : MonoBehaviour
     [SerializeField] Stack<BoardData> undoStack = null;
 
     [Header("Object References")]
-    [SerializeField] private BoardManager boardManager = null;
+    [SerializeField] private LevelConstructor levelConstructor = null;
 
     [Header("GUI References")]
     [SerializeField] private Button undoButton = null;
@@ -34,7 +34,7 @@ public class UndoManager : MonoBehaviour
         undoThemeElement.SetElementToNormal();
     }
 
-    public void ProcessGameBoard(Transform gameBoardParent) { PushBoardData(new BoardData(gameBoardParent)); }
+    public void ProcessGameBoard(Transform gameBoardParent, Vector2Int boardSize) { PushBoardData(new BoardData(gameBoardParent, boardSize)); }
     public void PushBoardData(BoardData boardData)
     {
         if (undoStack == null)
@@ -59,102 +59,25 @@ public class UndoManager : MonoBehaviour
             RestoreBoardState(data);
     }
 
-    public void RestoreBoardState(BoardData data)
-    {
-        // Getting board parents
-        GameObject shapePrefab = GameManager.manager.shapePrefab;
-        Transform gameBoardParent = GameManager.manager.gameBoardParent;
-        float shapeSize = boardManager.shapeSize;
+    public void ClearUndoStack() { undoStack?.Clear(); DisableUndoButton(); }
 
-        // Declaring Tracker Variables
-        GameSlot slot;
-        GameShape shape;
-        SlotLock slotLock;
-        ShapeTransformer shapeTransformer;
-
-        // Loop through the board and set the board state to the data
-        for (int i = 0; i < gameBoardParent.childCount; i++)
-        {
-            // Getting the Game Slot/Shape Reference
-            slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-            shape = slot?.GetSlotShape();
-            slotLock = slot?.GetSlotLock();
-            shapeTransformer = gameBoardParent.GetChild(i).GetComponent<ShapeTransformer>();
-
-            #region Generating Slot Shape
-            if (shape != null)
-            {
-                // Checking if a shape doesn't exist on the passed in data
-                if (data.board[i] == null)
-                    Destroy(shape.gameObject);
-                else if (shape.GetShapeData() != data.board[i])
-                {
-                    // Shape does exist but doesn't match the shape in the data, set them to be equivalent
-                    shape.SetShapeColor(data.board[i].shapeColor);
-                    shape.SetShapeType(data.board[i].shapeType);
-                }
-            }
-            else
-            {
-                // Checking to see if a shape exists in the data at the given spot, if so create a new one
-                if (data.board[i] != null)
-                {
-                    // Creating the shape
-                    GameObject newShape = Instantiate(shapePrefab, slot.transform);
-                    newShape.transform.localPosition = new Vector3(0.5f, -0.5f, 0f);
-                    newShape.transform.localScale = new Vector3(shapeSize, shapeSize, 0f);
-
-                    // Getting the GameShape reference and setting it equal to the shape in the data
-                    GameShape shapeRef = newShape.GetComponent<GameShape>();
-                    shapeRef.SetShapeColor(data.board[i].shapeColor);
-                    shapeRef.SetShapeType(data.board[i].shapeType);
-
-                    slot.SetSlotShapeReference(shapeRef.transform);
-                }
-            }
-            #endregion
-
-            #region Generating Slot Lock
-            if (slotLock != null)
-            {
-                LockData lockData = data.locks[i];
-                if (lockData != null)
-                {
-                    Debug.Log($"Generating Slot Lock at Index {i} of type {lockData.lockType} with {lockData.lockTimer} move(s) left");
-
-                    // Active
-                    if (lockData.lockTimer > 0)
-                    {
-                        if (slotLock.GetLockCounter() <= 0)
-                            slotLock.SetLockToActive();
-
-                        slotLock.SetLockSettings(lockData.lockType, lockData.lockTimer);
-                        slot.LockGameSlot();
-                    }
-                    else if (slotLock.GetLockCounter() > 0)
-                        slotLock.SetLockToDestruct();
-                }
-            }
-            #endregion
-
-            #region Generate Shape Transformers
-            if (shapeTransformer != null)
-                shapeTransformer.SetTransformerData(data.transformers[i]);
-            #endregion
-        }
-    }
+    public void RestoreBoardState(BoardData data) { levelConstructor.ConstructGameBoard(data); }
 }
 
+[System.Serializable]
 public class BoardData
 {
-    public List<ShapeData> board;
+    public Vector2Int boardSize;
+
+    public List<ShapeData> shapes;
     public List<LockData> locks;
     public List<TransformerData> transformers;
 
-    public BoardData(Transform gameBoardParent)
+    public BoardData(Transform gameBoardParent, Vector2Int boardSize)
     {
-        // Creating a new list
-        board = new List<ShapeData>();
+        this.boardSize = boardSize;
+
+        shapes = new List<ShapeData>();
         locks = new List<LockData>();
         transformers = new List<TransformerData>();
 
@@ -169,18 +92,18 @@ public class BoardData
             slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
             if (slot != null)
             {
-                transformers.Add(null);
+                transformers.Add(new TransformerData(ShapeTransformer.TransformerType.None, 0));
                 shape = slot.GetSlotShape();
                 slotLock = slot.GetSlotLock();
 
-                ShapeData newShape = shape != null ? new ShapeData(shape.GetShapeColor(), shape.GetShapeType()) : null;
-                board.Add(newShape);
+                ShapeData newShape = shape != null ? new ShapeData(shape.GetShapeColor(), shape.GetShapeType()) : new ShapeData(GameShape.ColorType.None, GameShape.ShapeType.None);
+                shapes.Add(newShape);
 
-                LockData newLock = slotLock != null ? new LockData(slotLock.GetLockType(), slotLock.GetLockCounter()) : null;
+                LockData newLock = slotLock != null ? new LockData(slotLock.GetLockType(), slotLock.GetLockCounter()) : new LockData(SlotLock.LockType.None, 0);
                 locks.Add(newLock);
             } else
             {
-                board.Add(null);
+                shapes.Add(null);
                 locks.Add(null);
 
                 transformer = gameBoardParent.GetChild(i).GetComponent<ShapeTransformer>();
@@ -188,7 +111,7 @@ public class BoardData
                 if (transformerData != null)
                     transformers.Add(new TransformerData(transformerData));
                 else
-                    transformers.Add(null);
+                    transformers.Add(new TransformerData(ShapeTransformer.TransformerType.None, 0));
             }
         }
     }

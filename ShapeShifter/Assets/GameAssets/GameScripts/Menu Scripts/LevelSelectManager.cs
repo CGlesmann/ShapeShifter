@@ -15,6 +15,7 @@ public class LevelSelectManager : MonoBehaviour
     private string targetLevel = "";
 
     [Header("Object References")]
+    [SerializeField] private string levelSceneName = "";
     [SerializeField] private MenuSwipeController levelSelectPanelController = null;
     [SerializeField] private ChallengePreview challengePreview = null;
     [SerializeField] private Animator levelSelectAnimator = null;
@@ -113,6 +114,8 @@ public class LevelSelectManager : MonoBehaviour
         // Storing the input
         currentLevel = $"Level_{levelPackIndex + 1}-{levelIndex + 1}";
 
+        LevelLoader.SetLevelToLoad(currentLevel);
+
         // Displaying The Level Investigation Screen
         levelPreviewPanel.SetActive(true);
         levelPreviewPanel.GetComponent<LevelPreview>().SetLevelPreview(levelPackIndex, levelIndex);
@@ -121,7 +124,7 @@ public class LevelSelectManager : MonoBehaviour
         challengePreview.SetLevelChallengePreview(ChallengeManager.GetCurrentChallengeLog(levelPackIndex + 1, levelIndex + 1), $"Level_{levelPackIndex + 1}-{levelIndex + 1}");
     }
 
-    public void NavigateToLevel() { targetLevel = currentLevel; }
+    public void NavigateToLevel() { targetLevel = levelSceneName; }
     public void NavigateToInstructions() { targetLevel = instructionsScene; levelSelectAnimator.SetTrigger("Exit"); }
     public void NavigateToOptions()
     {

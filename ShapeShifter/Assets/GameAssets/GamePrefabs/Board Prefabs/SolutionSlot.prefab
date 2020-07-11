@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5057015497495022007}
   - component: {fileID: 9166125427838967819}
   - component: {fileID: 4736976126553175703}
+  - component: {fileID: 8094606789842148786}
   m_Layer: 5
   m_Name: SolutionSlot
   m_TagString: Untagged
@@ -64,6 +65,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.21960784, g: 0.5529412, b: 0.27058825, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -89,10 +91,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ebb670a635da044a3bbe04fd024857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pressSoundEffect: {fileID: 0}
   slotLock: {fileID: 0}
   shapeTransform: {fileID: 0}
   themeElement: {fileID: 0}
+  anim: {fileID: 8094606789842148786}
   canSelect: 0
+  pulsing: 0
 --- !u!223 &5057015497495022007
 Canvas:
   m_ObjectHideFlags: 0
@@ -138,4 +143,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1283115fc1a4a864c860d55e259e821e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 2
+--- !u!95 &8094606789842148786
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4451472272814926790}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4aefbac2db4697540959adef328e288d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

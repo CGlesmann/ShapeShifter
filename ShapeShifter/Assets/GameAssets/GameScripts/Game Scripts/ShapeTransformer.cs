@@ -6,30 +6,23 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class ShapeTransformer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class ShapeTransformer : MonoBehaviour, IPointerDownHandler
 {
-    public enum TransformerType { Shape, Color }
+    public enum TransformerType { Shape, Color, None }
 
     [Header("Object References")]
-    [SerializeField] private Image transformerIconFill = null;
     [SerializeField] private TextMeshProUGUI transformerCountText = null;
+    [SerializeField] private Animator anim = null;
+
     private GameManager gameManager = null;
     private BoardManager boardManager = null;
     private UndoManager undoManager = null;
 
+    private bool transforming = false;
+
     [Header("Transformer Settings")]
     [SerializeField] private TransformerData transformerData = null;
-
     private List<GameShape> shapesToTransform = null;
-
-    [Header("Input Settings")]
-    [SerializeField] private float inputTime = 1f;
-    [SerializeField] private bool isHoldingDown = false;
-
-    private BoardData cachedBoardData = null;
-    private bool previewingTransformation = false;
-    private bool bypassEndHolding = false;
-    private float inputTimer;
 
     private void Awake() { UpdateCounterText(); }
     private void Start()
@@ -37,12 +30,6 @@ public class ShapeTransformer : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         gameManager = GameManager.manager;
         boardManager = BoardManager.boardManager;
         undoManager = UndoManager.undoManager;
-    }
-
-    private void Update()
-    {
-        if (isHoldingDown)
-            ExecuteHold();
     }
 
     public TransformerData GetTransformerData() { return transformerData; }
@@ -58,70 +45,24 @@ public class ShapeTransformer : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             transformerData.transformerCounter = 0;
     }
 
-    private void UpdateCounterText() { transformerCountText.text = $"{transformerData.transformerCounter}"; }
+    private void UpdateCounterText() 
+    { 
+        if (transformerCountText != null && transformerData != null)
+            transformerCountText.text = $"{transformerData.transformerCounter}"; 
+    }
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (transformerData.transformerCounter > 0)
-        {
-            if (!previewingTransformation)
-            {
-                DisplayShapePreviews();
-                bypassEndHolding = true;
-            }
-            else
-                BeginHolding();
-        }
+        if (!transforming && transformerData.transformerCounter > 0)
+            DisplayTransformAnimation();
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (bypassEndHolding)
-        {
-            bypassEndHolding = false;
-            return;
-        }
-
-        EndHolding();
-    }
-
-    private void BeginHolding()
-    {
-        isHoldingDown = true;
-        inputTimer = 0;
-
-        //DisplayShapePreviews();
-    }
-
-    private void ExecuteHold()
-    {
-        if (isHoldingDown)
-        {
-            inputTimer = Mathf.Clamp(inputTimer + Time.deltaTime, 0, inputTime);
-            transformerIconFill.fillAmount = (inputTimer / inputTime);
-        }
-    }
-
-    private void EndHolding()
-    {
-        if (isHoldingDown)
-        {
-            isHoldingDown = false;
-            transformerIconFill.fillAmount = 0;
-
-            if (inputTimer >= inputTime)
-                FinalizeShapeTransformations();
-            else
-                RevertShapeTransformations();
-        }
-    }
-
-    private void DisplayShapePreviews()
+    public void TransformSurroundingShapes()
     {
         Transform gameBoardParent = gameManager.gameBoardParent;
         List<int> surroundingShapes = boardManager.CheckForSurroundingShapes(transform.GetSiblingIndex(), gameBoardParent);
+
         if (surroundingShapes != null && surroundingShapes.Count > 0)
         {
-            cachedBoardData = new BoardData(gameBoardParent);
             shapesToTransform = new List<GameShape>();
 
             foreach (int shapeIndex in surroundingShapes)
@@ -141,74 +82,21 @@ public class ShapeTransformer : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
                     GameShape.ShapeType newShapeType = (GameShape.ShapeType)newShapeTypeIndex;
                     gameShape.SetShapeType(newShapeType);
-
-                    shapeImage.color = new Color(shapeImage.color.r, shapeImage.color.g, shapeImage.color.b, shapeImage.color.a * 0.5f);
                 }
             }
 
-            previewingTransformation = true;
-        }
-    }
-
-    private void FinalizeShapeTransformations()
-    {
-        if (shapesToTransform != null && shapesToTransform.Count > 0)
-        {
-            undoManager.PushBoardData(cachedBoardData);
-            cachedBoardData = null;
-
-            foreach (GameShape shape in shapesToTransform)
-            {
-                Image shapeImage = shape?.GetComponent<Image>();
-                if (shapeImage != null)
-                    shapeImage.color = new Color(shapeImage.color.r, shapeImage.color.g, shapeImage.color.b, 1f);
-            }
-
+            undoManager.PushBoardData(new BoardData(gameBoardParent, new Vector2Int(boardManager.GetBoardWidth(), boardManager.GetBoardHeight())));
             transformerData.transformerCounter--;
             UpdateCounterText();
 
-            previewingTransformation = false;
             gameManager.CheckForVictory(gameManager.gameBoardParent, gameManager.solutionBoardParent);
         }
     }
 
-    private void ResetShapePreviewAlpha()
-    {
-        if (shapesToTransform != null && shapesToTransform.Count > 0)
-        {
-            foreach (GameShape shape in shapesToTransform)
-            {
-                Image shapeImage = shape?.GetComponent<Image>();
-                if (shapeImage != null)
-                    shapeImage.color = new Color(shapeImage.color.r, shapeImage.color.g, shapeImage.color.b, 1f);
-            }
-        }
-    }
-
-    private void RevertShapeTransformations()
-    {
-        if (shapesToTransform != null && shapesToTransform.Count > 0)
-        {
-            foreach (GameShape shape in shapesToTransform)
-            {
-                ShapeData shapeData = shape?.GetShapeData();
-                Image shapeImage = shape?.GetComponent<Image>();
-                if (shape != null && shapeData != null && shapeImage != null)
-                {
-                    GameShape.ShapeType shapeType = shapeData.shapeType;
-
-                    int newShapeTypeIndex = (int)shapeType - 1;
-                    if (newShapeTypeIndex < 0)
-                        newShapeTypeIndex = Enum.GetNames(typeof(GameShape.ShapeType)).Length - 1;
-
-                    GameShape.ShapeType newShapeType = (GameShape.ShapeType)newShapeTypeIndex;
-                    shape.SetShapeType(newShapeType);
-                }
-            }
-
-            previewingTransformation = false;
-        }
-    }
+    public void DisplayEnterAnimation() { anim.SetTrigger("Enter"); }
+    public void DisplayExitAnimation() { anim.SetTrigger("Exit"); }
+    public void DestroyTransformer() { GameObject.DestroyImmediate(gameObject); }
+    public void DisplayTransformAnimation() { anim.SetTrigger("Transform"); }
 }
 
 [System.Serializable]
@@ -227,5 +115,11 @@ public class TransformerData
     {
         this.transformerType = reference.transformerType;
         this.transformerCounter = reference.transformerCounter;
+    }
+
+    public TransformerData(ShapeTransformer.TransformerType type, int counter)
+    {
+        transformerType = type;
+        transformerCounter = counter;
     }
 }

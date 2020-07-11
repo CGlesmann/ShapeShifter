@@ -1,7 +1,8 @@
 ﻿using QFSW.QC;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.IO;
 using UnityEngine;
 
 public class DebugCommands
@@ -86,5 +87,54 @@ public class DebugCommands
             }
         }
         #endregion
+    }
+
+    [Command]
+    public static void ClearChallenges()
+    {
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        saveDataAccessor.SetData(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY, null);
+        DataTracker.dataTracker.SaveData();
+    }
+
+    [Command]
+    public static void SetAllChallengesToComplete()
+    {
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, bool> completedChallenges = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
+        if (completedChallenges == null)
+            completedChallenges = new Dictionary<int, bool>();
+
+        string baseChallengeLogs = "Assets/Resources/ChallengeLogs/";
+
+        ChallengeLog[] packLogs;
+        string[] levelPackDirectories = Directory.GetDirectories(baseChallengeLogs);
+
+        for(int i = 0; i < levelPackDirectories.Length; i++)
+        {
+            packLogs = Resources.LoadAll<ChallengeLog>($"ChallengeLogs/Level_Pack_{i + 1}/");
+            if (packLogs != null)
+            {
+                ChallengeLog currentLog;
+                for(int j = 0; j < packLogs.Length; j++)
+                {
+                    currentLog = packLogs[j];
+                    Debug.Log($"{currentLog.name} has {currentLog.GetChallengeCount()} challenges");
+                    for(int h = 0; h < currentLog.GetChallengeCount(); h++)
+                    {
+                        int levelIndex = Int32.Parse(currentLog.name.Split('_')[1]);
+                        Debug.Log($"Setting Challenge {h + 1} for Level_{i + 1}-{levelIndex}");
+                        int key = Challenge.GetChallengeKey(i + 1, levelIndex, h);
+                        if (completedChallenges.TryGetValue(key, out bool val))
+                            completedChallenges[key] = true;
+                        else
+                            completedChallenges.Add(key, true);
+                    }
+                } 
+            }
+        }
+
+        saveDataAccessor.SetData(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY, completedChallenges);
+        DataTracker.dataTracker.SaveData();
     }
 }

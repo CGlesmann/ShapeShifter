@@ -187,11 +187,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ebb670a635da044a3bbe04fd024857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pressSoundEffect: {fileID: 0}
   slotLock: {fileID: 0}
   shapeTransform: {fileID: 0}
   themeElement: {fileID: 341301295615846738}
   anim: {fileID: 4230888934985347489}
   canSelect: 1
+  pulsing: 0
 --- !u!114 &5976591229818430387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,6 +221,7 @@ MonoBehaviour:
   updateDynamically: 1
   normalKey: 0
   highlightedKey: 1
+  tertiaryKey: 2
 --- !u!114 &779796949850978997
 MonoBehaviour:
   m_ObjectHideFlags: 0

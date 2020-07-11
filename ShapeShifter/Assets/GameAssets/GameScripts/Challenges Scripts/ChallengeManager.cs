@@ -8,30 +8,37 @@ public class ChallengeManager : MonoBehaviour
     [SerializeField] private GameManager gameManager = null;
     private ChallengeLog currentChallengeLog = null;
 
+    private List<IChallenge> currentChallenges;
     private int packIndex;
     private int levelIndex;
 
-    private void Start()
+    private void OnEnable()
     {
-        gameManager.onVictory += CheckChallengesForCompletion;
-        packIndex = gameManager.GetPackIndex();
-        levelIndex = gameManager.GetLevelIndex();
+        SubscribeChallenges(gameManager.GetPackIndex(), gameManager.GetLevelIndex());
 
-        SubscribeChallenges();
+        gameManager.onVictory += CheckChallengesForCompletion;
+        gameManager.onVictory += UnsubscribeCurrentChallenges;
+        gameManager.onLevelSet += SubscribeChallenges;
     }
 
-    private void SubscribeChallenges()
+    private void OnDisable()
     {
-        if (currentChallengeLog == null)
-        {
-            currentChallengeLog = GetCurrentChallengeLog(packIndex, levelIndex);
-            if (currentChallengeLog == null)
-                return;
-        }
+        gameManager.onVictory -= CheckChallengesForCompletion;
+        gameManager.onVictory -= UnsubscribeCurrentChallenges;
+        gameManager.onLevelSet -= SubscribeChallenges;
+    }
+
+    private void SubscribeChallenges(int pack, int level)
+    {
+        packIndex = pack;
+        levelIndex = level;
+        currentChallengeLog = GetCurrentChallengeLog(packIndex, levelIndex);
 
         SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
         Dictionary<int, bool> challengeDictionary = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
+        
         int challengeCount = currentChallengeLog.GetChallengeCount();
+        currentChallenges = new List<IChallenge>();
 
         for (int i = 0; i < challengeCount; i++)
         {
@@ -40,8 +47,16 @@ public class ChallengeManager : MonoBehaviour
             {
                 IChallenge challenge = currentChallengeLog.GetChallengeData(i) as IChallenge;
                 challenge.SetUpChallenge();
+
+                currentChallenges.Add(challenge);
             }
         }
+    }
+
+    public void UnsubscribeCurrentChallenges()
+    {
+        for(int i = 0; i < currentChallenges.Count; i++)
+            currentChallenges[i].UnsubscribeChallenge();
     }
 
     public static ChallengeLog GetCurrentChallengeLog(int packIndex, int levelIndex)
@@ -52,15 +67,14 @@ public class ChallengeManager : MonoBehaviour
 
     public void CheckChallengesForCompletion()
     {
-        ChallengeLog challengeLog = GetCurrentChallengeLog(packIndex, levelIndex);
-        if (challengeLog != null)
+        if (currentChallengeLog != null)
         {
             SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
             Dictionary<int, bool> challengeDictionary = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
-            int challengeCount = challengeLog.GetChallengeCount();
+            int challengeCount = currentChallengeLog.GetChallengeCount();
             for(int i = 0; i < challengeCount; i++)
             {
-                IChallenge challenge = challengeLog.GetChallengeData(i) as IChallenge;
+                IChallenge challenge = currentChallengeLog.GetChallengeData(i) as IChallenge;
                 if (challenge != null)
                 {
                     int challengeKey = Challenge.GetChallengeKey(packIndex, levelIndex, i);

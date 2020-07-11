@@ -65,6 +65,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -92,8 +93,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeThemeElement: {fileID: 7368481225132494719}
   anim: {fileID: 6591824464240858555}
-  shapeType: 0
-  colorType: 0
+  shapeType: 1
+  colorType: 1
 --- !u!223 &8231258902120797227
 Canvas:
   m_ObjectHideFlags: 0
@@ -158,4 +159,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1876b49149d22674899a8fe9c46f53ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementImage: {fileID: 0}
+  updateDynamically: 1

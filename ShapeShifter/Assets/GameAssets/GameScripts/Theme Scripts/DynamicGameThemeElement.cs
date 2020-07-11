@@ -24,6 +24,12 @@ public class DynamicGameThemeElement : ThemeElementLoader
             ThemeManager.onThemeSettingsUpdate += LoadElement;
     }
 
+    public void SetElementToNewKey(Theme.GameUIThemeKey key)
+    {
+        currentKey = key;
+        LoadElement(ThemeManager.GetCurrentTheme(), ThemeManager.GetCurrentColorMode());
+    }
+
     public void ToggleActiveKey()
     {
         Debug.Log($"Toggling {gameObject.name}'s element");

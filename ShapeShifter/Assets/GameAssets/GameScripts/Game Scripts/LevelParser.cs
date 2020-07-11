@@ -15,7 +15,7 @@ public static class LevelParser
     {
         if (levelName.Contains("Level_"))
         {
-            string[] indexes = levelName.Split('_')[1].Split('-');
+            string[] indexes = LevelLoader.GetLevelName().Split('_')[1].Split('-');
             return Int32.Parse(indexes[0]);
         }
 
@@ -26,7 +26,7 @@ public static class LevelParser
     {
         if (levelName.Contains("Level_"))
         {
-            string[] indexes = levelName.Split('_')[1].Split('-');
+            string[] indexes = LevelLoader.GetLevelName().Split('_')[1].Split('-');
             return Int32.Parse(indexes[1]);
         }
 

@@ -30,12 +30,19 @@ public class VictoryDisplay : MonoBehaviour
 
     public void UpdateChallengePreview()
     {
-        Vector2 indexes = LevelParser.GetLevelPackLevelIndexes(SceneManager.GetActiveScene().name);
+        Vector2 indexes = LevelParser.GetLevelPackLevelIndexes(LevelLoader.GetLevelName());
         ChallengeLog challengeLog = ChallengeManager.GetCurrentChallengeLog((int)indexes.x, (int)indexes.y);
-        challengePreview.SetLevelChallengePreview(challengeLog, SceneManager.GetActiveScene().name);
+        challengePreview.SetLevelChallengePreview(challengeLog, LevelLoader.GetLevelName());
     }
 
-    public void ExecuteOnAnimationFinish() { onExitAnimationComplete?.Invoke(); }
+    public void ExecuteOnAnimationFinish() 
+    { 
+        onExitAnimationComplete?.Invoke();
+        onExitAnimationComplete = null;
+
+        gameObject.SetActive(false);
+    }
+
     public void NavigateToNextLevel()
     {
         anim.SetTrigger("Exit");

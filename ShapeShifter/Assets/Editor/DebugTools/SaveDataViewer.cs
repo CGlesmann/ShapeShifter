@@ -6,6 +6,7 @@ using UnityEditor;
 public class SaveDataViewer : EditorWindow
 {
     private SaveDataAccessor saveDataAccessor;
+    private Vector2 scrollView;
 
     [MenuItem(itemName: "Save Data Viewer", menuItem = "Window/Save Data Viewer")]
     public static void DisplayWindow()
@@ -21,22 +22,15 @@ public class SaveDataViewer : EditorWindow
             return;
         }
 
-        /*
-        if (saveDataAccessor == null)
-            saveDataAccessor = new SaveDataAccessor();
+        SaveDataAccessor saveDataAccessor = new SaveDataAccessor();
+        Dictionary<int, bool> completedChallenges = saveDataAccessor.GetDataValue<Dictionary<int, bool>>(SaveKeys.COMPLETED_CHALLENGES_SAVE_KEY);
 
-        int highestDisplayedUnlock = saveDataAccessor.GetDataValue<int>(SaveKeys.HIGHEST_DISPLAYED_LEVEL_UNLOCK);
-        EditorGUILayout.LabelField($"Highest Displayed Unlock: {highestDisplayedUnlock}");
+        if (completedChallenges == null)
+            return;
 
-        EditorGUILayout.LabelField("Completed Levels");
-        Dictionary<int, int> completedLevels = saveDataAccessor.GetDataValue<Dictionary<int, int>>(SaveKeys.COMPLETED_LEVELS_SAVE_KEY);
-        if (completedLevels == null || completedLevels.Count == 0)
-            EditorGUILayout.LabelField("No levels have been completed");
-        else
-        {
-            foreach(KeyValuePair<int, int> packLevelsCompleted in completedLevels)
-                EditorGUILayout.LabelField($"Highest Completed Level for Pack{packLevelsCompleted.Key}: {packLevelsCompleted.Value}");
-        }
-        */
+        scrollView = EditorGUILayout.BeginScrollView(scrollView);
+        foreach (KeyValuePair<int, bool> entry in completedChallenges)
+            EditorGUILayout.LabelField($"{entry.Key}: {entry.Value}");
+        EditorGUILayout.EndScrollView();
     }
 }

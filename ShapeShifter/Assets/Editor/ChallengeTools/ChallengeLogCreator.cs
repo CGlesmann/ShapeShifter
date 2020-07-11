@@ -22,16 +22,11 @@ public class ChallengeLogCreator : EditorWindow
 
     private void OnGUI()
     {
-        /*
         selectedPackIndex = EditorGUILayout.IntField("Pack", selectedPackIndex, GUILayout.MaxWidth(200f));
         selectedLevelIndex = EditorGUILayout.IntField("Level", selectedLevelIndex, GUILayout.MaxWidth(200f));
-        */
+        
         if (GameObject.FindObjectOfType<GameManager>() != null)
         {
-            string[] levelTitleIndexes = EditorSceneManager.GetActiveScene().name.Split('_')[1].Split('-');
-            selectedPackIndex = Int32.Parse(levelTitleIndexes[0]);
-            selectedLevelIndex = Int32.Parse(levelTitleIndexes[1]);
-
             currentChallengeLog = Resources.Load<ChallengeLog>($"ChallengeLogs/Level_Pack_{selectedPackIndex}/Level_{selectedLevelIndex}");
             if (currentChallengeLog == null)
             {

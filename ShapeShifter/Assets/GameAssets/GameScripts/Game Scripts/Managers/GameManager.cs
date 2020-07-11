@@ -14,22 +14,19 @@ public class GameManager : MonoBehaviour
     // Destroy Control Toggle
     public enum DestroyMethod { Shape, Color };
 
-    [Header("Scene Navigation Variables")]
-    [SerializeField] private string mainMenuScene = "";
-    [SerializeField] private string nextLevelScene = "";
     private int currentPackIndex = 0;
     private int currentLevelIndex = 0;
     private string currentLevelName = "";
 
-    [Header("Control Variables")]
-    [SerializeField] private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
-    public float levelTimer = 0f;
+    private DestroyMethod currentDestoryMethod = DestroyMethod.Shape;
+    [HideInInspector] public float levelTimer = 0f;
 
     private BoardData processedBoardData = null;
     private GameSlot slot1 = null, slot2 = null;
     private bool switching = false;
 
     [Header("Object References")]
+    public LevelConstructor levelConstructor = null;
     public BoardManager boardManager = null;
     public UndoManager undoManager = null;
     public Transform gameBoardParent = null;
@@ -50,6 +47,9 @@ public class GameManager : MonoBehaviour
     public delegate void OnModeSwitch();
     public event OnModeSwitch onModeSwitch;
 
+    public delegate void OnLevelSet(int packIndex, int levelIndex);
+    public event OnLevelSet onLevelSet;
+
     [Header("GUI References")]
     [SerializeField] private GameObject pauseMenuParent = null;
     [SerializeField] private GameObject victoryMenuParent = null;
@@ -64,35 +64,7 @@ public class GameManager : MonoBehaviour
     private void OnEnable() { manager = this; }
     private void Awake()
     {
-        currentLevelName = SceneManager.GetActiveScene().name.Split('_')[1];
-
-        string[] levelNumberSplit = currentLevelName.Split('-');
-
-        currentPackIndex = Int32.Parse(levelNumberSplit[0]);
-        currentLevelIndex = Int32.Parse(levelNumberSplit[1]);
-        gameTimerText.text = $"Level {currentLevelName} : 00:00";
-
-        // Setting the default destroy settings
-        currentDestoryMethod = DestroyMethod.Shape;
-        destroyText.text = "Destroy by Shape";
-
-        // Getting the required shapes
-        GameShape shape;
-        requiredShapes = new Dictionary<int, ShapeData>();
-
-        // Getting the required Shapes/Slots
-        for(int i = 0; i < solutionBoardParent.childCount; i++)
-        {
-            // Attempting to get the shape at the given index
-            shape = solutionBoardParent.GetChild(i).gameObject.GetComponent<GameSlot>()?.GetSlotShape();
-
-            // Adding shape data if a shape exists
-            if (shape != null)
-                requiredShapes.Add(i, shape.GetShapeData());
-        }
-
-        // Setting the gameboard/solution board
-        boardManager.SetGameSlotIndexes();
+        SetLevel();
     }
 
     private void Update()
@@ -147,7 +119,7 @@ public class GameManager : MonoBehaviour
 
                 boardManager.DeselectGameSlots();
 
-                processedBoardData = new BoardData(gameBoardParent);
+                processedBoardData = new BoardData(gameBoardParent, new Vector2Int(boardManager.GetBoardWidth(), boardManager.GetBoardHeight()));
                 //undoManager.ProcessGameBoard(gameBoardParent);
                 StartCoroutine(boardManager.MoveShapes(slot1, slot2));
                 return true;
@@ -196,6 +168,39 @@ public class GameManager : MonoBehaviour
         }
 
         onModeSwitch?.Invoke();
+    }
+
+    public void SetLevel()
+    {
+        levelTimer = 0f;
+        currentLevelName = LevelLoader.GetLevelName().Split('_')[1];
+
+        string[] levelNumberSplit = currentLevelName.Split('-');
+
+        currentPackIndex = Int32.Parse(levelNumberSplit[0]);
+        currentLevelIndex = Int32.Parse(levelNumberSplit[1]);
+        gameTimerText.text = $"Level {currentLevelName} : 00:00";
+
+        // Setting the default destroy settings
+        currentDestoryMethod = DestroyMethod.Shape;
+        destroyText.text = "Destroy by Shape";
+
+        // Getting the required shapes
+        GameShape shape;
+        requiredShapes = new Dictionary<int, ShapeData>();
+
+        // Getting the required Shapes/Slots
+        for (int i = 0; i < solutionBoardParent.childCount; i++)
+        {
+            // Attempting to get the shape at the given index
+            shape = solutionBoardParent.GetChild(i).gameObject.GetComponent<GameSlot>()?.GetSlotShape();
+
+            // Adding shape data if a shape exists
+            if (shape != null)
+                requiredShapes.Add(i, shape.GetShapeData());
+        }
+
+        onLevelSet?.Invoke(currentPackIndex, currentLevelIndex);
     }
     #endregion
 
@@ -394,8 +399,27 @@ public class GameManager : MonoBehaviour
 
     #region Scene Navigation Functions
     public void RestartCurrentLevel() { GameState.gamePaused = false; SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
-    public void ExitToMainMenu() { GameState.gamePaused = false; SceneManager.LoadScene(mainMenuScene); }
-    public void NavigateToNextLevel() { AdManager.CheckForAutomaticAd(GameTime.GetMinuteCount(levelTimer), nextLevelScene); /*HideVictoryScreen();*/ GameState.gamePaused = false; }
+    public void ExitToMainMenu() 
+    { 
+        GameState.gamePaused = false; 
+        SceneManager.LoadScene($"LevelPack_{currentPackIndex}"); 
+    }
+
+    public void NavigateToNextLevel() 
+    {
+        string futureLevelName = $"Level_{currentPackIndex}-{currentLevelIndex + 1}";
+
+        if (LevelLoader.SetLevelToLoad(futureLevelName))
+        {
+            SetLevel();
+            undoManager.ClearUndoStack();
+            levelConstructor.ConstructLevel(LevelLoader.GetLevelToLoad());
+        }
+        else
+            SceneManager.LoadScene($"LevelPack_{currentPackIndex}");
+
+        GameState.gamePaused = false; 
+    }
     #endregion
 
     #region Helper Functions

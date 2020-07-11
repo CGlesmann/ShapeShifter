@@ -4,11 +4,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
 
-public static class AdManager
+public class AdManager : MonoBehaviour, IUnityAdsListener
 {
     private static int roundCounter = 5;
 
-    public static void CheckForAutomaticAd(int minutesPassed, string nextScene)
+    private void Awake()
+    {
+        Advertisement.AddListener(this);
+    }
+
+    public void CheckForAutomaticAd(int minutesPassed, string nextScene)
     {
         if (!Debug.isDebugBuild)
         {
@@ -32,7 +37,7 @@ public static class AdManager
             SceneManager.LoadScene(nextScene);
     }
 
-    private static void ShowAutomaticAd(string nextScene)
+    private void ShowAutomaticAd(string nextScene)
     {
         if (Advertisement.IsReady("video"))
         {
@@ -45,8 +50,27 @@ public static class AdManager
         }
     }
 
-    private static void ResetCounters()
+    private void ResetCounters() { roundCounter = 5; }
+    public void OnUnityAdsReady(string placementId)
     {
-        roundCounter = 5;
+        Debug.Log("Ad Ready To Play");
+        return;
+    }
+
+    public void OnUnityAdsDidError(string message)
+    {
+        Debug.LogError($"UnityAds Returned an Error: {message}");
+        return;
+    }
+
+    public void OnUnityAdsDidStart(string placementId)
+    {
+        Debug.Log("UnityAds Started");
+        return;
+    }
+
+    public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
+    {
+        throw new System.NotImplementedException();
     }
 }

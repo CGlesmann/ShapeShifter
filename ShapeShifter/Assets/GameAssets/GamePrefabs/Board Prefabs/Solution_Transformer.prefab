@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.21960784, g: 0.5529412, b: 0.27058825, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -88,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1283115fc1a4a864c860d55e259e821e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 9
 --- !u!223 &5000061028813546421
 Canvas:
@@ -136,6 +138,8 @@ GameObject:
   - component: {fileID: 1779147624732053716}
   - component: {fileID: 1779147624732053718}
   - component: {fileID: 1868628366408827179}
+  - component: {fileID: 4092755978863645092}
+  - component: {fileID: 5572516781386048166}
   m_Layer: 5
   m_Name: Solution_Transformer
   m_TagString: Untagged
@@ -185,7 +189,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.08627451, g: 0.25882354, b: 0.14117648, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -244,4 +249,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1283115fc1a4a864c860d55e259e821e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateDynamically: 1
   elementKey: 10
+--- !u!114 &4092755978863645092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779147624732053714}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634cb1062e89f7447ba895bff885a435, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformerCountText: {fileID: 0}
+  transformerData:
+    transformerType: 1
+    transformerCounter: 0
+--- !u!95 &5572516781386048166
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779147624732053714}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 84ba7e9e37ecc454f9d041fb465d7f7f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

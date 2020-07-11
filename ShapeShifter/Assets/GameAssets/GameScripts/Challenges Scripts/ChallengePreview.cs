@@ -7,6 +7,7 @@ using TMPro;
 public class ChallengePreview : MonoBehaviour
 {
     [Header("Object References")]
+    [SerializeField] private GameManager gameManager = null;
     [SerializeField] private TextMeshProUGUI noChallengeText = null;
 
     [Header("Challenge References")]
@@ -15,6 +16,12 @@ public class ChallengePreview : MonoBehaviour
 
     private int packIndex = -1;
     private int levelIndex = -1;
+
+    private void Awake()
+    {
+        if (gameManager != null)
+            gameManager.onVictory += ResetChallengePreview;
+    }
 
     public void SetLevelChallengePreview(ChallengeLog challengeLog, string levelName)
     {

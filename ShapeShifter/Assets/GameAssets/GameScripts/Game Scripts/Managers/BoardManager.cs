@@ -35,12 +35,15 @@ public class BoardManager : MonoBehaviour
 
     private int locksAnimating = 0;
 
-    public void Awake() { boardManager = this; }
+    public void OnEnable() { boardManager = this; }
 
     public void SelectGameSlots() { onSelectGameSlots?.Invoke(); }
     public void DeselectGameSlots() { onDeselectGameSlots?.Invoke(); }
 
+    public void SetBoardSize(int width, int height) { boardWidth = width; boardHeight = height; }
     public int GetBoardSize() { return boardWidth * boardHeight; }
+    public int GetBoardWidth() { return boardWidth; }
+    public int GetBoardHeight() { return boardHeight; }
     public int GetShapesBeingDestroyed() { return shapesBeingDestroyed; }
     public void MarkShapeAsDestroyed() { shapesBeingDestroyed--; }
 
@@ -59,34 +62,6 @@ public class BoardManager : MonoBehaviour
         }
         else
             return null;
-    }
-
-    public void SetGameSlotIndexes()
-    {
-        // Declaring the temp store variable
-        GameSlot slot = null;
-
-        // Setting the indexes on the solution board
-        if (solutionBoardParent != null)
-        {
-            for (int i = 0; i < solutionBoardParent.childCount; i++)
-            {
-                slot = solutionBoardParent.GetChild(i).GetComponent<GameSlot>();
-                if (slot != null)
-                    slot.SetSlotIndex(i);
-            }
-        }
-
-        // Setting the indexes on the game board
-        if (gameBoardParent != null)
-        {
-            for (int i = 0; i < gameBoardParent.childCount; i++)
-            {
-                slot = gameBoardParent.GetChild(i).GetComponent<GameSlot>();
-                if (slot != null)
-                    slot.SetSlotIndex(i);
-            }
-        }
     }
 
     public IEnumerator MoveShapes(GameSlot slot1, GameSlot slot2)

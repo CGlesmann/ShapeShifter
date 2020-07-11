@@ -67,16 +67,17 @@ public class PackButton : GameButton
             ChallengeLog currentLog;
             int currentChallengeCount;
 
-            for (int levelIndex = 0; levelIndex < packLogs.Length; levelIndex++)
+            for (int index = 0; index < packLogs.Length; index++)
             {
-                currentLog = packLogs[levelIndex];
+                currentLog = packLogs[index];
+                int levelIndex = Int32.Parse(currentLog.name.Split('_')[1]);
 
                 currentChallengeCount = currentLog.GetChallengeCount();
                 amountOfChallenges += currentChallengeCount;
 
                 for (int challengeIndex = 0; challengeIndex < currentChallengeCount; challengeIndex++)
                 {
-                    int challengeKey = Challenge.GetChallengeKey(packIndex + 1, levelIndex + 1, challengeIndex);
+                    int challengeKey = Challenge.GetChallengeKey(packIndex + 1, levelIndex, challengeIndex);
                     if (completedChallenges.TryGetValue(challengeKey, out bool result))
                         if (result == true)
                             completedChallengeCount++;

@@ -11,8 +11,8 @@ using UnityEditor.SceneManagement;
 public class GameShape : MonoBehaviour
 {
     // Global Shape Type Enum
-    [System.Serializable] public enum ShapeType { Square, Circle, Triangle, Diamond };
-    [System.Serializable] public enum ColorType { Red, Blue, Green, Yellow}
+    [System.Serializable] public enum ShapeType { None, Square, Circle, Triangle, Diamond };
+    [System.Serializable] public enum ColorType { None, Red, Blue, Green, Yellow}
 
     [Header("Object References")]
     [SerializeField] private ShapeThemeElement shapeThemeElement = null;
@@ -115,13 +115,14 @@ public class ShapeInspector : Editor
 }
 #endif
 
+[System.Serializable]
 public class ShapeData
 {
     public GameShape.ColorType shapeColor;
     public GameShape.ShapeType shapeType;
 
     public ShapeData(GameShape.ColorType color, GameShape.ShapeType type) { shapeColor = color; shapeType = type; }
-    public override string ToString() { return shapeColor.ToString() + shapeType.ToString(); }
+    public override string ToString() { return $"{shapeColor.ToString()} {shapeType.ToString()}"; }
     public override int GetHashCode() { return base.GetHashCode(); }
 
     public override bool Equals(object obj)
