@@ -73,6 +73,14 @@ public class LevelConstructor : MonoBehaviour
             {
                 ShapeTransformer newTransformer = Instantiate(transformerPrefab, boardParent).GetComponent<ShapeTransformer>();
                 newTransformer.SetTransformerData(boardData.transformers[i]);
+                if (Application.isPlaying)
+                    newTransformer.transform.localScale = Vector3.zero;
+
+                float childSize = (cellWidth / 384f);
+                Vector3 newScale = new Vector3(childSize, childSize);
+
+                for(int j = 0; j < newTransformer.transform.childCount; j++)
+                    newTransformer.transform.GetChild(j).localScale = new Vector3(childSize, childSize);
             }
         }
 

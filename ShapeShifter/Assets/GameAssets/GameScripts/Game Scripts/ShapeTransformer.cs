@@ -63,6 +63,7 @@ public class ShapeTransformer : MonoBehaviour, IPointerDownHandler
 
         if (surroundingShapes != null && surroundingShapes.Count > 0)
         {
+            undoManager.PushBoardData(new BoardData(gameBoardParent, new Vector2Int(boardManager.GetBoardWidth(), boardManager.GetBoardHeight())));
             shapesToTransform = new List<GameShape>();
 
             foreach (int shapeIndex in surroundingShapes)
@@ -78,25 +79,26 @@ public class ShapeTransformer : MonoBehaviour, IPointerDownHandler
 
                     int newShapeTypeIndex = (int)shapeType + 1;
                     if (newShapeTypeIndex > Enum.GetNames(typeof(GameShape.ShapeType)).Length - 1)
-                        newShapeTypeIndex = 0;
+                        newShapeTypeIndex = 1;
 
                     GameShape.ShapeType newShapeType = (GameShape.ShapeType)newShapeTypeIndex;
-                    gameShape.SetShapeType(newShapeType);
+                    gameShape.TriggerShapeTransform(newShapeType, gameShape.GetShapeColor());
                 }
             }
 
-            undoManager.PushBoardData(new BoardData(gameBoardParent, new Vector2Int(boardManager.GetBoardWidth(), boardManager.GetBoardHeight())));
             transformerData.transformerCounter--;
             UpdateCounterText();
 
             gameManager.CheckForVictory(gameManager.gameBoardParent, gameManager.solutionBoardParent);
         }
+
+        transforming = false;
     }
 
     public void DisplayEnterAnimation() { anim.SetTrigger("Enter"); }
     public void DisplayExitAnimation() { anim.SetTrigger("Exit"); }
     public void DestroyTransformer() { GameObject.DestroyImmediate(gameObject); }
-    public void DisplayTransformAnimation() { anim.SetTrigger("Transform"); }
+    public void DisplayTransformAnimation() { transforming = true; anim.SetTrigger("Transform"); }
 }
 
 [System.Serializable]

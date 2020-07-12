@@ -28,6 +28,9 @@ public class GameShape : MonoBehaviour
     private Vector3 baseSize = Vector3.zero;
     private bool markedForDestruct = false;
 
+    private ShapeData queuedTransformData = null;
+    private bool transforming = false;
+
     public void Start() { manager = GameManager.manager; baseSize = transform.localScale; }
     public override string ToString() { return "Shape: " + shapeType.ToString() + " Color: " + colorType.ToString(); }
     public override int GetHashCode() { return base.GetHashCode(); }
@@ -82,6 +85,28 @@ public class GameShape : MonoBehaviour
     {
         transform.parent.GetComponent<GameSlot>().SetSlotShapeReference(null);
         DestroyImmediate(gameObject);
+    }
+
+    public void TriggerShapeTransform(ShapeData newData)
+    {
+        queuedTransformData = newData;
+        transforming = true;
+
+        anim.SetTrigger("Transform");
+    }
+
+    public void TriggerShapeTransform(GameShape.ShapeType shapeType, GameShape.ColorType colorType)
+    {
+        queuedTransformData = new ShapeData(colorType, shapeType);
+        transforming = true;
+
+        anim.SetTrigger("Transform");
+    }
+
+    public void ExecuteShapeTransform()
+    {
+        ConfigureShape(queuedTransformData.shapeType, queuedTransformData.shapeColor);
+        transforming = false;
     }
 }
 

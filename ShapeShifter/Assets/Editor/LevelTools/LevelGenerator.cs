@@ -26,7 +26,8 @@ public static class LevelGenerator
         // Generate list of available slots
         List<int> availableSlots = new List<int>();
         for (int s = 0; s < boardParent.childCount; s++)
-            availableSlots.Add(s);
+            if (boardParent.GetChild(s).GetComponent<GameSlot>() != null)
+                availableSlots.Add(s);
 
         // Generating the shapes
         List<ShapeData> shapesToCreate = genPrefs.GetShapeDataList();
